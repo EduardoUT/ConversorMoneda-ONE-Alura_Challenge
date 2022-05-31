@@ -8,6 +8,8 @@ import java.awt.Color;
 import javax.swing.UIManager;
 import javax.swing.JOptionPane;
 import com.clases.divisa.PesoMexicano;
+import com.clases.temperatura.Temperatura;
+import java.math.BigDecimal;
 import jdk.nashorn.internal.runtime.JSType;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -17,7 +19,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class TestDos {
 
-    public static void main(String[] args) throws 
+    public static void main(String[] args) throws
             ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         //Configurando apariencia de las ventanas emergentes.
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -29,6 +31,33 @@ public class TestDos {
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
         UIManager.put("ComboBox.background", new Color(126, 193, 228));
         menuPrincipal(); // <---- Buscar método Runnable para hacer JAR File. 
+    }
+
+    public static void menuPrincipal() {
+        //Creando ventana menú con ComboBox de dos opciones.
+        Object seleccionTipoConversion = JOptionPane.showInputDialog(
+                null,
+                "Seleccione una opción de conversión: ",
+                "Menú",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new Object[]{
+                    "Conversor de Moneda",
+                    "Conversor de Temperatura"
+                },
+                "Conversor de Moneda" //Opción seleccionada por defecto.
+        );
+
+        //Si el usuario no presiona Cancel o el botón cerrar "X".
+        if (seleccionTipoConversion != null) {
+            if (esConversorMoneda(seleccionTipoConversion)) {
+                conversionDivisaUsuario();
+            } else {
+                conversorTemperatura();
+            }
+        } else {
+            System.exit(0);
+        }
     }
 
     /**
@@ -71,55 +100,63 @@ public class TestDos {
                         "Peso Mexicano (MXN) a Dólar Américano (USD)"
                 );
 
-                valorSeleccionTipoDivisa = seleccionTipoDivisa.toString();
-                switch (valorSeleccionTipoDivisa) {
-                    case "Peso Mexicano (MXN) a Dólar Américano (USD)":
-                        tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Peso Mexicano (MXN) a Euro (EUR)":
-                        tasaCambio = pesoMexicano.getTasaCambioEuros();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
-                        tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Peso Mexicano (MXN) a Yen (JPY)":
-                        tasaCambio = pesoMexicano.getTasaCambioYenJapones();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Peso Mexicano (MXN) a Won Coreano (KRW)":
-                        tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Dólar Americano (USD) a Peso Mexicano (MXN)":
-                        tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Euro (EUR) a Peso Mexicano (MXN)":
-                        tasaCambio = pesoMexicano.getTasaCambioEuros();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
-                        tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Yen (JPY) a Peso Mexicano (MXN)":
-                        tasaCambio = pesoMexicano.getTasaCambioYenJapones();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    case "Won Coreano (KRW) a Peso Mexicano (MXN)":
-                        tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
-                        pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
-                        break;
-                    default:
-                        break;
+                if (seleccionTipoDivisa != null) {
+                    valorSeleccionTipoDivisa = seleccionTipoDivisa.toString();
+                    switch (valorSeleccionTipoDivisa) {
+                        case "Peso Mexicano (MXN) a Dólar Américano (USD)":
+                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Peso Mexicano (MXN) a Euro (EUR)":
+                            tasaCambio = pesoMexicano.getTasaCambioEuros();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
+                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Peso Mexicano (MXN) a Yen (JPY)":
+                            tasaCambio = pesoMexicano.getTasaCambioYenJapones();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Peso Mexicano (MXN) a Won Coreano (KRW)":
+                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Dólar Americano (USD) a Peso Mexicano (MXN)":
+                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Euro (EUR) a Peso Mexicano (MXN)":
+                            tasaCambio = pesoMexicano.getTasaCambioEuros();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
+                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Yen (JPY) a Peso Mexicano (MXN)":
+                            tasaCambio = pesoMexicano.getTasaCambioYenJapones();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        case "Won Coreano (KRW) a Peso Mexicano (MXN)":
+                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
+                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            break;
+                        default:
+                            break;
+                    }
+                    mensajeDeseaContinuarDivisa();
+                } else {
+                    menuPrincipal();
                 }
-                mensajeDeseaContinuar();
             } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "El valor ingresado no es un número "
-                        + "entero o decimal");
+                JOptionPane.showMessageDialog(
+                        null,
+                        "El valor ingresado no es un número entero o decimal",
+                        "Error al recibir los datos.",
+                        JOptionPane.ERROR_MESSAGE
+                );
                 /**
                  * Con recursividad volvemos a pedir el valor llamando la
                  * ventana si no es numérico.
@@ -129,37 +166,63 @@ public class TestDos {
         } else {
             System.exit(0);
         }
-
     }
 
-    public static void menuPrincipal() {
-        //Creando ventana menú con ComboBox de dos opciones.
-        Object seleccionTipoConversion = JOptionPane.showInputDialog(
+    /**
+     * Llama a la ventana de conversión de temperaturas.
+     */
+    public static void conversorTemperatura() {
+        String valorUsuario = JOptionPane.showInputDialog(
                 null,
-                "Seleccione una opción de conversión: ",
-                "Menú",
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                new Object[]{
-                    "Conversor de Moneda",
-                    "Conversor de Temperatura"
-                },
-                "Conversor de Moneda" //Opción seleccionada por defecto.
+                "Ingresa el valor de Temperatura que deseas convertir: ",
+                "Cantidad de Temperatura a Convertir",
+                JOptionPane.QUESTION_MESSAGE
         );
 
-        //Si el usuario no presiona Cancel o el botón cerrar "X".
-        if (seleccionTipoConversion != null) {
-            if (esConversorMoneda(seleccionTipoConversion)) {
-                conversionDivisaUsuario();
-            } else {
+        if (valorUsuario != null) {
+            try {
+                double valorUsuarioToDouble = Double.valueOf(valorUsuario);
+                esNumerico(valorUsuarioToDouble);
+                String valorSeleccionTipoTemperatura;
+                Temperatura t = new Temperatura();
+                BigDecimal bd = new BigDecimal(String.valueOf(valorUsuarioToDouble));
 
+                Object seleccionTipoTemperatura = JOptionPane.showInputDialog(
+                        null,
+                        "Elije el tipo de conversión de temperatura que deseas hacer: ",
+                        "Selección conversiones de Temperatura",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new Object[]{
+                            "Celcius (°C) a Farenheit (°F)",
+                            "Celcius (°C) a Kelvin (°K)",
+                            "Farenheit (°F) a Celsius (°C)",
+                            "Farenheit (°F) a Kelvin (°K)",
+                            "Kelvin (°K) a Celsius (°C)",
+                            "Kelvin (°K) a Farenheit (°F)"
+                        },
+                        "Celcius (°C) a Farenheit (°F)"
+                );
+                valorSeleccionTipoTemperatura = seleccionTipoTemperatura.toString();
+                t.convertirTemperatura(bd, valorSeleccionTipoTemperatura);
+                mensajeDeseaContinuarTemperatura();
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "El valor ingresado no es un número entero o decimal",
+                        "Error al recibir los datos.",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                conversorTemperatura();
             }
+
         } else {
             System.exit(0);
         }
+
     }
 
-    public static void mensajeDeseaContinuar() {
+    public static void mensajeDeseaContinuarDivisa() {
         int seleccionUsuario = JOptionPane.showOptionDialog(
                 null,
                 "¿Desea realizar otra conversión de divisa?",
@@ -179,6 +242,39 @@ public class TestDos {
             switch (seleccionUsuario) {
                 case 0:
                     conversionDivisaUsuario();
+                    break;
+                case 1:
+                    menuPrincipal();
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Programa finalizado :D");
+                    break;
+            }
+        } else {
+            System.exit(0);
+        }
+    }
+
+    public static void mensajeDeseaContinuarTemperatura() {
+        int seleccionUsuario = JOptionPane.showOptionDialog(
+                null,
+                "¿Desea realizar otra conversión de temperatura?",
+                "Selector de opciones",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                new Object[]{
+                    "Sí",
+                    "No, ir al menú principal",
+                    "Salir"
+                },
+                "Sí"
+        );
+
+        if (seleccionUsuario != -1) {
+            switch (seleccionUsuario) {
+                case 0:
+                    conversorTemperatura();
                     break;
                 case 1:
                     menuPrincipal();
