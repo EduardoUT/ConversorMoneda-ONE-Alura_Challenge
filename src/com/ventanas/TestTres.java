@@ -4,20 +4,20 @@
  */
 package com.ventanas;
 
-import java.awt.Color;
-import javax.swing.UIManager;
-import javax.swing.JOptionPane;
 import com.clases.divisa.PesoMexicano;
 import com.clases.temperatura.Temperatura;
+import java.awt.Color;
 import java.math.BigDecimal;
-import jdk.nashorn.internal.runtime.JSType;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import jdk.nashorn.internal.runtime.JSType;
 
 /**
  *
  * @author mcore
  */
-public class TestDos {
+public class TestTres {
 
     public static void main(String[] args) throws
             ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
@@ -30,8 +30,9 @@ public class TestDos {
         UIManager.put("ComboBox.background", Color.DARK_GRAY);
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
         UIManager.put("ComboBox.background", new Color(126, 193, 228));
-
-        menuPrincipal();
+        java.awt.EventQueue.invokeLater(() -> {
+            TestTres.menuPrincipal();
+        });
         // <---- Buscar método Runnable para hacer JAR File. 
     }
 
@@ -58,7 +59,7 @@ public class TestDos {
                 conversorTemperatura();
             }
         } else {
-            System.exit(0);
+            mensajeProgramaFinalizado();
         }
     }
 
@@ -166,7 +167,7 @@ public class TestDos {
                 conversionDivisaUsuario();
             }
         } else {
-            System.exit(0);
+            menuPrincipal();
         }
     }
 
@@ -205,9 +206,14 @@ public class TestDos {
                         },
                         "Celcius (°C) a Farenheit (°F)"
                 );
-                valorSeleccionTipoTemperatura = seleccionTipoTemperatura.toString();
-                t.convertirTemperatura(bd, valorSeleccionTipoTemperatura);
-                mensajeDeseaContinuarTemperatura();
+
+                if (seleccionTipoTemperatura != null) {
+                    valorSeleccionTipoTemperatura = seleccionTipoTemperatura.toString();
+                    t.convertirTemperatura(bd, valorSeleccionTipoTemperatura);
+                    mensajeDeseaContinuarTemperatura();
+                } else {
+                    menuPrincipal();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(
                         null,
@@ -217,9 +223,8 @@ public class TestDos {
                 );
                 conversorTemperatura();
             }
-
         } else {
-            System.exit(0);
+            menuPrincipal();
         }
 
     }
@@ -249,7 +254,7 @@ public class TestDos {
                     menuPrincipal();
                     break;
                 default:
-                    JOptionPane.showMessageDialog(null, "Programa finalizado :D");
+                    mensajeProgramaFinalizado();
                     break;
             }
         } else {
@@ -282,12 +287,16 @@ public class TestDos {
                     menuPrincipal();
                     break;
                 default:
-                    JOptionPane.showMessageDialog(null, "Programa finalizado :D");
+                    mensajeProgramaFinalizado();
                     break;
             }
         } else {
             System.exit(0);
         }
+    }
+    
+    public static void mensajeProgramaFinalizado() {
+        JOptionPane.showMessageDialog(null, "Programa finalizado :D");
     }
 
     /**
