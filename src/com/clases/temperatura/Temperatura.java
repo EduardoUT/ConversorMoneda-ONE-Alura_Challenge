@@ -23,39 +23,38 @@ public class Temperatura {
         switch (valorSeleccionTemperatura) {
             case "Celcius (°C) a Farenheit (°F)":
                 res = valorUsuario.multiply(new BigDecimal("1.8")).add(new BigDecimal("32"));
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             case "Celcius (°C) a Kelvin (°K)":
                 res = valorUsuario.add(new BigDecimal("273.15"));
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             case "Farenheit (°F) a Celsius (°C)":
                 res = valorUsuario.subtract(new BigDecimal("32")).divide(new BigDecimal("1.8"), 2, RoundingMode.FLOOR);
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             case "Farenheit (°F) a Kelvin (°K)":
                 res = valorUsuario.subtract(new BigDecimal("32")).multiply(new BigDecimal("5")).divide(
                         new BigDecimal("9"), 2, RoundingMode.FLOOR).add(new BigDecimal("273.15"));
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             case "Kelvin (°K) a Celsius (°C)":
                 res = valorUsuario.subtract(new BigDecimal("273.15"));
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             case "Kelvin (°K) a Farenheit (°F)":
                 res = valorUsuario.subtract(new BigDecimal("273.15")).multiply(
                         new BigDecimal("1.8")).add(new BigDecimal("32"));
-                JOptionPane.showMessageDialog(null, valorUsuario + "° " + valorSeleccionTemperatura
-                        + ": " + res.setScale(2, RoundingMode.FLOOR) + "°");
+                mensajeResultadoConversion(valorUsuario, res, valorSeleccionTemperatura);
                 return res.setScale(2, RoundingMode.FLOOR);
             default:
                 return null;
         }
+    }
+
+    public void mensajeResultadoConversion(BigDecimal valor, BigDecimal resultado, String valorSeleccionTemp) {
+        JOptionPane.showMessageDialog(null, valor + "° " + valorSeleccionTemp
+                + ": " + resultado.setScale(2, RoundingMode.FLOOR) + "°");
     }
 
     /**
