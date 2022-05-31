@@ -30,10 +30,7 @@ public class TestTres {
         UIManager.put("ComboBox.background", Color.DARK_GRAY);
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
         UIManager.put("ComboBox.background", new Color(126, 193, 228));
-        java.awt.EventQueue.invokeLater(() -> {
-            TestTres.menuPrincipal();
-        });
-        // <---- Buscar método Runnable para hacer JAR File. 
+        java.awt.EventQueue.invokeLater(TestTres::menuPrincipal);
     }
 
     public static void menuPrincipal() {
