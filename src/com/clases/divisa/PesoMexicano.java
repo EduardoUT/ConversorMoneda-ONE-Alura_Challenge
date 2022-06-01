@@ -7,6 +7,9 @@ package com.clases.divisa;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import javax.swing.JOptionPane;
+import com.service.ConexionApi;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Contiene métodos sobrescritos con el valor de la tasa de cambio en pesos
@@ -24,8 +27,16 @@ public class PesoMexicano extends Divisa {
      */
     @Override
     public double getTasaCambioDolarAmericano() {
-        double tasaCambioDolares = super.getTasaCambioDolarAmericano();
-        return tasaCambioDolares += 20.34530;
+        try {
+            double tasaCambioDolares = super.getTasaCambioDolarAmericano();
+            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_USA(), Divisa.getNOMBRE_DIVISA_MEXICO());
+            tasaCambioDolares += rateApi;
+            return tasaCambioDolares;
+        } catch (Exception ex) {
+            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+        return 19.68550;
     }
 
     /**
@@ -33,8 +44,15 @@ public class PesoMexicano extends Divisa {
      */
     @Override
     public double getTasaCambioEuros() {
-        double tasaCambioEuros = super.getTasaCambioEuros();
-        return tasaCambioEuros += 21.2145;
+        try {
+            double tasaCambioDolares = super.getTasaCambioEuros();
+            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_EUROPA(), Divisa.getNOMBRE_DIVISA_MEXICO());
+            tasaCambioDolares += rateApi;
+            return tasaCambioDolares;
+        } catch (Exception ex) {
+            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 21.2145;
     }
 
     /**
@@ -42,8 +60,15 @@ public class PesoMexicano extends Divisa {
      */
     @Override
     public double getTasaCambioLibrasEsterlinas() {
-        double tasaCambioLibras = super.getTasaCambioLibrasEsterlinas();
-        return tasaCambioLibras += 25.54861;
+        try {
+            double tasaCambioDolares = super.getTasaCambioEuros();
+            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_GRAN_BRETANA(), Divisa.getNOMBRE_DIVISA_MEXICO());
+            tasaCambioDolares += rateApi;
+            return tasaCambioDolares;
+        } catch (Exception ex) {
+            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 25.54861;
     }
 
     /**
@@ -51,8 +76,15 @@ public class PesoMexicano extends Divisa {
      */
     @Override
     public double getTasaCambioYenJapones() {
-        double tasaCambioYen = super.getTasaCambioYenJapones();
-        return tasaCambioYen += 0.15724;
+        try {
+            double tasaCambioDolares = super.getTasaCambioEuros();
+            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_YEN_JAPON(), Divisa.getNOMBRE_DIVISA_MEXICO());
+            tasaCambioDolares += rateApi;
+            return tasaCambioDolares;
+        } catch (Exception ex) {
+            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0.15724;
     }
 
     /**
@@ -60,8 +92,15 @@ public class PesoMexicano extends Divisa {
      */
     @Override
     public double getTasaCambioWonSurCoreano() {
-        double tasaCambioWon = super.getTasaCambioWonSurCoreano();
-        return tasaCambioWon += 16.19689;
+        try {
+            double tasaCambioDolares = super.getTasaCambioEuros();
+            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_WON(), Divisa.getNOMBRE_DIVISA_MEXICO());
+            tasaCambioDolares += rateApi;
+            return tasaCambioDolares;
+        } catch (Exception ex) {
+            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 16.19689;
     }
 
     @Override
