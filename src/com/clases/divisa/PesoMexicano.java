@@ -13,10 +13,10 @@ import java.util.logging.Logger;
 
 /**
  * Contiene métodos sobrescritos con el valor de la tasa de cambio en pesos
- * mexicanos respecto a otras monedas acorde al resumen de cierre del mes 29 de
- * abril de 2022 en:
+ * mexicanos con tipos de cambio para revalorización de balance 
+ * del Banco de México con precio de cierre de jornada al 31 de mayo de 2022.
+ * Más info consulte:
  * https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?accion=consultarCuadroAnalitico&idCuadro=CA113&sector=6&locale=es
- * del Banco de México.
  *
  * @author mcore
  */

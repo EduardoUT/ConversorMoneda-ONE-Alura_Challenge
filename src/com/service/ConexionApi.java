@@ -68,7 +68,6 @@ public class ConexionApi {
     }
 
     public static double obtenerValorRates(String response) {
-        //String currencyTest = "{\"success\":true,\"timestamp\":1657565,\"base\":\"USD\",\"date\":\"2022-05-31\",\"rates\":{\"MXN\":19.678404}}";
         JSONObject json = new JSONObject(response);
         double mxnRate = json.getJSONObject("rates").getDouble("MXN");
         return mxnRate;
