@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -35,6 +36,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         ventanaIngresoDivisa.setBackground(new Color(0, 0, 0, 0));
+        btnIngresoDivisa.setEnabled(false);
         btnMinimizarVentana.setBackground(new Color(0, 0, 0, 0));
         mostrarVentanaBienvenida();
         ocultarVentanaIngresoDivisa();
@@ -63,6 +65,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         campoIngresoDivisa.setVisible(false);
         instruccionCampoIngresoDivisa.setVisible(false);
         btnIngresoDivisa.setVisible(false);
+        btnIngresoDivisa.setEnabled(false);
     }
 
     public void ocultarPanelSeleccionDivisa() {
@@ -290,7 +293,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         campoSeleccionDivisa.setBackground(new java.awt.Color(70, 174, 124));
         campoSeleccionDivisa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         campoSeleccionDivisa.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Peso Mexicano (MXN) a Dólar Américano (USD)", "Peso Mexicano (MXN) a Euro (EUR)", "Peso Mexicano (MXN) a Libra Esterlina (GBP)", "Peso Mexicano (MXN) a Yen (JPY)", "Peso Mexicano (MXN) a Won Coreano (KRW)", "Dólar Americano (USD) a Peso Mexicano (MXN)", "Euro (EUR) a Peso Mexicano (MXN)", "Libra Exterlina (GBP) a Peso Mexicano (MXN)", "Yen (JPY) a Peso Mexicano (MXN)", "Won Coreano (KRW) a Peso Mexicano (MXN)" }));
-        panelSeleccionDivisa.add(campoSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 190, 310, 40));
+        panelSeleccionDivisa.add(campoSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 350, 40));
 
         btnSeleccionDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSeleccionDivisa.setText("Ingresa el Valor");
@@ -457,7 +460,6 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         //</editor-fold>
 
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new ConversorPrincipal().setVisible(true);
