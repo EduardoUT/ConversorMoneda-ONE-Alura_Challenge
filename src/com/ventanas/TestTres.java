@@ -104,43 +104,43 @@ public class TestTres {
                     valorSeleccionTipoDivisa = seleccionTipoDivisa.toString();
                     switch (valorSeleccionTipoDivisa) {
                         case "Peso Mexicano (MXN) a Dólar Américano (USD)":
-                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
+                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Euro (EUR)":
-                            tasaCambio = pesoMexicano.getTasaCambioEuros();
+                            tasaCambio = pesoMexicano.getTasaCambioEurosApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
-                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
+                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinasApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Yen (JPY)":
-                            tasaCambio = pesoMexicano.getTasaCambioYenJapones();
+                            tasaCambio = pesoMexicano.getTasaCambioYenJaponesApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Won Coreano (KRW)":
-                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
+                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreanoApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Dólar Americano (USD) a Peso Mexicano (MXN)":
-                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericano();
+                            tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Euro (EUR) a Peso Mexicano (MXN)":
-                            tasaCambio = pesoMexicano.getTasaCambioEuros();
+                            tasaCambio = pesoMexicano.getTasaCambioEurosApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
-                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinas();
+                            tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinasApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Yen (JPY) a Peso Mexicano (MXN)":
-                            tasaCambio = pesoMexicano.getTasaCambioYenJapones();
+                            tasaCambio = pesoMexicano.getTasaCambioYenJaponesApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Won Coreano (KRW) a Peso Mexicano (MXN)":
-                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreano();
+                            tasaCambio = pesoMexicano.getTasaCambioWonSurCoreanoApi();
                             pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         default:

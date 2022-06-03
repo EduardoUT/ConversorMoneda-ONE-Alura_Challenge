@@ -4,7 +4,6 @@
  */
 package com.service;
 
-
 import java.io.*;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -12,6 +11,7 @@ import okhttp3.OkHttpClient;
 import org.json.JSONObject;
 import javax.swing.JOptionPane;
 import com.clases.divisa.Divisa;
+import com.clases.divisa.PesoMexicano;
 import java.net.UnknownHostException;
 
 /**
@@ -23,6 +23,7 @@ public class ConexionApi {
     private static final OkHttpClient httpClient = new OkHttpClient();
 
     public static double tasaBaseCambio(String tasaBase, String tasaCambio) throws Exception {
+        PesoMexicano pesoMexicano = new PesoMexicano();
         Request r = new Request.Builder()
                 .url("https://api.apilayer.com/fixer/latest?base=" + tasaBase + "&symbols=" + tasaCambio + "")//EUR,GBP,USD,KRW,JPY
                 .addHeader("apikey", "dYpjEe0JbW770473cXv6VOh0LSTxQvYx")
@@ -42,24 +43,26 @@ public class ConexionApi {
         } catch (UnknownHostException e) {
             JOptionPane.showMessageDialog(
                     null,
-                    "Obtendrá a continuación la conversión, esta será respecto al cierre del mes 29 de"
-                    + " abril de 2022, según el Banco de México."
-                    + "\nPosibles causas: "
+                    "Tips:"
+                    + "\nObtendrá a continuación la conversión con tipos de cambio para "
+                    + "revalorización de balance del Banco de México con precio de cierre de jornada al\n"
+                    + "31 de mayo de 2022"
+                    + "\nPosibles causas de error: "
                     + "\n1. Para obtener conversiones obtenidas en tiempo real, debe conectarse a una red."
                     + "\n2. El límite de consumo del servicio por la API Fixer ha excedido las 100 peticiones.",
                     "Error al conectar con la API Fixer.",
                     JOptionPane.ERROR_MESSAGE
             );
             if (tasaBase.contains(Divisa.getNOMBRE_DIVISA_USA())) {
-                return 19.68550;
+                return pesoMexicano.getTasaCambioDolarAmericanoFijo();
             } else if (tasaBase.contains(Divisa.getNOMBRE_DIVISA_EUROPA())) {
-                return 21.2145;
+                return pesoMexicano.getTasaCambioEurosFijo();
             } else if (tasaBase.contains(Divisa.getNOMBRE_DIVISA_GRAN_BRETANA())) {
-                return 25.54861;
+                return pesoMexicano.getTasaCambioLibrasEsterlinasFijo();
             } else if (tasaBase.contains(Divisa.getNOMBRE_DIVISA_YEN_JAPON())) {
-                return 0.15724;
+                return pesoMexicano.getTasaCambioYenJaponesFijo();
             } else {
-                return 16.19689;
+                return pesoMexicano.getTasaCambioWonSulCoreanoFijo();
             }
         }
     }

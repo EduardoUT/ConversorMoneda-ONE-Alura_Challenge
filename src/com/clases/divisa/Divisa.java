@@ -5,6 +5,7 @@
 package com.clases.divisa;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  *
@@ -12,58 +13,103 @@ import java.math.BigDecimal;
  */
 public abstract class Divisa {
 
-    private double tasaCambioDolarAmericano;
-    private double tasaCambioEuros;
-    private double tasaCambioLibrasEsterlinas;
-    private double tasaCambioYenJapones;
-    private double tasaCambioWonSulCoreano;
+    private double tasaCambioDolarAmericanoFijo;
+    private double tasaCambioEurosFijo;
+    private double tasaCambioLibrasEsterlinasFijo;
+    private double tasaCambioYenJaponesFijo;
+    private double tasaCambioWonSulCoreanoFijo;
+    private double tasaCambioDolarAmericanoApi;
+    private double tasaCambioEurosApi;
+    private double tasaCambioLibrasEsterlinasApi;
+    private double tasaCambioYenJaponesApi;
+    private double tasaCambioWonSulCoreanoApi;
     private static final String NOMBRE_DIVISA_MEXICO = "MXN";
     private static final String NOMBRE_DIVISA_USA = "USD";
     private static final String NOMBRE_DIVISA_GRAN_BRETANA = "GBP";
     private static final String NOMBRE_DIVISA_EUROPA = "EUR";
     private static final String NOMBRE_DIVISA_YEN_JAPON = "JPY";
     private static final String NOMBRE_DIVISA_WON = "KRW";
+    private static final String SIMBOLO_DOLAR = "US$";
+    private static final String SIMBOLO_EURO = "€";
+    private static final String SIMBOLO_LIBRA_ESTERLINA = "£";
+    private static final String SIMBOLO_YEN = "¥";
+    private static final String SIMBOLO_WON_COREANO = "₩";
 
     /**
      * @return the tasaCambioDolarAmericano
      */
-    public double getTasaCambioDolarAmericano() {
-        return tasaCambioDolarAmericano;
+    public double getTasaCambioDolarAmericanoApi() {
+        return tasaCambioDolarAmericanoApi;
     }
 
     /**
      * @return the tasaCambioEuros
      */
-    public double getTasaCambioEuros() {
-        return tasaCambioEuros;
+    public double getTasaCambioEurosApi() {
+        return tasaCambioEurosApi;
     }
 
     /**
      * @param tasaCambioEuros the tasaCambioEuros to set
      */
-    public void setTasaCambioEuros(double tasaCambioEuros) {
-        this.tasaCambioEuros = tasaCambioEuros;
+    public void setTasaCambioEurosApi(double tasaCambioEuros) {
+        this.tasaCambioEurosApi = tasaCambioEuros;
     }
 
     /**
      * @return the tasaCambioLibrasEsterlinas
      */
-    public double getTasaCambioLibrasEsterlinas() {
-        return tasaCambioLibrasEsterlinas;
+    public double getTasaCambioLibrasEsterlinasApi() {
+        return tasaCambioLibrasEsterlinasApi;
     }
 
     /**
      * @return the tasaCambioYenJapones
      */
-    public double getTasaCambioYenJapones() {
-        return tasaCambioYenJapones;
+    public double getTasaCambioYenJaponesApi() {
+        return tasaCambioYenJaponesApi;
     }
 
     /**
      * @return the tasaCambioWonSulCoreano
      */
-    public double getTasaCambioWonSurCoreano() {
-        return tasaCambioWonSulCoreano;
+    public double getTasaCambioWonSurCoreanoApi() {
+        return tasaCambioWonSulCoreanoApi;
+    }
+
+    /**
+     * @return the tasaCambioDolarAmericanoFijo
+     */
+    public double getTasaCambioDolarAmericanoFijo() {
+        return tasaCambioDolarAmericanoFijo;
+    }
+
+    /**
+     * @return the tasaCambioEurosFijo
+     */
+    public double getTasaCambioEurosFijo() {
+        return tasaCambioEurosFijo;
+    }
+
+    /**
+     * @return the tasaCambioLibrasEsterlinasFijo
+     */
+    public double getTasaCambioLibrasEsterlinasFijo() {
+        return tasaCambioLibrasEsterlinasFijo;
+    }
+
+    /**
+     * @return the tasaCambioYenJaponesFijo
+     */
+    public double getTasaCambioYenJaponesFijo() {
+        return tasaCambioYenJaponesFijo;
+    }
+
+    /**
+     * @return the tasaCambioWonSulCoreanoFijo
+     */
+    public double getTasaCambioWonSulCoreanoFijo() {
+        return tasaCambioWonSulCoreanoFijo;
     }
 
     /**
@@ -79,7 +125,7 @@ public abstract class Divisa {
     public static String getNOMBRE_DIVISA_USA() {
         return NOMBRE_DIVISA_USA;
     }
-    
+
     /**
      * @return the NOMBRE_DIVISA_EUROPA
      */
@@ -109,6 +155,41 @@ public abstract class Divisa {
     }
 
     /**
+     * @return the SIMBOLO_DOLAR
+     */
+    public static String getSIMBOLO_DOLAR() {
+        return SIMBOLO_DOLAR;
+    }
+
+    /**
+     * @return the SIMBOLO_EURO
+     */
+    public static String getSIMBOLO_EURO() {
+        return SIMBOLO_EURO;
+    }
+
+    /**
+     * @return the SIMBOLO_LIBRA_ESTERLINA
+     */
+    public static String getSIMBOLO_LIBRA_ESTERLINA() {
+        return SIMBOLO_LIBRA_ESTERLINA;
+    }
+
+    /**
+     * @return the SIMBOLO_YEN
+     */
+    public static String getSIMBOLO_YEN() {
+        return SIMBOLO_YEN;
+    }
+
+    /**
+     * @return the SIMBOLO_WON_COREANO
+     */
+    public static String getSIMBOLO_WON_COREANO() {
+        return SIMBOLO_WON_COREANO;
+    }
+
+    /**
      * Devuelve el valor de la moneda extranjera con el ajuste a la moneda
      * nacional.
      *
@@ -117,5 +198,13 @@ public abstract class Divisa {
      * @param valorSeleccionTipoDivisa
      * @return valorTotal - Moneda extranjera a pesos mexicanos.
      */
-    public abstract BigDecimal conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa);
+    public abstract String conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa);
+
+    public BigDecimal operacionConMonedaLocal(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
+        return valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal operacionConMonedaExtranjera(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
+        return valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.HALF_UP);
+    }
 }
