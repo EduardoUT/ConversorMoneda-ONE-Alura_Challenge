@@ -208,30 +208,6 @@ public class PesoMexicano extends Divisa {
                     + "\n 2. No es posible hacer conversión de monedas extranjeras en esta función.");
             return null;
         }
-
-        /*
-        if (esConversionMonedaMexicana) {
-            if (this.equals(this) && valor > 0) {
-                valorConversion = valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.HALF_UP);
-                //JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.HALF_UP) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
-                return valorConversion;
-            } else {
-                JOptionPane.showMessageDialog(null, "Posibles errores: "
-                        + "\n 1. No es posible ingresar valores menores o igual a 0. "
-                        + "\n 2. No es posible hacer conversión de monedas extranjeras en esta función.");
-                return null;
-            }
-        } else {
-            if (valor > 0) {
-                valorConversion = valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.HALF_UP);
-                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.HALF_UP) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
-                return valorConversion;
-            } else {
-                JOptionPane.showMessageDialog(null, "No es posible ingresar valores menores o igual a 0");
-                return null;
-            }
-        }
-         */
         return null;
     }
 }
