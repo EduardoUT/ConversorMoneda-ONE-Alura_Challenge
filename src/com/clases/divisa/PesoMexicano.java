@@ -165,7 +165,6 @@ public class PesoMexicano extends Divisa {
         BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
         BigDecimal valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
         BigDecimal valorConversion;
-        //boolean esConversionMonedaMexicana = valorSeleccionTipoDivisa.startsWith("Peso Mexicano (MXN)");
         if (valor > 0 && this.equals(this)) {
 
             switch (valorSeleccionTipoDivisa) {
