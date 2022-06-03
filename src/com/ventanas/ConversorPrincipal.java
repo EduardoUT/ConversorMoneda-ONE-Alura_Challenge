@@ -18,7 +18,7 @@ import javax.swing.JPanel;
  *
  * @author mcore
  */
-public final class Conversor extends javax.swing.JFrame {
+public final class ConversorPrincipal extends javax.swing.JFrame {
 
     int xMouse;
     int yMouse;
@@ -31,7 +31,7 @@ public final class Conversor extends javax.swing.JFrame {
     /**
      * Creates new form MenuConversion
      */
-    public Conversor() {
+    public ConversorPrincipal() {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         ventanaIngresoDivisa.setBackground(new Color(0, 0, 0, 0));
@@ -411,7 +411,7 @@ public final class Conversor extends javax.swing.JFrame {
             double tasaCambio;
             double valorUsuarioToDouble = Double.valueOf(valorDivisa);
             valorSeleccionTipoDivisa = String.valueOf(campoSeleccionDivisa.getSelectedItem());
-            TestTres.esNumerico(Double.valueOf(valorUsuarioToDouble));
+            ConversorAlternativo.esNumerico(Double.valueOf(valorUsuarioToDouble));
             tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
             resultadoConversion = pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
             mostrarPanelResultadosDivisa();
@@ -449,8 +449,10 @@ public final class Conversor extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Conversor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConversorPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -458,7 +460,7 @@ public final class Conversor extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new Conversor().setVisible(true);
+            new ConversorPrincipal().setVisible(true);
         });
     }
 

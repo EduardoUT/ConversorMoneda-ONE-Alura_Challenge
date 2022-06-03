@@ -17,7 +17,7 @@ import javax.swing.UnsupportedLookAndFeelException;
  *
  * @author mcore
  */
-public class TestTres {
+public class ConversorAlternativo {
 
     public static void main(String[] args) throws
             ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
@@ -30,7 +30,7 @@ public class TestTres {
         UIManager.put("ComboBox.background", Color.DARK_GRAY);
         UIManager.put("ComboBox.selectionForeground", Color.WHITE);
         UIManager.put("ComboBox.background", new Color(126, 193, 228));
-        java.awt.EventQueue.invokeLater(TestTres::menuPrincipal);
+        java.awt.EventQueue.invokeLater(ConversorAlternativo::menuPrincipal);
     }
 
     public static void menuPrincipal() {
@@ -105,43 +105,43 @@ public class TestTres {
                     switch (valorSeleccionTipoDivisa) {
                         case "Peso Mexicano (MXN) a Dólar Américano (USD)":
                             tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Euro (EUR)":
                             tasaCambio = pesoMexicano.getTasaCambioEurosApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
                             tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinasApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Yen (JPY)":
                             tasaCambio = pesoMexicano.getTasaCambioYenJaponesApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Peso Mexicano (MXN) a Won Coreano (KRW)":
                             tasaCambio = pesoMexicano.getTasaCambioWonSurCoreanoApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Dólar Americano (USD) a Peso Mexicano (MXN)":
                             tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Euro (EUR) a Peso Mexicano (MXN)":
                             tasaCambio = pesoMexicano.getTasaCambioEurosApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
                             tasaCambio = pesoMexicano.getTasaCambioLibrasEsterlinasApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Yen (JPY) a Peso Mexicano (MXN)":
                             tasaCambio = pesoMexicano.getTasaCambioYenJaponesApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         case "Won Coreano (KRW) a Peso Mexicano (MXN)":
                             tasaCambio = pesoMexicano.getTasaCambioWonSurCoreanoApi();
-                            pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
+                            pesoMexicano.conversionDivisaAlternativo(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
                             break;
                         default:
                             break;

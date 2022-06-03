@@ -132,9 +132,7 @@ public class PesoMexicano extends Divisa {
         return valorTasaFija += 15.91376;
     }
 
-    /*
-    @Override
-    public BigDecimal conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa) {
+    public BigDecimal conversionDivisaAlternativo(double tasaCambio, double valor, String valorSeleccionTipoDivisa) {
         BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
         BigDecimal valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
         BigDecimal valorConversion;
@@ -161,7 +159,7 @@ public class PesoMexicano extends Divisa {
             }
         }
     }
-     */
+
     @Override
     public String conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa) {
         BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
@@ -185,7 +183,7 @@ public class PesoMexicano extends Divisa {
                     return Divisa.getSIMBOLO_YEN() + " " + valorConversion;
                 case "Peso Mexicano (MXN) a Won Coreano (KRW)":
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_WON_COREANO()+ " " + valorConversion;
+                    return Divisa.getSIMBOLO_WON_COREANO() + " " + valorConversion;
                 case "Dólar Americano (USD) a Peso Mexicano (MXN)":
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
