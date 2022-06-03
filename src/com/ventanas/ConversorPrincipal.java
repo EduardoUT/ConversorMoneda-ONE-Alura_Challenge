@@ -383,7 +383,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
 
     private void campoIngresoDivisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoDivisaKeyReleased
         String valorDivisa = campoIngresoDivisa.getText();
-        if (RegexNumerosDecimales.esValorDecimal(valorDivisa)) {
+        if (ComprobarValorNumerico.esValorDecimal(valorDivisa)) {
             btnIngresoDivisa.setEnabled(true);
         } else {
             btnIngresoDivisa.setEnabled(false);
@@ -411,7 +411,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
             double tasaCambio;
             double valorUsuarioToDouble = Double.valueOf(valorDivisa);
             valorSeleccionTipoDivisa = String.valueOf(campoSeleccionDivisa.getSelectedItem());
-            ConversorAlternativo.esNumerico(Double.valueOf(valorUsuarioToDouble));
+            ComprobarValorNumerico.esNumerico(valorUsuarioToDouble);
             tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
             resultadoConversion = pesoMexicano.conversionDivisa(tasaCambio, valorUsuarioToDouble, valorSeleccionTipoDivisa);
             mostrarPanelResultadosDivisa();

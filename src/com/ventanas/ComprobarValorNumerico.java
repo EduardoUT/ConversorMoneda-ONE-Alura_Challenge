@@ -5,13 +5,24 @@
 package com.ventanas;
 
 import java.util.regex.Pattern;
+import jdk.nashorn.internal.runtime.JSType;
 
 /**
  *
  * @author mcore
  */
-public class RegexNumerosDecimales {
-
+public class ComprobarValorNumerico {
+    /**
+     * Comprobando que el valor ingresado en el inputMessage sea numerico
+     * decimal o entero.
+     *
+     * @param cantidadDivisaUsuario
+     * @return
+     */
+    public static boolean esNumerico(double cantidadDivisaUsuario) {
+        return JSType.isNumber(cantidadDivisaUsuario);
+    }
+    
     public static boolean esValorDecimal(String valor) {
         String regex = "^([\\d]*(?:[\\.]?[\\d]+)+)$";
         Pattern pt = Pattern.compile(regex);

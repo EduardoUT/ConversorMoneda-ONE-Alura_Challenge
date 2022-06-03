@@ -10,7 +10,6 @@ import javax.swing.UIManager;
 import javax.swing.JOptionPane;
 import com.clases.divisa.PesoMexicano;
 import com.clases.temperatura.Temperatura;
-import jdk.nashorn.internal.runtime.JSType;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
@@ -74,7 +73,7 @@ public class ConversorAlternativo {
         if (valorUsuario != null) {
             try {
                 double valorUsuarioToDouble = Double.valueOf(valorUsuario);
-                esNumerico(valorUsuarioToDouble);
+                ComprobarValorNumerico.esNumerico(valorUsuarioToDouble);
                 String valorSeleccionTipoDivisa;
                 //Instanciando la clase que contiene todos los métodos para conversión.
                 PesoMexicano pesoMexicano = new PesoMexicano();
@@ -182,7 +181,7 @@ public class ConversorAlternativo {
         if (valorUsuario != null) {
             try {
                 double valorUsuarioToDouble = Double.valueOf(valorUsuario);
-                esNumerico(valorUsuarioToDouble);
+                ComprobarValorNumerico.esNumerico(valorUsuarioToDouble);
                 String valorSeleccionTipoTemperatura;
                 Temperatura t = new Temperatura();
                 BigDecimal bd = new BigDecimal(String.valueOf(valorUsuarioToDouble));
@@ -223,7 +222,6 @@ public class ConversorAlternativo {
         } else {
             menuPrincipal();
         }
-
     }
 
     public static void mensajeDeseaContinuarDivisa() {
@@ -291,7 +289,7 @@ public class ConversorAlternativo {
             System.exit(0);
         }
     }
-    
+
     public static void mensajeProgramaFinalizado() {
         JOptionPane.showMessageDialog(null, "Programa finalizado :D");
     }
@@ -305,16 +303,5 @@ public class ConversorAlternativo {
      */
     public static boolean esConversorMoneda(Object seleccionUsuario) {
         return seleccionUsuario.equals("Conversor de Moneda");
-    }
-
-    /**
-     * Comprobando que el valor ingresado en el inputMessage sea numerico
-     * decimal o entero.
-     *
-     * @param cantidadDivisaUsuario
-     * @return
-     */
-    public static boolean esNumerico(double cantidadDivisaUsuario) {
-        return JSType.isNumber(cantidadDivisaUsuario);
     }
 }
