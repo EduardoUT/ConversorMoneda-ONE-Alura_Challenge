@@ -4,12 +4,10 @@ import com.clases.divisa.PesoMexicano;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.math.BigDecimal;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -36,12 +34,13 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         initComponents();
         setBackground(new Color(0, 0, 0, 0));
         ventanaIngresoDivisa.setBackground(new Color(0, 0, 0, 0));
-        btnIngresoDivisa.setEnabled(false);
+        ventanaIngresoTemperatura.setBackground(new Color(0, 0, 0, 0));
         btnMinimizarVentana.setBackground(new Color(0, 0, 0, 0));
         mostrarVentanaBienvenida();
         ocultarVentanaIngresoDivisa();
         ocultarPanelValorDivisa();
         ocultarPanelSeleccionDivisa();
+        campoIngresoDivisa.requestFocus();
     }
 
     public void ocultarVentanaBienvenida() {
@@ -65,7 +64,6 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         campoIngresoDivisa.setVisible(false);
         instruccionCampoIngresoDivisa.setVisible(false);
         btnIngresoDivisa.setVisible(false);
-        btnIngresoDivisa.setEnabled(false);
     }
 
     public void ocultarPanelSeleccionDivisa() {
@@ -78,27 +76,30 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     public void ocultarPanelResultadosDivisa() {
         panelResultadosDivisa.setVisible(false);
         resultadoDivisa.setVisible(false);
-        btnOtraConversion.setVisible(false);
+        btnOtraConversionDivisa.setVisible(false);
     }
 
     public void mostrarPanelValorDivisa() {
         panelValorDivisa.setVisible(true);
         campoIngresoDivisa.setVisible(true);
+        campoIngresoDivisa.requestFocus();
         instruccionCampoIngresoDivisa.setVisible(true);
         btnIngresoDivisa.setVisible(true);
+        btnIngresoDivisa.setEnabled(false);
     }
 
     public void mostrarPanelSeleccionDivisa() {
         panelSeleccionDivisa.setVisible(true);
         instruccionSeleccionDivisa.setVisible(true);
         campoSeleccionDivisa.setVisible(true);
+        campoSeleccionDivisa.requestFocus();
         btnSeleccionDivisa.setVisible(true);
     }
 
     public void mostrarPanelResultadosDivisa() {
         panelResultadosDivisa.setVisible(true);
         resultadoDivisa.setVisible(true);
-        btnOtraConversion.setVisible(true);
+        btnOtraConversionDivisa.setVisible(true);
     }
 
     public boolean esMayorQueCero(String valorUsuario) {
@@ -107,16 +108,16 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     }
 
     public void mostrarResultadosDivisa(double valorUsuarioToDouble) {
-        infoConversionUno.setText("El ajuste de $ " + valorUsuarioToDouble);
-        infoConversionDos.setText(valorSeleccionTipoDivisa + " es de: ");
+        infoConversionUnoDivisa.setText("El ajuste de $ " + valorUsuarioToDouble);
+        infoConversionDosDivisa.setText(valorSeleccionTipoDivisa + " es de: ");
         resultadoDivisa.setText(String.valueOf(resultadoConversion));
     }
-    
+
     public void reestablecerValoresDivisa() {
         campoIngresoDivisa.setText("");
         campoSeleccionDivisa.setSelectedItem("Peso Mexicano (MXN) a Dólar Américano (USD)");
-        infoConversionUno.setText("");
-        infoConversionDos.setText("");
+        infoConversionUnoDivisa.setText("");
+        infoConversionDosDivisa.setText("");
         resultadoDivisa.setText("");
     }
 
@@ -150,17 +151,31 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         panelValorDivisa = new FondoPanelesPequenos();
         instruccionCampoIngresoDivisa = new javax.swing.JLabel();
         campoIngresoDivisa = new javax.swing.JTextField();
-        btnIngresoDivisa = new javax.swing.JButton();
+        btnIngresoDivisa = new javax.swing.JLabel();
         panelSeleccionDivisa = new FondoPanelesPequenos();
         instruccionSeleccionDivisa = new javax.swing.JLabel();
         campoSeleccionDivisa = new javax.swing.JComboBox<>();
         btnSeleccionDivisa = new javax.swing.JLabel();
         panelResultadosDivisa = new FondoPanelesPequenos();
+        infoConversionUnoDivisa = new javax.swing.JLabel();
+        infoConversionDosDivisa = new javax.swing.JLabel();
         resultadoDivisa = new javax.swing.JLabel();
-        btnOtraConversion = new javax.swing.JLabel();
-        infoConversionUno = new javax.swing.JLabel();
-        infoConversionDos = new javax.swing.JLabel();
-        FondoPrincipal = new JLabelTransparente();
+        btnOtraConversionDivisa = new javax.swing.JLabel();
+        ventanaIngresoTemperatura = new javax.swing.JPanel();
+        panelValorTemperatura = new javax.swing.JPanel();
+        instruccionCampoIngresoTemperatura = new javax.swing.JLabel();
+        campoIngresoTemperatura = new javax.swing.JTextField();
+        btnIngresoTemperatura = new javax.swing.JLabel();
+        panelSeleccionTemperatura = new javax.swing.JPanel();
+        instruccionSeleccionTemperatura = new javax.swing.JLabel();
+        campoSeleccionTemperatura = new javax.swing.JComboBox<>();
+        btnSeleccionTemperatura = new javax.swing.JLabel();
+        panelResultadosTemperatura = new javax.swing.JPanel();
+        infoConversionTemperaturaUno = new javax.swing.JLabel();
+        infoConversionTemperaturaDos = new javax.swing.JLabel();
+        resultadoTemperatura = new javax.swing.JLabel();
+        btnOtraConversionTemperatura = new javax.swing.JLabel();
+        fondoPrincipal = new JLabelTransparente();
 
         jLabel4.setText("jLabel4");
 
@@ -177,7 +192,13 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         btnCerrarVentana.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnCerrarVentana.setText("x");
+        btnCerrarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCerrarVentana.setOpaque(true);
+        btnCerrarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCerrarVentanaMouseClicked(evt);
+            }
+        });
         menuConversiones.add(btnCerrarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 30));
 
         btnMinimizarVentana.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -185,7 +206,13 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         btnMinimizarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnMinimizarVentana.setText("_");
         btnMinimizarVentana.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        btnMinimizarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMinimizarVentana.setOpaque(true);
+        btnMinimizarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMinimizarVentanaMouseClicked(evt);
+            }
+        });
         menuConversiones.add(btnMinimizarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 50, 30));
 
         btnConversionMoneda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -226,7 +253,6 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(menuConversiones, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 240, 470));
 
-        ventanaBienvenida.setBackground(new java.awt.Color(102, 255, 102));
         ventanaBienvenida.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tituloBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -254,7 +280,8 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         instruccionCampoIngresoDivisa.setText("Ingresa la cantidad de dinero que deseas convertir:");
         panelValorDivisa.add(instruccionCampoIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 580, 30));
 
-        campoIngresoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        campoIngresoDivisa.setBackground(new java.awt.Color(70, 174, 124));
+        campoIngresoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         campoIngresoDivisa.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         campoIngresoDivisa.setBorder(null);
         campoIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -271,17 +298,14 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         panelValorDivisa.add(campoIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 240, 40));
 
         btnIngresoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        btnIngresoDivisa.setText("Ingresar Valor");
-        btnIngresoDivisa.setAlignmentX(0.5F);
-        btnIngresoDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnIngresoDivisaMouseClicked(evt);
-            }
-        });
-        panelValorDivisa.add(btnIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, -1, -1));
+        btnIngresoDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnIngresoDivisa.setText("Aceptar");
+        btnIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        panelValorDivisa.add(btnIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 260, 90, 30));
 
         ventanaIngresoDivisa.add(panelValorDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
+        panelSeleccionDivisa.setNextFocusableComponent(campoSeleccionDivisa);
         panelSeleccionDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         instruccionSeleccionDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -296,74 +320,135 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         panelSeleccionDivisa.add(campoSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 350, 40));
 
         btnSeleccionDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        btnSeleccionDivisa.setText("Ingresa el Valor");
+        btnSeleccionDivisa.setText("Aceptar");
+        btnSeleccionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSeleccionDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnSeleccionDivisaMouseClicked(evt);
             }
         });
-        panelSeleccionDivisa.add(btnSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, 140, 31));
+        panelSeleccionDivisa.add(btnSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 260, 90, 30));
 
         ventanaIngresoDivisa.add(panelSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         panelResultadosDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        infoConversionUnoDivisa.setBackground(new java.awt.Color(153, 153, 0));
+        infoConversionUnoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        infoConversionUnoDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoConversionUnoDivisa.setToolTipText("");
+        panelResultadosDivisa.add(infoConversionUnoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 580, 40));
+
+        infoConversionDosDivisa.setBackground(new java.awt.Color(0, 153, 204));
+        infoConversionDosDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        infoConversionDosDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoConversionDosDivisa.setToolTipText("");
+        panelResultadosDivisa.add(infoConversionDosDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 580, 40));
 
         resultadoDivisa.setBackground(new java.awt.Color(0, 204, 102));
         resultadoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         resultadoDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         panelResultadosDivisa.add(resultadoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 560, 80));
 
-        btnOtraConversion.setText("Hacer otra conversión");
-        btnOtraConversion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnOtraConversion.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnOtraConversionDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnOtraConversionDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnOtraConversionDivisa.setText("Hacer otra conversión");
+        btnOtraConversionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOtraConversionDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnOtraConversionMouseClicked(evt);
+                btnOtraConversionDivisaMouseClicked(evt);
             }
         });
-        panelResultadosDivisa.add(btnOtraConversion, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 360, -1, -1));
-
-        infoConversionUno.setBackground(new java.awt.Color(153, 153, 0));
-        infoConversionUno.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        infoConversionUno.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        infoConversionUno.setToolTipText("");
-        panelResultadosDivisa.add(infoConversionUno, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 580, 40));
-
-        infoConversionDos.setBackground(new java.awt.Color(0, 153, 204));
-        infoConversionDos.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        infoConversionDos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        infoConversionDos.setToolTipText("");
-        panelResultadosDivisa.add(infoConversionDos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 580, 40));
+        panelResultadosDivisa.add(btnOtraConversionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 360, 190, 30));
 
         ventanaIngresoDivisa.add(panelResultadosDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         getContentPane().add(ventanaIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
 
-        FondoPrincipal.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        ventanaIngresoTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        panelValorTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        instruccionCampoIngresoTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        instruccionCampoIngresoTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        instruccionCampoIngresoTemperatura.setText("Ingresa el valor de Temperatura que deseas convertir:");
+        panelValorTemperatura.add(instruccionCampoIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 580, -1));
+
+        campoIngresoTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        panelValorTemperatura.add(campoIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 240, 40));
+
+        btnIngresoTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnIngresoTemperatura.setText("Aceptar");
+        panelValorTemperatura.add(btnIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 260, 90, 30));
+
+        ventanaIngresoTemperatura.add(panelValorTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+
+        panelSeleccionTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        instruccionSeleccionTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        instruccionSeleccionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        instruccionSeleccionTemperatura.setText("Elije el tipo de conversión de temperatura que deseas hacer:");
+        panelSeleccionTemperatura.add(instruccionSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 580, -1));
+
+        campoSeleccionTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        campoSeleccionTemperatura.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Celcius (°C) a Farenheit (°F)", "Celcius (°C) a Kelvin (°K)", "Farenheit (°F) a Celsius (°C)", "Farenheit (°F) a Kelvin (°K)", "Kelvin (°K) a Celsius (°C)", "Kelvin (°K) a Farenheit (°F)" }));
+        panelSeleccionTemperatura.add(campoSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 240, 40));
+
+        btnSeleccionTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnSeleccionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnSeleccionTemperatura.setText("Aceptar");
+        panelSeleccionTemperatura.add(btnSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(244, 260, 90, 30));
+
+        ventanaIngresoTemperatura.add(panelSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+
+        panelResultadosTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        infoConversionTemperaturaUno.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        infoConversionTemperaturaUno.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        panelResultadosTemperatura.add(infoConversionTemperaturaUno, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 580, 40));
+
+        infoConversionTemperaturaDos.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        infoConversionTemperaturaDos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        panelResultadosTemperatura.add(infoConversionTemperaturaDos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 580, 40));
+
+        resultadoTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        panelResultadosTemperatura.add(resultadoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 560, 80));
+
+        btnOtraConversionTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnOtraConversionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        btnOtraConversionTemperatura.setText("Hacer otra conversión");
+        panelResultadosTemperatura.add(btnOtraConversionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 360, 190, 30));
+
+        ventanaIngresoTemperatura.add(panelResultadosTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+
+        getContentPane().add(ventanaIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
+
+        fondoPrincipal.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                FondoPrincipalMouseDragged(evt);
+                fondoPrincipalMouseDragged(evt);
             }
         });
-        FondoPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
+        fondoPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                FondoPrincipalMousePressed(evt);
+                fondoPrincipalMousePressed(evt);
             }
         });
-        getContentPane().add(FondoPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 470));
+        getContentPane().add(fondoPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 470));
 
         setSize(new java.awt.Dimension(866, 470));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void FondoPrincipalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FondoPrincipalMousePressed
+    private void fondoPrincipalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoPrincipalMousePressed
         xMouse = evt.getX();
         yMouse = evt.getY();
-    }//GEN-LAST:event_FondoPrincipalMousePressed
+    }//GEN-LAST:event_fondoPrincipalMousePressed
 
-    private void FondoPrincipalMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_FondoPrincipalMouseDragged
+    private void fondoPrincipalMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoPrincipalMouseDragged
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_FondoPrincipalMouseDragged
+    }//GEN-LAST:event_fondoPrincipalMouseDragged
 
     private void campoIngresoDivisaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoDivisaKeyTyped
         char car = evt.getKeyChar();
@@ -373,6 +458,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_campoIngresoDivisaKeyTyped
 
     private void btnConversionMonedaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionMonedaMouseClicked
+        evt.consume();
         ocultarVentanaBienvenida();
         mostrarVentanaIngresoDivisa();
         mostrarPanelValorDivisa();
@@ -381,11 +467,12 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConversionMonedaMouseClicked
 
     private void btnConversionTemperaturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionTemperaturaMouseClicked
-
+        evt.consume();
     }//GEN-LAST:event_btnConversionTemperaturaMouseClicked
 
     private void campoIngresoDivisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoDivisaKeyReleased
-        String valorDivisa = campoIngresoDivisa.getText();
+        evt.consume();
+        valorDivisa = campoIngresoDivisa.getText();
         if (ComprobarValorNumerico.esValorDecimal(valorDivisa)) {
             btnIngresoDivisa.setEnabled(true);
         } else {
@@ -393,22 +480,16 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_campoIngresoDivisaKeyReleased
 
-    private void btnIngresoDivisaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresoDivisaMouseClicked
-        valorDivisa = campoIngresoDivisa.getText();
-        if (esMayorQueCero(valorDivisa)) {
-            ocultarPanelValorDivisa();
-            mostrarPanelSeleccionDivisa();
-        } else {
-            JOptionPane.showMessageDialog(null, "El valor ingresado no puede ser igual a 0.");
-        }
-
-    }//GEN-LAST:event_btnIngresoDivisaMouseClicked
-
     private void btnBienvenidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBienvenidaMouseClicked
-        // TODO add your handling code here:
+        evt.consume();
+        if (ventanaIngresoDivisa.isVisible()) {
+            ocultarVentanaIngresoDivisa();
+        } //Agregar condción para ventanaIngresoTemperatura
+        mostrarVentanaBienvenida();
     }//GEN-LAST:event_btnBienvenidaMouseClicked
 
     private void btnSeleccionDivisaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSeleccionDivisaMouseClicked
+        evt.consume();
         ocultarPanelSeleccionDivisa();
         try {
             double tasaCambio;
@@ -429,11 +510,22 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSeleccionDivisaMouseClicked
 
-    private void btnOtraConversionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionMouseClicked
+    private void btnOtraConversionDivisaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionDivisaMouseClicked
+        evt.consume();
         reestablecerValoresDivisa();
         ocultarPanelResultadosDivisa();
         mostrarPanelValorDivisa();
-    }//GEN-LAST:event_btnOtraConversionMouseClicked
+    }//GEN-LAST:event_btnOtraConversionDivisaMouseClicked
+
+    private void btnCerrarVentanaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCerrarVentanaMouseClicked
+        evt.consume();
+        System.exit(0);
+    }//GEN-LAST:event_btnCerrarVentanaMouseClicked
+
+    private void btnMinimizarVentanaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMinimizarVentanaMouseClicked
+        evt.consume();
+        this.setExtendedState(ICONIFIED);
+    }//GEN-LAST:event_btnMinimizarVentanaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -467,31 +559,45 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel FondoPrincipal;
     private javax.swing.JLabel btnBienvenida;
     private javax.swing.JLabel btnCerrarVentana;
     private javax.swing.JLabel btnConversionMoneda;
     private javax.swing.JLabel btnConversionTemperatura;
-    private javax.swing.JButton btnIngresoDivisa;
+    private javax.swing.JLabel btnIngresoDivisa;
+    private javax.swing.JLabel btnIngresoTemperatura;
     private javax.swing.JLabel btnMinimizarVentana;
-    private javax.swing.JLabel btnOtraConversion;
+    private javax.swing.JLabel btnOtraConversionDivisa;
+    private javax.swing.JLabel btnOtraConversionTemperatura;
     private javax.swing.JLabel btnSeleccionDivisa;
+    private javax.swing.JLabel btnSeleccionTemperatura;
     private javax.swing.JTextField campoIngresoDivisa;
+    private javax.swing.JTextField campoIngresoTemperatura;
     private javax.swing.JComboBox<String> campoSeleccionDivisa;
-    private javax.swing.JLabel infoConversionDos;
-    private javax.swing.JLabel infoConversionUno;
+    private javax.swing.JComboBox<String> campoSeleccionTemperatura;
+    private javax.swing.JLabel fondoPrincipal;
+    private javax.swing.JLabel infoConversionDosDivisa;
+    private javax.swing.JLabel infoConversionTemperaturaDos;
+    private javax.swing.JLabel infoConversionTemperaturaUno;
+    private javax.swing.JLabel infoConversionUnoDivisa;
     private javax.swing.JLabel instruccionCampoIngresoDivisa;
+    private javax.swing.JLabel instruccionCampoIngresoTemperatura;
     private javax.swing.JLabel instruccionSeleccionDivisa;
+    private javax.swing.JLabel instruccionSeleccionTemperatura;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel menuConversiones;
     private javax.swing.JLabel nombreDesarrollador;
     private javax.swing.JPanel panelResultadosDivisa;
+    private javax.swing.JPanel panelResultadosTemperatura;
     private javax.swing.JPanel panelSeleccionDivisa;
+    private javax.swing.JPanel panelSeleccionTemperatura;
     private javax.swing.JPanel panelValorDivisa;
+    private javax.swing.JPanel panelValorTemperatura;
     private javax.swing.JLabel resultadoDivisa;
+    private javax.swing.JLabel resultadoTemperatura;
     private javax.swing.JLabel tituloBienvenida;
     private javax.swing.JPanel ventanaBienvenida;
     private javax.swing.JPanel ventanaIngresoDivisa;
+    private javax.swing.JPanel ventanaIngresoTemperatura;
     // End of variables declaration//GEN-END:variables
     class BannerConversor extends JLabel {
 
