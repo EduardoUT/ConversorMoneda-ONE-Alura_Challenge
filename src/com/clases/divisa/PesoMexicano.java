@@ -17,8 +17,8 @@ import java.util.logging.Logger;
  * del Banco de México con precio de cierre de jornada al 31 de mayo de 2022.
  * Más info consulte:
  * https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?accion=consultarCuadroAnalitico&idCuadro=CA113&sector=6&locale=es
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public class PesoMexicano extends Divisa {
 

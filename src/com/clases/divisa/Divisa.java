@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public abstract class Divisa {
 

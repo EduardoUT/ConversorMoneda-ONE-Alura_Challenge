@@ -5,6 +5,7 @@ import com.clases.temperatura.Temperatura;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.math.BigDecimal;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -15,9 +16,10 @@ import javax.swing.JPanel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public final class ConversorPrincipal extends javax.swing.JFrame {
 
@@ -200,12 +202,15 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
     }
 
     /**
-     * PAra logo de escritorio, etc.
-     *
-     * @Override public Image getIconImage() { Image retImage =
-     * Toolkit.getDefaultToolkit().
-     * getImage(ClassLoader.getSystemResource(name)); }
+     * Para logo de escritorio.
      */
+    @Override
+    public Image getIconImage() {
+        Image retImage = Toolkit.getDefaultToolkit().
+                getImage(ClassLoader.getSystemResource("Imagenes/logo_personal.png"));
+        return retImage;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -259,6 +264,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
+        setIconImage(getIconImage());
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 

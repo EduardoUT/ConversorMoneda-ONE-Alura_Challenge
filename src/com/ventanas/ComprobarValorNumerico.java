@@ -8,8 +8,8 @@ import java.util.regex.Pattern;
 import jdk.nashorn.internal.runtime.JSType;
 
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public class ComprobarValorNumerico {
     /**

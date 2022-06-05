@@ -15,8 +15,8 @@ import com.clases.divisa.PesoMexicano;
 import java.net.UnknownHostException;
 
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public class ConexionApi {
 

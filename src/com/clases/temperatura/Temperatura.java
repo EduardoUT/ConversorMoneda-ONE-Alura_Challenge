@@ -9,8 +9,8 @@ import java.math.RoundingMode;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public class Temperatura {
 

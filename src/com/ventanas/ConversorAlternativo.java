@@ -13,8 +13,8 @@ import com.clases.temperatura.Temperatura;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
- *
- * @author mcore
+ * 
+ * @author Eduardo Reyes Hernández
  */
 public class ConversorAlternativo {
 
