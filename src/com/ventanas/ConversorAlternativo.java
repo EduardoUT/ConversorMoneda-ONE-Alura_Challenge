@@ -205,7 +205,7 @@ public class ConversorAlternativo {
 
                 if (seleccionTipoTemperatura != null) {
                     valorSeleccionTipoTemperatura = seleccionTipoTemperatura.toString();
-                    t.convertirTemperatura(bd, valorSeleccionTipoTemperatura);
+                    t.conversionTemperaturaAlternativo(bd, valorSeleccionTipoTemperatura);
                     mensajeDeseaContinuarTemperatura();
                 } else {
                     menuPrincipal();

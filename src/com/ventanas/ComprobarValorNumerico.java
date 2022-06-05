@@ -29,4 +29,11 @@ public class ComprobarValorNumerico {
         java.util.regex.Matcher mat = pt.matcher(valor);
         return mat.find();
     }
+    
+    public static boolean esValorDecimalOpcionalNegativo(String valor) {
+        String regex = "^([-]?[\\d]*(?:[\\.]?[\\d]+)+)$";
+        Pattern pt = Pattern.compile(regex);
+        java.util.regex.Matcher mat = pt.matcher(valor);
+        return mat.find();
+    }
 }
