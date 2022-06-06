@@ -139,8 +139,8 @@ public class PesoMexicano extends Divisa {
         boolean esConversionMonedaMexicana = valorSeleccionTipoDivisa.startsWith("Peso Mexicano (MXN)");
         if (esConversionMonedaMexicana) {
             if (this.equals(this) && valor > 0) {
-                valorConversion = valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.HALF_UP);
-                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.HALF_UP) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
+                valorConversion = valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.FLOOR);
+                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.FLOOR) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
                 return valorConversion;
             } else {
                 JOptionPane.showMessageDialog(null, "Posibles errores: "
@@ -150,8 +150,8 @@ public class PesoMexicano extends Divisa {
             }
         } else {
             if (valor > 0) {
-                valorConversion = valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.HALF_UP);
-                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.HALF_UP) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
+                valorConversion = valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.FLOOR);
+                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.FLOOR) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
                 return valorConversion;
             } else {
                 JOptionPane.showMessageDialog(null, "No es posible ingresar valores menores o igual a 0");

@@ -200,10 +200,10 @@ public abstract class Divisa {
     public abstract String conversionDivisa(double valor, String valorSeleccionTipoDivisa);
 
     public BigDecimal operacionConMonedaLocal(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
-        return valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.HALF_UP);
+        return valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.FLOOR);
     }
 
     public BigDecimal operacionConMonedaExtranjera(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
-        return valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.HALF_UP);
+        return valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.FLOOR);
     }
 }
