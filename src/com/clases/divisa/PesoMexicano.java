@@ -161,41 +161,62 @@ public class PesoMexicano extends Divisa {
     }
 
     @Override
-    public String conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa) {
+    public String conversionDivisa(double valor, String valorSeleccionTipoDivisa) {
+        double tasaCambio;
         BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
-        BigDecimal valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
+        BigDecimal valorMonedaTasaCambio;
         BigDecimal valorConversion;
         if (valor > 0 && this.equals(this)) {
 
             switch (valorSeleccionTipoDivisa) {
                 case "Peso Mexicano (MXN) a Dólar Américano (USD)":
+                    tasaCambio = this.getTasaCambioDolarAmericanoApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
                     return Divisa.getSIMBOLO_DOLAR() + " " + valorConversion;
                 case "Peso Mexicano (MXN) a Euro (EUR)":
+                    tasaCambio = this.getTasaCambioEurosApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
                     return Divisa.getSIMBOLO_EURO() + " " + valorConversion;
                 case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
+                    tasaCambio = this.getTasaCambioLibrasEsterlinasApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
                     return Divisa.getSIMBOLO_LIBRA_ESTERLINA() + " " + valorConversion;
                 case "Peso Mexicano (MXN) a Yen (JPY)":
+                    tasaCambio = this.getTasaCambioYenJaponesApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
                     return Divisa.getSIMBOLO_YEN() + " " + valorConversion;
                 case "Peso Mexicano (MXN) a Won Coreano (KRW)":
+                    tasaCambio = this.getTasaCambioWonSurCoreanoApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
                     return Divisa.getSIMBOLO_WON_COREANO() + " " + valorConversion;
                 case "Dólar Americano (USD) a Peso Mexicano (MXN)":
+                    tasaCambio = this.getTasaCambioDolarAmericanoApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
                 case "Euro (EUR) a Peso Mexicano (MXN)":
+                    tasaCambio = this.getTasaCambioEurosApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
                 case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
+                    tasaCambio = this.getTasaCambioLibrasEsterlinasApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
                 case "Yen (JPY) a Peso Mexicano (MXN)":
+                    tasaCambio = this.getTasaCambioYenJaponesApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
                 case "Won Coreano (KRW) a Peso Mexicano (MXN)":
+                    tasaCambio = this.getTasaCambioWonSurCoreanoApi();
+                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
                     valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
                     return "$ " + valorConversion;
                 default:

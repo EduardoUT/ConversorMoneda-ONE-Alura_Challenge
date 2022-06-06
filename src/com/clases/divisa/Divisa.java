@@ -193,12 +193,11 @@ public abstract class Divisa {
      * Devuelve el valor de la moneda extranjera con el ajuste a la moneda
      * nacional.
      *
-     * @param tasaCambio
      * @param valor
      * @param valorSeleccionTipoDivisa
      * @return valorTotal - Moneda extranjera a pesos mexicanos.
      */
-    public abstract String conversionDivisa(double tasaCambio, double valor, String valorSeleccionTipoDivisa);
+    public abstract String conversionDivisa(double valor, String valorSeleccionTipoDivisa);
 
     public BigDecimal operacionConMonedaLocal(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
         return valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.HALF_UP);

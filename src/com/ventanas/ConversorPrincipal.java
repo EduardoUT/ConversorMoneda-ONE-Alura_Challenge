@@ -759,8 +759,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
             valorConversionToDouble = Double.valueOf(valorConversion);
             valorSeleccionTipoConversion = String.valueOf(campoSeleccionDivisa.getSelectedItem());
             ComprobarValorNumerico.esNumerico(valorConversionToDouble);
-            tasaCambio = pesoMexicano.getTasaCambioDolarAmericanoApi();
-            resultadoConversion = pesoMexicano.conversionDivisa(tasaCambio, valorConversionToDouble, valorSeleccionTipoConversion);
+            resultadoConversion = pesoMexicano.conversionDivisa(valorConversionToDouble, valorSeleccionTipoConversion);
             mostrarPanelResultadosDivisa();
             mostrarResultadosDivisa(valorConversionToDouble);
         } catch (NumberFormatException e) {
