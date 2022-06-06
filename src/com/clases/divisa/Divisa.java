@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * 
+ * "https://api.apilayer.com/fixer/latest?base" + tasaBase + "&symbols=" + tasaCambio + ""
+ * "https://api.apilayer.com/exchangerates_data/latest?symbols=" + tasaCambio + "&base=" + tasaBase + ""
  * @author Eduardo Reyes Hernández
  */
 public abstract class Divisa {
@@ -199,10 +200,24 @@ public abstract class Divisa {
      */
     public abstract String conversionDivisa(double valor, String valorSeleccionTipoDivisa);
 
+    /**
+     * @param valorMonedaUsuario
+     * @param valorMonedaTasaCambio
+     * @return BigDecimal - Devuelve el valor de la división del valor ingresado
+     * por el usuario entre el valor de mercado de la moneda local respecto al
+     * tipo de divisa p.ej: Peso Mexicano a Dolar = (Dolar Americano).
+     */
     public BigDecimal operacionConMonedaLocal(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
         return valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.FLOOR);
     }
 
+    /**
+     * @param valorMonedaUsuario
+     * @param valorMonedaTasaCambio
+     * @return BigDecimal - Devuelve el valor de la multiplicación del valor ingresado
+     * por el usuario por el valor de la moneda local respecto al tipo de divisa
+     * p.ej: Dólar a Peso Mexicano = (Peso Mexicano)
+     */
     public BigDecimal operacionConMonedaExtranjera(BigDecimal valorMonedaUsuario, BigDecimal valorMonedaTasaCambio) {
         return valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.FLOOR);
     }

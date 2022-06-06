@@ -22,6 +22,14 @@ public class ConexionApi {
 
     private static final OkHttpClient httpClient = new OkHttpClient();
 
+    /**
+     * Recibe como parámetros el nombre de la divisa, ej (MXN) como tasaBase
+     * y el segundo parámetro la tasa extranjera (tasaCambio). 
+     * @param tasaBase
+     * @param tasaCambio
+     * @return
+     * @throws Exception 
+     */
     public static double tasaBaseCambio(String tasaBase, String tasaCambio) throws Exception {
         PesoMexicano pesoMexicano = new PesoMexicano();
         Request r = new Request.Builder()
@@ -37,7 +45,7 @@ public class ConexionApi {
             }
             res = response.body().string();
             valorMoneda = obtenerValorRates(res);
-            System.out.println(valorMoneda);
+            System.out.println("El valor actual es de: " + valorMoneda);
             return valorMoneda;
 
         } catch (UnknownHostException e) {

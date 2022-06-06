@@ -722,6 +722,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
 
         mostrarVentanaIngresoTemperatura();
         mostrarPanelValorTemperatura();
+        reestablecerValoresTemperatura();
     }//GEN-LAST:event_btnConversionTemperaturaMouseClicked
 
     private void campoIngresoDivisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoDivisaKeyReleased
@@ -1039,6 +1040,7 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         //</editor-fold>
 
         //</editor-fold>
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
             new ConversorPrincipal().setVisible(true);
