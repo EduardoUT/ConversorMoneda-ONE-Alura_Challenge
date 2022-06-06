@@ -25,7 +25,7 @@ public class ConexionApi {
     public static double tasaBaseCambio(String tasaBase, String tasaCambio) throws Exception {
         PesoMexicano pesoMexicano = new PesoMexicano();
         Request r = new Request.Builder()
-                .url("https://api.apilayer.com/fixer/latest?base=" + tasaBase + "&symbols=" + tasaCambio + "")//EUR,GBP,USD,KRW,JPY
+                .url("https://api.apilayer.com/exchangerates_data/latest?symbols=" + tasaCambio + "&base=" + tasaBase + "")//EUR,GBP,USD,KRW,JPY
                 .addHeader("apikey", "dYpjEe0JbW770473cXv6VOh0LSTxQvYx")
                 .build();
         try {
@@ -49,7 +49,7 @@ public class ConexionApi {
                     + "31 de mayo de 2022"
                     + "\nPosibles causas de error: "
                     + "\n1. Para obtener el valor del peso mexicano actualizado, debe conectarse a una red."
-                    + "\n2. El límite de consumo del servicio por la API ha excedido las 100 peticiones.",
+                    + "\n2. El límite de consumo del servicio por la API ha excedido las 250 peticiones.",
                     "Error al conectar con la API.",
                     JOptionPane.ERROR_MESSAGE
             );
