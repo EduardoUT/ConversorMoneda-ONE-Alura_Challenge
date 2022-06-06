@@ -48,9 +48,9 @@ public class ConexionApi {
                     + "revalorización de balance del Banco de México con precio de cierre de jornada al\n"
                     + "31 de mayo de 2022"
                     + "\nPosibles causas de error: "
-                    + "\n1. Para obtener conversiones obtenidas en tiempo real, debe conectarse a una red."
-                    + "\n2. El límite de consumo del servicio por la API Fixer ha excedido las 100 peticiones.",
-                    "Error al conectar con la API Fixer.",
+                    + "\n1. Para obtener el valor del peso mexicano actualizado, debe conectarse a una red."
+                    + "\n2. El límite de consumo del servicio por la API ha excedido las 100 peticiones.",
+                    "Error al conectar con la API.",
                     JOptionPane.ERROR_MESSAGE
             );
             if (tasaBase.contains(Divisa.getNOMBRE_DIVISA_USA())) {
