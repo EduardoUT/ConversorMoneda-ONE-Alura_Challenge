@@ -755,7 +755,6 @@ public final class ConversorPrincipal extends javax.swing.JFrame {
         ocultarPanelResultadosDivisa();
 
         try {
-            double tasaCambio;
             valorConversionToDouble = Double.valueOf(valorConversion);
             valorSeleccionTipoConversion = String.valueOf(campoSeleccionDivisa.getSelectedItem());
             ComprobarValorNumerico.esNumerico(valorConversionToDouble);
