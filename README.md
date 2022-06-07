@@ -30,7 +30,6 @@ Públicado en el topic:
 ![Vista Previa Interfaz Conversor de Temperatura](https://raw.githubusercontent.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/master/src/Imagenes/interfaztemperatura.PNG)
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/BesKl2Ulx9I" frameborder="0" allowfullscreen></iframe>
 
 
 
