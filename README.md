@@ -24,11 +24,13 @@ Extra personal:
   <img src="https://assets.apilayer.com/apis/exchangerates_data.png">
   
 
-Acceda al archivo JAR (Requerimientos JRE de Java):
+**Pruebe el Proyecto JAR (Requerimientos JRE de Java):**
 
 Para buen funcionamiento descargue desde el siguiente enlace:
 
 https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/tags
+
+**Instrucciones para ejecución:**
 
   - Una vez descargado, descomprima.
   - Abra la carpeta dist.
