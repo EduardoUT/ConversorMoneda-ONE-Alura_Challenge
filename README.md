@@ -28,12 +28,12 @@ Acceda al archivo JAR (Requerimientos JRE de Java):
 
 Para buen funcionamiento descargue desde el siguiente enlace:
 
+https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/tags
+
   - Una vez descargado, descomprima.
   - Abra la carpeta dist.
   - Ejecute el archivo conversor-moneda con extensión JAR.
   - **¡Importante!** El archivo JAR debe permanecer dentro del directorio dist ya que este posee las librerías utiliadas en el directorio lib.
-
-https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/blob/master/dist/conversor-moneda.jar
 
 Públicado en el topic:
 
