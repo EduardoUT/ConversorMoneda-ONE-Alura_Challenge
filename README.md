@@ -26,6 +26,13 @@ Extra personal:
 
 Acceda al archivo JAR (Requerimientos JRE de Java):
 
+Para buen funcionamiento descargue desde el siguiente enlace:
+
+  - Una vez descargado, descomprima.
+  - Abra la carpeta dist.
+  - Ejecute el archivo conversor-moneda con extensión JAR.
+  - **¡Importante!** El archivo JAR debe permanecer dentro del directorio dist ya que este posee las librerías utiliadas en el directorio lib.
+
 https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/blob/master/dist/conversor-moneda.jar
 
 Públicado en el topic:
@@ -48,7 +55,7 @@ Públicado en el topic:
 
 En esta oportunidad, a los Devs se nos solicitó crear un conversor de divisas utilizando el lenguaje Java. Las características solicitadas por nuestro cliente son las siguientes:
 
-**Requisitos:**
+**Requisitos Proyecto:**
 
 El convertidor de moneda debe:
 
