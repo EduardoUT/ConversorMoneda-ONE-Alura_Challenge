@@ -3,11 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/PM.java</file>
             <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/PesoMexicano.java</file>
+            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/Test.java</file>
             <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/TestDivisa.java</file>
-            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/Divisa.java</file>
-            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/service/ConexionApi.java</file>
-            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/Conversion.java</file>
+            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/service/ConexionAPI.java</file>
+            <file>file:/C:/Users/mcore/Documents/Oracle%20Next%20Education/Programación/Formación%20Java%20Orientado%20a%20Objetos/Challenges/Conversor_Moneda/conversor-moneda/src/com/clases/divisa/IClavesDivisas.java</file>
         </group>
     </open-files>
 </project-private>

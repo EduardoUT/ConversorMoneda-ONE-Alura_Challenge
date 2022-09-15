@@ -4,231 +4,158 @@
  */
 package com.clases.divisa;
 
+import com.service.ProveedorAPI;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import javax.swing.JOptionPane;
-import com.service.ConexionApi;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * Contiene métodos sobrescritos con el valor de la tasa de cambio en pesos
- * mexicanos con tipos de cambio para revalorización de balance 
- * del Banco de México con precio de cierre de jornada al 31 de mayo de 2022.
- * Más info consulte:
- * https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?accion=consultarCuadroAnalitico&idCuadro=CA113&sector=6&locale=es
- * 
+ * Posee métodos que permiten realizar la conversión del peso mexicano con las
+ * siguientes divisas: Dólar Americano, Euro, Libra Esterlina, Yuan Japones y
+ * Won Sur Coreano.
+ *
+ * Los cálculos de conversión se realizan tomando en cuenta la descripción
+ * seleccionada por el usuario en el view.
+ *
+ * El valor del peso mexicano respecto a otras divisas es consultado a través de
+ * las siguientes APIs: ExchangeRatesAPI(Valor en tiempo real) y SIE API del
+ * Banco de México(Valor de cierre de jornada del último día de cada mes).
+ *
  * @author Eduardo Reyes Hernández
  */
-public class PesoMexicano extends Divisa {
+public class PesoMexicano implements IClavesDivisas {
 
-    /**
-     * @return the pesoMexicanoCambioDolarAmericano
-     */
-    @Override
-    public double getTasaCambioDolarAmericanoApi() {
-        try {
-            double tasaCambioDolares = super.getTasaCambioDolarAmericanoApi();
-            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_USA(), Divisa.getNOMBRE_DIVISA_MEXICO());
-            tasaCambioDolares += rateApi;
-            return tasaCambioDolares;
-        } catch (Exception ex) {
-            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return this.getTasaCambioDolarAmericanoFijo();
-    }
+    private String claveDivisa;
+    private BigDecimal importe;
 
-    /**
-     * @return the pesoMexicanoCambioEuros
-     */
-    @Override
-    public double getTasaCambioEurosApi() {
-        try {
-            double tasaCambioEuros = super.getTasaCambioEurosApi();
-            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_EUROPA(), Divisa.getNOMBRE_DIVISA_MEXICO());
-            tasaCambioEuros += rateApi;
-            return tasaCambioEuros;
-        } catch (Exception ex) {
-            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+    public PesoMexicano(BigDecimal importe) {
+        if (importe == null) {
+            throw new NullPointerException("Valor nulo.");
         }
-        return this.getTasaCambioEurosFijo();
+
+        if (esImporteInvalido(importe)) {
+            throw new IllegalArgumentException("No puede ser menor o igual a cero.");
+        }
+        this.claveDivisa = CLAVE_DIVISA_MEXICO;
+        this.importe = importe;
     }
 
     /**
-     * @return the pesoMexicanoCambioLibrasEsterlinas
+     * @return the claveDivisa
      */
-    @Override
-    public double getTasaCambioLibrasEsterlinasApi() {
-        try {
-            double tasaCambioLibrasEsterlinas = super.getTasaCambioLibrasEsterlinasApi();
-            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_GRAN_BRETANA(), Divisa.getNOMBRE_DIVISA_MEXICO());
-            tasaCambioLibrasEsterlinas += rateApi;
-            return tasaCambioLibrasEsterlinas;
-        } catch (Exception ex) {
-            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return this.getTasaCambioLibrasEsterlinasFijo();
+    public String getClaveDivisa() {
+        return claveDivisa;
     }
 
     /**
-     * @return the pesoMexicanoCambioYenJapones
+     * @return the importe
      */
-    @Override
-    public double getTasaCambioYenJaponesApi() {
-        try {
-            double tasaCambioYenes = super.getTasaCambioYenJaponesApi();
-            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_YEN_JAPON(), Divisa.getNOMBRE_DIVISA_MEXICO());
-            tasaCambioYenes += rateApi;
-            return tasaCambioYenes;
-        } catch (Exception ex) {
-            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+    public BigDecimal getImporte() {
+        return importe;
+    }
+
+    private boolean esImporteInvalido(BigDecimal importe) {
+        if (importe.signum() == -1) {
+            return true;
+        } else if (importe.signum() == 0) {
+            return true;
         }
-        return this.getTasaCambioYenJaponesFijo();
+        return false;
     }
 
     /**
-     * @return the pesoMexicanoCambioWonSulCoreano
+     * Realiza la operación de división entre el importe del usuario y el
+     * importe equivalente cuando el peso mexicano es la divisa base.
+     *
+     * Por ejemplo:
+     *
+     * Importe Usuario | Importe Equivalente del Peso Mexicano con una Libra.
+     *
+     * 50 / 23.44668 = 2.13
+     *
+     * @param importeUsuario Importe ingresado por el usuario através del
+     * constructor.
+     * @param importeEquivalente Importe del peso mexicano con una divisa
+     * extranjera obtenido de la API.
+     * @return El importe final de la conversión.
      */
-    @Override
-    public double getTasaCambioWonSurCoreanoApi() {
-        try {
-            double tasaCambioWonSurCoreano = super.getTasaCambioWonSurCoreanoApi();
-            double rateApi = ConexionApi.tasaBaseCambio(Divisa.getNOMBRE_DIVISA_WON(), Divisa.getNOMBRE_DIVISA_MEXICO());
-            System.out.println(rateApi);
-            tasaCambioWonSurCoreano += rateApi;
-            return tasaCambioWonSurCoreano;
-        } catch (Exception ex) {
-            Logger.getLogger(PesoMexicano.class.getName()).log(Level.SEVERE, null, ex);
+    private BigDecimal calcularPrecioMonedaLocal(BigDecimal importeUsuario, BigDecimal importeEquivalente) {
+        return importeUsuario.divide(importeEquivalente, 2, RoundingMode.FLOOR);
+    }
+
+    /**
+     * Realiza la operación de multiplicación entre el importe del usuario y el
+     * importe equivalente cuando la divisa extranjera es la divisa base.
+     *
+     * Por ejemplo:
+     *
+     * Importe Usuario | Importe Equivalente del Peso Mexicano con una Libra.
+     *
+     * 50 * 23.44668 = 1172.33
+     *
+     * @param importeUsuario Importe ingresado por el usuario através del
+     * constructor.
+     * @param importeEquivalente Importe del peso mexicano con una divisa
+     * extranjera obtenido de la API.
+     * @return El importe final de la conversión.
+     */
+    private BigDecimal calcularPrecioMonedaExtranjera(BigDecimal importeUsuario, BigDecimal importeEquivalente) {
+        return importeUsuario.multiply(importeEquivalente).setScale(2, RoundingMode.FLOOR);
+    }
+
+    /**
+     * Obtiene el importe del peso mexicano como divisa base con la divisa
+     * extranjera en tiempo real, aunque si la conexión falla o hubo un exceso
+     * de peticiones a ExchangeRates API, se obtendrá entonces de la API del
+     * Banco de México con un valor menos preciso y de ajuste cambiario mensual.
+     *
+     * Por ejemplo: 1 GBP -> 23.44668 MXN
+     *
+     * @param claveCambio Clave de la divisa a convertir.
+     * @return Importe equivalente del peso mexicano con la divisa extranjera.
+     */
+    private BigDecimal getEquivalencia(String claveCambio) {
+        return ProveedorAPI.valorDivisaExchangeRatesAPI(this.getClaveDivisa(), claveCambio);
+    }
+
+    /**
+     *
+     * @param descripcionConversion Es el valor obtenido del selector de
+     * opciones swing.
+     * @return La clave de la divisa de la descripción.
+     */
+    private String extraerClave(String descripcionConversion) {
+        if (descripcionConversion.contains(CLAVE_DIVISA_USA)) {
+            descripcionConversion = CLAVE_DIVISA_USA;
+        } else if (descripcionConversion.contains(CLAVE_DIVISA_GRAN_BRETANA)) {
+            descripcionConversion = CLAVE_DIVISA_GRAN_BRETANA;
+        } else if (descripcionConversion.contains(CLAVE_DIVISA_EUROPA)) {
+            descripcionConversion = CLAVE_DIVISA_EUROPA;
+        } else if (descripcionConversion.contains(CLAVE_DIVISA_WON)) {
+            descripcionConversion = CLAVE_DIVISA_WON;
+        } else if (descripcionConversion.contains(CLAVE_DIVISA_YEN_JAPON)) {
+            descripcionConversion = CLAVE_DIVISA_YEN_JAPON;
         }
-        return this.getTasaCambioWonSulCoreanoFijo();
+        return descripcionConversion;
     }
 
-    @Override
-    public double getTasaCambioDolarAmericanoFijo() {
-        double valorTasaFija = super.getTasaCambioDolarAmericanoFijo();
-        return valorTasaFija += 19.68550;
-    }
-
-    @Override
-    public double getTasaCambioEurosFijo() {
-        double valorTasaFija = super.getTasaCambioDolarAmericanoFijo();
-        return valorTasaFija += 21.08612;
-    }
-
-    @Override
-    public double getTasaCambioLibrasEsterlinasFijo() {
-        double valorTasaFija = super.getTasaCambioEurosFijo();
-        return valorTasaFija += 24.79979;
-    }
-
-    @Override
-    public double getTasaCambioYenJaponesFijo() {
-        double valorTasaFija = super.getTasaCambioYenJaponesFijo();
-        return valorTasaFija += 0.15296;
-    }
-
-    @Override
-    public double getTasaCambioWonSulCoreanoFijo() {
-        double valorTasaFija = super.getTasaCambioWonSulCoreanoFijo();
-        return valorTasaFija += 15.91376;
-    }
-
-    public BigDecimal conversionDivisaAlternativo(double tasaCambio, double valor, String valorSeleccionTipoDivisa) {
-        BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
-        BigDecimal valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-        BigDecimal valorConversion;
-        boolean esConversionMonedaMexicana = valorSeleccionTipoDivisa.startsWith("Peso Mexicano (MXN)");
-        if (esConversionMonedaMexicana) {
-            if (this.equals(this) && valor > 0) {
-                valorConversion = valorMonedaUsuario.divide(valorMonedaTasaCambio, 2, RoundingMode.FLOOR);
-                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.FLOOR) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
-                return valorConversion;
-            } else {
-                JOptionPane.showMessageDialog(null, "Posibles errores: "
-                        + "\n 1. No es posible ingresar valores menores o igual a 0. "
-                        + "\n 2. No es posible hacer conversión de monedas extranjeras en esta función.");
-                return null;
-            }
+    /**
+     * Convierte al peso mexicano a otras divisas y viceversa.
+     *
+     * @param descripcionConversion Es el valor obtenido del selector de
+     * opciones swing.
+     * @return El importe final de la conversión entre la divisa base MXN y la
+     * divisa extranjera GBP, USD, EUR, JPY y KRW.
+     */
+    public BigDecimal hacerConversion(String descripcionConversion) {
+        BigDecimal resultado;
+        String clave = extraerClave(descripcionConversion);
+        if (descripcionConversion.startsWith("Peso Mexicano")) {
+            resultado = calcularPrecioMonedaLocal(this.getImporte(),
+                    this.getEquivalencia(clave));
         } else {
-            if (valor > 0) {
-                valorConversion = valorMonedaUsuario.multiply(valorMonedaTasaCambio).setScale(2, RoundingMode.FLOOR);
-                JOptionPane.showMessageDialog(null, "El ajuste de $" + valorMonedaUsuario.setScale(2, RoundingMode.FLOOR) + " " + valorSeleccionTipoDivisa + " es de: $" + valorConversion);
-                return valorConversion;
-            } else {
-                JOptionPane.showMessageDialog(null, "No es posible ingresar valores menores o igual a 0");
-                return null;
-            }
+            resultado = calcularPrecioMonedaExtranjera(getImporte(),
+                    this.getEquivalencia(clave));
         }
-    }
-
-    @Override
-    public String conversionDivisa(double valor, String valorSeleccionTipoDivisa) {
-        double tasaCambio;
-        BigDecimal valorMonedaUsuario = new BigDecimal(String.valueOf(valor));
-        BigDecimal valorMonedaTasaCambio;
-        BigDecimal valorConversion;
-        if (valor > 0 && this.equals(this)) {
-
-            switch (valorSeleccionTipoDivisa) {
-                case "Peso Mexicano (MXN) a Dólar Américano (USD)":
-                    tasaCambio = this.getTasaCambioDolarAmericanoApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_DOLAR() + " " + valorConversion;
-                case "Peso Mexicano (MXN) a Euro (EUR)":
-                    tasaCambio = this.getTasaCambioEurosApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_EURO() + " " + valorConversion;
-                case "Peso Mexicano (MXN) a Libra Esterlina (GBP)":
-                    tasaCambio = this.getTasaCambioLibrasEsterlinasApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_LIBRA_ESTERLINA() + " " + valorConversion;
-                case "Peso Mexicano (MXN) a Yen (JPY)":
-                    tasaCambio = this.getTasaCambioYenJaponesApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_YEN() + " " + valorConversion;
-                case "Peso Mexicano (MXN) a Won Coreano (KRW)":
-                    tasaCambio = this.getTasaCambioWonSurCoreanoApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaLocal(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return Divisa.getSIMBOLO_WON_COREANO() + " " + valorConversion;
-                case "Dólar Americano (USD) a Peso Mexicano (MXN)":
-                    tasaCambio = this.getTasaCambioDolarAmericanoApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return "$ " + valorConversion;
-                case "Euro (EUR) a Peso Mexicano (MXN)":
-                    tasaCambio = this.getTasaCambioEurosApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return "$ " + valorConversion;
-                case "Libra Exterlina (GBP) a Peso Mexicano (MXN)":
-                    tasaCambio = this.getTasaCambioLibrasEsterlinasApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return "$ " + valorConversion;
-                case "Yen (JPY) a Peso Mexicano (MXN)":
-                    tasaCambio = this.getTasaCambioYenJaponesApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return "$ " + valorConversion;
-                case "Won Coreano (KRW) a Peso Mexicano (MXN)":
-                    tasaCambio = this.getTasaCambioWonSurCoreanoApi();
-                    valorMonedaTasaCambio = new BigDecimal(String.valueOf(tasaCambio));
-                    valorConversion = super.operacionConMonedaExtranjera(valorMonedaUsuario, valorMonedaTasaCambio);
-                    return "$ " + valorConversion;
-                default:
-                    break;
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Posibles errores: "
-                    + "\n 1. No es posible ingresar valores menores o igual a 0. "
-                    + "\n 2. No es posible hacer conversión de monedas extranjeras en esta función.");
-            return null;
-        }
-        return null;
+        return resultado;
     }
 }
