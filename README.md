@@ -1,13 +1,17 @@
 Challenge Cinco de Seis | Formación Java Orientado a Objetos | Conversor de Moneda
 
-<h1 align="center">Conversor de Moneda ☕</h1>
+<h1 align="center">:currency_exchange: Conversor de Moneda ☕</h1>
 
 ![Challenge Oracle Next Education + Alura Banner](https://raw.githubusercontent.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/master/src/Imagenes/challengeImage.jpg)
 
 En este desafio realicé un conversor de moneda utilizando como moneda base el Peso Mexicano, el conversor
-obtiene los valores del peso mexicano frente a las divisas extranjeras solicitadas gracias a la API Exchange Rates.
-Sin embargo puede funcionar sin conexión a internet, con valores fijos al cierre del 22 de Mayo del 2022 consultados
-en el Banco de México.
+obtiene los valores del peso mexicano frente a las divisas extranjeras solicitadas.
+
+La aplicación debe estar conectada a internet, ya que consume dos API REST las cuales son Exchange Rates Data API y del Sistema de Información Económica (SIE) API del Banco de México.
+
+Los valores más actualizados provienen de Exchange Rates Data API, mientras que los valores del SIE API del BAnco de México son de forma mensual.
+
+Incluye también un conversor de temperaturas, este puede usarse sin conexión a internet.
 
 Extra personal:
 - Imágenes de fondo personalizados en Canva.com
@@ -17,12 +21,12 @@ Extra personal:
    - Java SE 8 U331 ☕
             
          - Interfaz gráfica desarrollada con Javax.Swing.
-         - Uso de Programación Orientada a Objetos (Clase Abstracta, Herencia, Getters, 
-           Setters con lógica de negocio y Sobrescritura de Métodos).
-         - Cálculos con clase BigDecimal.
-   - <a href="https://apilayer.com/marketplace/exchangerates_data-api">Exchange Rates API</a>  
-  <img src="https://assets.apilayer.com/apis/exchangerates_data.png">
+         - Uso de Programación Orientada a Objetos.
+         - Cálculos de conversión realizados y manejo de cifras monetarias con la clase BigDecimal.
   
+  **API REST Consumidas :currency_exchange::**
+  | [<img src="https://assets.apilayer.com/apis/exchangerates_data.png" width=50><br><sub>Exchange Rates Data API</sub>](https://apilayer.com/marketplace/exchangerates_data-api) |  [<img src="https://raw.githubusercontent.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/master/src/Imagenes/bm.png" width=115><br><sub>(Sistema de Información Económica) SIE API</sub>](https://www.banxico.org.mx/SieAPIRest/service/v1/)
+| :---: | :---: |
 
 **Pruebe el Proyecto JAR (Requerimientos JRE de Java):**
 
@@ -36,6 +40,7 @@ https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/tags
   - Abra la carpeta dist.
   - Ejecute el archivo conversor-moneda con extensión JAR.
   - **¡Importante!** El archivo JAR debe permanecer dentro del directorio dist ya que este posee las librerías utiliadas en el directorio lib.
+  - Asegurese de estar conectado a internet al utilizar el conversor de moneda.
 
 Públicado en el topic:
 
