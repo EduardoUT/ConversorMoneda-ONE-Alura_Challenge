@@ -32,7 +32,7 @@ Extra personal:
 
 Para buen funcionamiento descargue desde el siguiente enlace:
 
-https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/tags
+https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/releases/tag/v0.2.0
 
 **Instrucciones para ejecución:**
 
