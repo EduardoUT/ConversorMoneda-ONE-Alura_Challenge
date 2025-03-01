@@ -4,7 +4,7 @@
  */
 package com.util;
 
-import com.clases.divisa.IClavesDivisas;
+import io.github.eduardout.converter.currency.IClavesDivisas;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,6 +1,6 @@
 package com.ventanas;
 
-import com.clases.divisa.PesoMexicano;
+import io.github.eduardout.converter.currency.PesoMexicano;
 import com.clases.temperatura.Temperatura;
 import java.awt.Color;
 import java.awt.Graphics;

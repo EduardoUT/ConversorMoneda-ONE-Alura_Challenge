@@ -9,7 +9,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.OkHttpClient;
 import org.json.JSONObject;
-import com.clases.divisa.IClavesDivisas;
+import io.github.eduardout.converter.currency.IClavesDivisas;
 import com.util.SeriesID;
 import com.util.Recurso;
 import java.math.BigDecimal;
