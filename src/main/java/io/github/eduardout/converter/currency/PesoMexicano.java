@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.clases.divisa;
+package io.github.eduardout.converter.currency;
 
 import com.service.ProveedorAPI;
 import java.math.BigDecimal;
