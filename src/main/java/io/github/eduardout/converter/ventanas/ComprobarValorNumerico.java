@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.ventanas;
+package io.github.eduardout.converter.ventanas;
 
 import java.util.regex.Pattern;
 import jdk.nashorn.internal.runtime.JSType;

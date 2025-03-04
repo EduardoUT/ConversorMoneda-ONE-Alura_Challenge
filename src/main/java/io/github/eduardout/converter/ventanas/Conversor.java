@@ -1,7 +1,7 @@
-package com.ventanas;
+package io.github.eduardout.converter.ventanas;
 
-import io.github.eduardout.converter.currency.PesoMexicano;
-import com.clases.temperatura.Temperatura;
+import io.github.eduardout.converter.currency.CurrencyUnit;
+import io.github.eduardout.converter.clases.temperatura.Temperatura;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -29,7 +29,7 @@ public final class Conversor extends javax.swing.JFrame {
     String valorSeleccionTipoConversion;
     String infoConversionRealizada;
     String resultadoConversion;
-    PesoMexicano pesoMexicano;
+    CurrencyUnit pesoMexicano;
     Temperatura temperatura = new Temperatura();
     BigDecimal valorConversionToBigDecimal;
     Color transparent = new Color(0, 0, 0, 0);
@@ -284,7 +284,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnCerrarVentana.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnCerrarVentana.setText("x");
-        btnCerrarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCerrarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCerrarVentana.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCerrarVentana.setOpaque(true);
         btnCerrarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -305,7 +305,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnMinimizarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnMinimizarVentana.setText("_");
         btnMinimizarVentana.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        btnMinimizarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMinimizarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnMinimizarVentana.setOpaque(true);
         btnMinimizarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -325,7 +325,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnConversionMoneda.setForeground(new java.awt.Color(244, 246, 252));
         btnConversionMoneda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnConversionMoneda.setText("Conversor de Moneda");
-        btnConversionMoneda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConversionMoneda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnConversionMoneda.setOpaque(true);
         btnConversionMoneda.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -345,7 +345,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnConversionTemperatura.setForeground(new java.awt.Color(244, 246, 252));
         btnConversionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnConversionTemperatura.setText("Conversor de Temperatura");
-        btnConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnConversionTemperatura.setOpaque(true);
         btnConversionTemperatura.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -365,7 +365,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnBienvenida.setForeground(new java.awt.Color(244, 246, 252));
         btnBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBienvenida.setText("Bienvenida");
-        btnBienvenida.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBienvenida.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBienvenida.setOpaque(true);
         btnBienvenida.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -415,7 +415,7 @@ public final class Conversor extends javax.swing.JFrame {
         campoIngresoDivisa.setForeground(new java.awt.Color(244, 246, 252));
         campoIngresoDivisa.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         campoIngresoDivisa.setBorder(null);
-        campoIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        campoIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         campoIngresoDivisa.setMaximumSize(new java.awt.Dimension(2, 2));
         campoIngresoDivisa.setNextFocusableComponent(btnIngresoDivisa);
         campoIngresoDivisa.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -439,7 +439,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnIngresoDivisa.setForeground(new java.awt.Color(244, 246, 252));
         btnIngresoDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnIngresoDivisa.setText("Aceptar");
-        btnIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnIngresoDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnIngresoDivisa.setOpaque(true);
         btnIngresoDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -475,7 +475,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnSeleccionDivisa.setForeground(new java.awt.Color(244, 246, 252));
         btnSeleccionDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSeleccionDivisa.setText("Aceptar");
-        btnSeleccionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSeleccionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSeleccionDivisa.setOpaque(true);
         btnSeleccionDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -519,7 +519,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnOtraConversionDivisa.setForeground(new java.awt.Color(244, 246, 252));
         btnOtraConversionDivisa.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnOtraConversionDivisa.setText("Hacer otra conversión");
-        btnOtraConversionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOtraConversionDivisa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnOtraConversionDivisa.setOpaque(true);
         btnOtraConversionDivisa.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -574,7 +574,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnIngresoTemperatura.setForeground(new java.awt.Color(244, 246, 252));
         btnIngresoTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnIngresoTemperatura.setText("Aceptar");
-        btnIngresoTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnIngresoTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnIngresoTemperatura.setOpaque(true);
         btnIngresoTemperatura.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -609,7 +609,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnSeleccionTemperatura.setForeground(new java.awt.Color(244, 246, 252));
         btnSeleccionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnSeleccionTemperatura.setText("Aceptar");
-        btnSeleccionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSeleccionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSeleccionTemperatura.setOpaque(true);
         btnSeleccionTemperatura.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -648,7 +648,7 @@ public final class Conversor extends javax.swing.JFrame {
         btnOtraConversionTemperatura.setForeground(new java.awt.Color(244, 246, 252));
         btnOtraConversionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnOtraConversionTemperatura.setText("Hacer otra conversión");
-        btnOtraConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOtraConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnOtraConversionTemperatura.setOpaque(true);
         btnOtraConversionTemperatura.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -728,12 +728,12 @@ public final class Conversor extends javax.swing.JFrame {
     private void campoIngresoDivisaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoDivisaKeyReleased
         evt.consume();
         valorConversion = campoIngresoDivisa.getText();
-        if (ComprobarValorNumerico.esValorDecimal(valorConversion)) {
+       /* if (ComprobarValorNumerico.esValorDecimal(valorConversion)) {
             btnIngresoDivisa.setEnabled(true);
         } else {
             btnIngresoDivisa.setEnabled(false);
             //btnIngresoDivisa.setForeground(new Color(60, 63, 65, 255));
-        }
+        }*/
     }//GEN-LAST:event_campoIngresoDivisaKeyReleased
 
     private void btnBienvenidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBienvenidaMouseClicked
@@ -754,12 +754,12 @@ public final class Conversor extends javax.swing.JFrame {
         ocultarPanelSeleccionDivisa();
         if (panelResultadosDivisa.isVisible());
         ocultarPanelResultadosDivisa();
-
+/*
         try {
             valorConversionToDouble = Double.valueOf(valorConversion);
             valorSeleccionTipoConversion = String.valueOf(campoSeleccionDivisa.getSelectedItem());
             ComprobarValorNumerico.esNumerico(valorConversionToDouble);
-            pesoMexicano = new PesoMexicano(new BigDecimal(valorConversionToDouble));
+            pesoMexicano = new CurrencyUnit(new BigDecimal(valorConversionToDouble));
             resultadoConversion = String.valueOf(pesoMexicano.hacerConversion(valorSeleccionTipoConversion));
             mostrarPanelResultadosDivisa();
             mostrarResultadosDivisa(valorConversionToDouble);
@@ -770,7 +770,7 @@ public final class Conversor extends javax.swing.JFrame {
                     "Error al recibir los datos.",
                     JOptionPane.ERROR_MESSAGE
             );
-        }
+        }*/
     }//GEN-LAST:event_btnSeleccionDivisaMouseClicked
 
     private void btnOtraConversionDivisaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionDivisaMouseClicked
@@ -799,12 +799,13 @@ public final class Conversor extends javax.swing.JFrame {
     private void campoIngresoTemperaturaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoTemperaturaKeyReleased
         evt.consume();
         valorConversion = campoIngresoTemperatura.getText();
+/*
         if (ComprobarValorNumerico.esValorDecimalOpcionalNegativo(valorConversion)) {
             btnIngresoTemperatura.setEnabled(true);
         } else {
             btnIngresoTemperatura.setEnabled(false);
             btnIngresoTemperatura.setBackground(verdeAzulado);
-        }
+        }*/
     }//GEN-LAST:event_campoIngresoTemperaturaKeyReleased
 
     private void campoIngresoTemperaturaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoIngresoTemperaturaKeyTyped
@@ -835,7 +836,7 @@ public final class Conversor extends javax.swing.JFrame {
         ocultarPanelSeleccionTemperatura();
         if (panelResultadosTemperatura.isVisible());
         ocultarPanelResultadosTemperatura();
-
+/*
         try {
             valorConversionToDouble = Double.valueOf(valorConversion);
             valorSeleccionTipoConversion = String.valueOf(campoSeleccionTemperatura.getSelectedItem());
@@ -852,7 +853,7 @@ public final class Conversor extends javax.swing.JFrame {
                     "Error al recibir los valores.",
                     JOptionPane.ERROR_MESSAGE
             );
-        }
+        }*/
     }//GEN-LAST:event_btnSeleccionTemperaturaMouseClicked
 
     private void btnOtraConversionTemperaturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionTemperaturaMouseClicked
