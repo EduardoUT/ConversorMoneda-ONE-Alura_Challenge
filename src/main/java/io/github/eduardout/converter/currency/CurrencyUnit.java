@@ -22,7 +22,7 @@ public class CurrencyUnit {
 
     private Currency currency;
 
-    public CurrencyUnit(CurrencyCodeIso4217 currencyCode) {
+    public CurrencyUnit(ISO4217Currency currencyCode) {
         if (currencyCode == null) {
             throw new IllegalArgumentException("Entered currency code is null.");
         }
