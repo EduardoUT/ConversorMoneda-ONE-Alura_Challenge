@@ -11,7 +11,7 @@ package io.github.eduardout.converter.currency;
  * @see java.util.Currency
  * @author eduar
  */
-public enum CurrencyCodeIso4217 {
+public enum ISO4217Currency {
 
     ADP("ADP"), AED("AED"), AFA("AFA"), AFN("AFN"), ALL("ALL"), AMD("AMD"),
     ANG("ANG"), AOA("AOA"), ARS("ARS"), ATS("ATS"), AUD("AUD"), AWG("AWG"),
@@ -55,7 +55,7 @@ public enum CurrencyCodeIso4217 {
 
     private final String currencyCode;
 
-    private CurrencyCodeIso4217(String currencyCode) {
+    private ISO4217Currency(String currencyCode) {
         this.currencyCode = currencyCode;
     }
 
