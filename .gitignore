@@ -1,2 +1,10 @@
+# Maven
 /target/
+
+# NetBeans
 /nbproject/
+nb-configuration.xml
+nbactions.xml
+
+# Project
+/logs/
