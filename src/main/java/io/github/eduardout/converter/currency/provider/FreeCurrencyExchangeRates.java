@@ -23,6 +23,7 @@ import static io.github.eduardout.converter.GlobalLogger.*;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.logging.Level;
 import org.json.JSONObject;
 
@@ -70,14 +71,16 @@ public class FreeCurrencyExchangeRates implements RateProvider {
      * CurrencyUnit ISO 4217.
      */
     @Override
-    public BigDecimal getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
+    public Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
+        BigDecimal rate;
         for (String key : propertiesConfig.getKeyProperties()) {
             try {
                 String url = propertiesConfig.getPropertyValue(key);
                 registerLog(Level.INFO, "Fetching data from API.");
                 JSONObject response = apiClient.fetchDataAsJSONObject(url);
                 fallbackProvider.updateCurrencyRates(response);
-                return rateParser.parseRate(response, base, target);
+                rate = rateParser.parseRate(response, base, target);
+                return Optional.ofNullable(rate);
             } catch (IOException | IllegalStateException e) {
                 registerLogException(Level.SEVERE, "Error while getting response "
                         + "from API {0} ", e);
