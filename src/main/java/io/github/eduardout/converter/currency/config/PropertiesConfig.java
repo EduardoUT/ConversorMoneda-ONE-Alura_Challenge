@@ -19,7 +19,9 @@ package io.github.eduardout.converter.currency.config;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * This class have two ways to handle key, value properties of a resource like a
@@ -69,11 +71,11 @@ public class PropertiesConfig {
         return propertyKeyPrefix;
     }
 
-    public String[] getKeyProperties() {
+    public List<String> getKeyProperties() {
         return properties.keySet().stream()
                 .filter(key -> key.toString().startsWith(propertyKeyPrefix))
                 .map(key -> key.toString().replace(propertyKeyPrefix, ""))
-                .toArray(String[]::new);
+                .collect(Collectors.toList());
     }
 
     public String getPropertyValue(String key) {
