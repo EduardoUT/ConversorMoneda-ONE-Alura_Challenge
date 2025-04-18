@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import org.json.JSONObject;
@@ -76,15 +77,16 @@ public class JSONCurrencyFileRepository implements RateProvider,
     }
 
     @Override
-    public BigDecimal getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
+    public Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
+        BigDecimal rate = null;
         try {
             JSONObject jsonObject = readFile();
-            return rateParser.parseRate(jsonObject, base, target);
+            rate = rateParser.parseRate(jsonObject, base, target);
         } catch (IOException ex) {
             registerLogException(Level.SEVERE, "An exception occours while "
                     + "reading the JSON currencies file. {0}", ex);
         }
-        return null;
+        return Optional.ofNullable(rate);
     }
 
     /**
