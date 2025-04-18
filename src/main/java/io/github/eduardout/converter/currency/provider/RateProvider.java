@@ -18,6 +18,7 @@ package io.github.eduardout.converter.currency.provider;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 /**
  * Interface where online or offline implementations get the CurrencyRate.
@@ -33,7 +34,8 @@ public interface RateProvider {
      * @param base CurrencyUnit as the base curreny.
      * @param target CurrencyUnit as the target currency to get the equivalence
      * amount.
-     * @return A BigDecimal with the equivalence target amount of the base.
+     * @return An Optional BigDecimal with the equivalence target amount of the
+     * base.
      */
-    BigDecimal getCurrencyRate(CurrencyUnit base, CurrencyUnit target);
+    Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target);
 }
