@@ -17,7 +17,11 @@
 package io.github.eduardout.converter.util;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
+
 import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.json.JSONObject;
 
 /**
@@ -29,9 +33,16 @@ import org.json.JSONObject;
 public class DefaultRateParser implements RateParser {
 
     @Override
-    public BigDecimal parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target) {
-        return response
-                .getJSONObject(base.getCurrencyCode().toLowerCase())
-                .getBigDecimal(target.getCurrencyCode().toLowerCase());
+    public Map<String, BigDecimal> parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target) {
+        return response.toMap().entrySet()
+                .stream()
+                .filter(entrySet ->
+                        entrySet.getKey().equalsIgnoreCase(base.getCurrencyCode())
+                                || entrySet.getKey().equalsIgnoreCase(target.getCurrencyCode()))
+                .collect(Collectors.toMap(
+                                keyEntry -> keyEntry.getKey().toUpperCase(),
+                                valueEntry -> new BigDecimal(valueEntry.getValue().toString())
+                        )
+                );
     }
 }
