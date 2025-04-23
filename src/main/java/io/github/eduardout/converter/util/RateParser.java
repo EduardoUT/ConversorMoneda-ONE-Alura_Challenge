@@ -17,17 +17,26 @@
 package io.github.eduardout.converter.util;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
+
 import java.math.BigDecimal;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 /**
  * Since API currency rate providers have different ways to show the concrete
- * currency rate amount, you can create your own way to parse the response
+ * currency rate amount, you can create your own to parse the response
  * depending on the JSONObject response.
  *
  * @author EduardoUT
  */
 public interface RateParser {
 
-    BigDecimal parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target);
+    /**
+     * @param response The response from the API Provider.
+     * @param base     The currency unit as base.
+     * @param target   The currency unit to convert.
+     * @return A Map with the currency codes as keys and its amount as values.
+     */
+    Map<String, BigDecimal> parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target);
 }
