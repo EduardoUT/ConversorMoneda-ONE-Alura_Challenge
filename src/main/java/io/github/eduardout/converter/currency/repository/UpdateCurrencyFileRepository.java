@@ -25,5 +25,12 @@ import org.json.JSONObject;
  */
 public interface UpdateCurrencyFileRepository {
 
+    /**
+     * Updates the latest available currencies from the API  provider
+     * in a local JSON file, in case there is no available network
+     * connection.
+     *
+     * @param jSONObject A JSONObject to store.
+     */
     void updateCurrencyRates(JSONObject jSONObject) throws IOException;
 }
