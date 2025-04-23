@@ -20,22 +20,28 @@ import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.util.RateParser;
+
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.*;
+
 import org.json.JSONObject;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.anyString;
+
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import static org.mockito.Mockito.times;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- *
  * @author EduardoUT
  */
 @ExtendWith(MockitoExtension.class)
@@ -63,56 +69,78 @@ class FreeCurrencyExchangeRatesTest {
     private FreeCurrencyExchangeRates rates;
 
     @Test
-    void testSuccessfilApiCall() throws Exception {
-        String testUrl = "https://api.example.com";
-        JSONObject mockResponse = new JSONObject().put("USD", new JSONObject().put("EUR", 0.85));
+    void testSuccessfulApiCall() throws Exception {
+        Map<String, BigDecimal> expectedRates = new HashMap<>();
+        expectedRates.put("usd", new BigDecimal("0.05075398"));
+        expectedRates.put("eur", new BigDecimal("0.044226646"));
+        String testUrl = "https://api.currency-fake.mxn.min.json";
+        JSONObject mockResponse = new JSONObject("{}")
+                .put("mxn", new JSONObject()
+                        .put("usd", 0.05075398)
+                        .put("eur", 0.044226646)
+                );
         when(mockPropertiesConfig.getKeyProperties())
-                .thenReturn(new String[]{"api.endpoint"});
+                .thenReturn(Collections.singletonList("api.endpoint"));
         when(mockPropertiesConfig.getPropertyValue("api.endpoint"))
                 .thenReturn(testUrl);
         when(mockApiClient.fetchDataAsJSONObject(testUrl))
                 .thenReturn(mockResponse);
-        when(mockRateParser.parseRate(mockResponse, mockBase, mockTarget))
-                .thenReturn(new BigDecimal("0.85"));
-        BigDecimal result = rates.getCurrencyRate(mockBase, mockTarget);
-        assertEquals(new BigDecimal("0.85"), result);
-        verify(mockFallbackProvider).updateCurrencyRates(mockResponse);
+        when(mockRateParser.parseRate(mockResponse.getJSONObject("mxn"), mockBase, mockTarget))
+                .thenReturn(expectedRates);
+        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
+        BigDecimal baseAmount = result.orElseThrow(NoSuchElementException::new).get("usd");
+        BigDecimal targetAmount = result.orElseThrow(NoSuchElementException::new).get("eur");
+        assertEquals(expectedRates.get("usd"), baseAmount);
+        assertEquals(expectedRates.get("eur"), targetAmount);
+        verify(mockFallbackProvider).updateCurrencyRates(mockResponse.getJSONObject("mxn"));
     }
 
     @Test
-    public void testFallbackWhenAllEnpointsFail() throws Exception {
+    void testFallbackWhenAllEnpointsFail() throws Exception {
+        Map<String, BigDecimal> expected = new HashMap<>();
+        expected.put("MXN", new BigDecimal("1.25"));
         when(mockPropertiesConfig.getKeyProperties())
-                .thenReturn(new String[]{"endpoint.one", "endpoint.two"});
+                .thenReturn(Arrays.asList("endpoint.one", "endpoint.two"));
         when(mockPropertiesConfig.getPropertyValue(anyString()))
                 .thenReturn("https://api.example.com");
         when(mockApiClient.fetchDataAsJSONObject(anyString()))
                 .thenThrow(new IOException("Connection failed."));
-        when(mockFallbackProvider.getCurrencyRate(mockBase, mockTarget))
-                .thenReturn(new BigDecimal("1.25"));
-        BigDecimal result = rates.getCurrencyRate(mockBase, mockTarget);
-        assertEquals(new BigDecimal("1.25"), result);
-        verify(mockFallbackProvider).getCurrencyRate(mockBase, mockTarget);
+        when(mockFallbackProvider.getCurrencyRates(mockBase, mockTarget))
+                .thenReturn(Optional.of(expected));
+        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
+        assertEquals(new BigDecimal("1.25"), result.orElseThrow(NoSuchElementException::new).get("MXN"));
+        verify(mockFallbackProvider).getCurrencyRates(mockBase, mockTarget);
     }
 
     @Test
     void testRetryNextEndpointOnFailure() throws Exception {
+        Map<String, BigDecimal> expected = new HashMap<>();
+        expected.put("usd", new BigDecimal("0.05075398"));
+        expected.put("jpy", new BigDecimal("7.15786539"));
         String badUrl = "https://bad.endpoint";
         String goodUrl = "https://good.endpoint";
-        JSONObject goodResponse = new JSONObject().put("usd", new JSONObject().put("jpy", 140.0));
+        JSONObject goodResponse = new JSONObject("{}")
+                .put("mxn", new JSONObject()
+                        .put("usd", 0.05075398)
+                        .put("jpy", 7.15786539)
+                );
         when(mockPropertiesConfig.getKeyProperties())
-                .thenReturn(new String[]{"first", "second"});
+                .thenReturn(Arrays.asList("first", "second"));
         when(mockPropertiesConfig.getPropertyValue("first"))
                 .thenReturn(badUrl);
         when(mockPropertiesConfig.getPropertyValue("second"))
                 .thenReturn(goodUrl);
         when(mockApiClient.fetchDataAsJSONObject(badUrl))
-                .thenThrow(new IOException("Connection failded"));
+                .thenThrow(new IOException("Connection failed"));
         when(mockApiClient.fetchDataAsJSONObject(goodUrl))
                 .thenReturn(goodResponse);
-        when(mockRateParser.parseRate(goodResponse, mockBase, mockTarget))
-                .thenReturn(new BigDecimal("140.0"));
-        BigDecimal result = rates.getCurrencyRate(mockBase, mockTarget);
-        assertEquals(new BigDecimal("140.0"), result);
+        when(mockRateParser.parseRate(goodResponse.getJSONObject("mxn"), mockBase, mockTarget))
+                .thenReturn(expected);
+        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
+        BigDecimal baseAmount = result.orElseThrow(NoSuchElementException::new).get("usd");
+        BigDecimal targetAmount = result.orElseThrow(NoSuchElementException::new).get("jpy");
+        assertEquals(expected.get("usd"), baseAmount);
+        assertEquals(expected.get("jpy"), targetAmount);
         verify(mockApiClient, times(2)).fetchDataAsJSONObject(anyString());
     }
 }

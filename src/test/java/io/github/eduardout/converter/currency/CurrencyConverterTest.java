@@ -16,55 +16,55 @@
  */
 package io.github.eduardout.converter.currency;
 
-import static io.github.eduardout.converter.GlobalLogger.*;
 import static io.github.eduardout.converter.currency.ISO4217Currency.*;
-import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.currency.provider.APIClient;
-import io.github.eduardout.converter.currency.provider.FreeCurrencyExchangeRates;
+import static io.github.eduardout.converter.currency.CurrencyConverter.DEFAULT_AMOUNT;
+
 import io.github.eduardout.converter.currency.provider.RateProvider;
-import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
-import io.github.eduardout.converter.util.DefaultRateParser;
-import io.github.eduardout.converter.util.RateParser;
-import java.io.IOException;
+
 import java.math.BigDecimal;
-import java.util.logging.Level;
+import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.BeforeEach;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- *
  * @author EduardoUT
  */
-public class CurrencyConverterTest {
+@ExtendWith(MockitoExtension.class)
+class CurrencyConverterTest {
 
     private CurrencyConverter currencyConverter;
     private IllegalArgumentException illegalArgumentException;
     private BigDecimal amount = new BigDecimal("100.00");
-    private CurrencyUnit baseDefault = new CurrencyUnit(MXN);
-    private CurrencyUnit targetDefault = new CurrencyUnit(USD);
+    private CurrencyUnit baseDefault = new CurrencyUnit(USD);
+    private CurrencyUnit targetDefault = new CurrencyUnit(EUR);
     private RateProvider rateProvider;
 
-    void setUpApiProvider(RateProvider rateProvider) {
-        this.rateProvider = rateProvider;
+    @BeforeEach
+    void setUpRateProviderMock() {
+        rateProvider = mock(RateProvider.class);
     }
 
-    void setUp(BigDecimal amount, CurrencyUnit base, CurrencyUnit target) {
-        try {
-            APIClient apiClient = APIClient.getInstance();
-            PropertiesConfig propertiesConfig = PropertiesConfig
-                    .fromFile("config.properties", "fcera.");
-            JSONCurrencyFileRepository repository = new JSONCurrencyFileRepository("");
-            RateParser rateParser = new DefaultRateParser();
-            setUpApiProvider(new FreeCurrencyExchangeRates(apiClient, propertiesConfig, repository, rateParser));
-            currencyConverter = new CurrencyConverter(
-                    base,
-                    target,
-                    rateProvider,
-                    amount);
-        } catch (IOException e) {
-            registerLogException(Level.SEVERE, "Error on property file {0}", e);
-        }
+    BigDecimal calculateAmount(BigDecimal baseAmount, BigDecimal targetAmount) {
+        return amount
+                .multiply(DEFAULT_AMOUNT.divide(baseAmount, baseAmount.scale(), RoundingMode.FLOOR))
+                .divide(DEFAULT_AMOUNT.divide(targetAmount, targetAmount.scale(), RoundingMode.FLOOR),
+                        4, RoundingMode.FLOOR
+                );
     }
 
     @DisplayName("Debería comprobar que el código ISO del argumento base sea "
@@ -72,12 +72,12 @@ public class CurrencyConverterTest {
     @Test
     void testBaseCurrencyUnitReference() {
         CurrencyUnit sameReferenceAsTarget = targetDefault;
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(amount, sameReferenceAsTarget, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(sameReferenceAsTarget, targetDefault, rateProvider, amount)
+        );
         assertEquals("Invalid base CurrencyUnit: same "
-                + "type or same reference as target CurrencyUnit argument "
-                + "were provided.",
+                        + "type or same reference as target CurrencyUnit argument "
+                        + "were provided.",
                 illegalArgumentException.getMessage()
         );
     }
@@ -87,12 +87,12 @@ public class CurrencyConverterTest {
     @Test
     void testTargetCurrencyUnitReference() {
         CurrencyUnit sameReferenceAsBase = baseDefault;
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(amount, baseDefault, sameReferenceAsBase);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, sameReferenceAsBase, rateProvider, amount)
+        );
         assertEquals("Invalid base CurrencyUnit: same "
-                + "type or same reference as target CurrencyUnit argument "
-                + "were provided.",
+                        + "type or same reference as target CurrencyUnit argument "
+                        + "were provided.",
                 illegalArgumentException.getMessage()
         );
     }
@@ -101,14 +101,14 @@ public class CurrencyConverterTest {
             + "tipo CurrencyUnit cuyo valor fue null.")
     @Test
     void testCurrencyUnitWithNullArguments() {
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(amount, null, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(null, targetDefault, rateProvider, amount)
+        );
         assertEquals("Base CurrencyUnit is null.",
                 illegalArgumentException.getMessage());
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(amount, baseDefault, null);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, null, rateProvider, amount)
+        );
         assertEquals("Target CurrencyUnit is null.",
                 illegalArgumentException.getMessage());
     }
@@ -117,15 +117,18 @@ public class CurrencyConverterTest {
             + "del tipo de interface RateProvider")
     @Test
     void testNullRateProvider() {
-
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, targetDefault, null, amount)
+        );
+        assertEquals("RateProvider argument is null.", illegalArgumentException.getMessage());
     }
 
     @DisplayName("Debería lanzar IllegalArgumentException cuando se de un monto null")
     @Test
     void testNullAmount() {
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(null, baseDefault, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, targetDefault, rateProvider, null)
+        );
         assertEquals("Amount is null.", illegalArgumentException.getMessage());
     }
 
@@ -133,15 +136,15 @@ public class CurrencyConverterTest {
             + "menor o igual a 0")
     @Test
     void testMinimumAmountBoundary() {
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(new BigDecimal("0.00"), baseDefault, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, targetDefault, rateProvider, new BigDecimal("0.00"))
+        );
         assertEquals("Minimum valid amount of 1, 1.0 or greater is required.",
                 illegalArgumentException.getMessage()
         );
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(new BigDecimal("-1.00"), baseDefault, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, targetDefault, rateProvider, new BigDecimal("-1.00"))
+        );
         assertEquals("Minimum valid amount of 1, 1.0 or greater is required.",
                 illegalArgumentException.getMessage()
         );
@@ -151,11 +154,51 @@ public class CurrencyConverterTest {
             + "mayor a 999999999.9999")
     @Test
     void testMaximumAmountBoundary() {
-        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            setUp(new BigDecimal("999999999.999").add(BigDecimal.ONE), baseDefault, targetDefault);
-        });
+        illegalArgumentException = assertThrowsExactly(IllegalArgumentException.class,
+                () -> new CurrencyConverter(baseDefault, targetDefault, rateProvider, new BigDecimal("999999999.999").add(BigDecimal.ONE))
+        );
         assertEquals("Maximum valid amount of 999999999.9999 was exceded.",
                 illegalArgumentException.getMessage()
         );
+    }
+
+    @DisplayName("Debería cálcular correctamente la conversión")
+    @Test
+    void testGetConversion() {
+        Map<String, BigDecimal> expectedRate = new HashMap<>();
+        expectedRate.put("USD", new BigDecimal("0.05075398"));
+        expectedRate.put("EUR", new BigDecimal("0.044226646"));
+        when(rateProvider.getCurrencyRates(baseDefault, targetDefault))
+                .thenReturn(Optional.of(expectedRate));
+        currencyConverter = new CurrencyConverter(baseDefault, targetDefault, rateProvider, amount);
+        BigDecimal result = currencyConverter.getConversion();
+        assertEquals(calculateAmount(currencyConverter.getBaseAmount(), currencyConverter.getTargetAmount()), result);
+    }
+
+    @DisplayName("Debería cálcular correctamente la conversión inversa")
+    @Test
+    void testReverseConversion() {
+        Map<String, BigDecimal> expectedRate = new HashMap<>();
+        expectedRate.put("USD", new BigDecimal("0.05075398"));
+        expectedRate.put("EUR", new BigDecimal("0.044226646"));
+        when(rateProvider.getCurrencyRates(baseDefault, targetDefault))
+                .thenReturn(Optional.of(expectedRate));
+        currencyConverter = new CurrencyConverter(baseDefault, targetDefault, rateProvider, amount);
+        BigDecimal result = currencyConverter.reverseConversion();
+        assertEquals(calculateAmount(currencyConverter.getTargetAmount(), currencyConverter.getBaseAmount()), result);
+    }
+
+    @DisplayName("Debería lanzar IllegalStateException cuando todos los RateProvider fallen.")
+    @Test
+    void testDefaultRateUsedWhenNotProvided() {
+        IllegalStateException illegalStateException;
+        illegalStateException = assertThrowsExactly(IllegalStateException.class, () -> {
+            when(rateProvider.getCurrencyRates(baseDefault, targetDefault))
+                    .thenReturn(Optional.of(Collections.emptyMap()));
+            currencyConverter = new CurrencyConverter(baseDefault, targetDefault, rateProvider, amount);
+            currencyConverter.getConversion();
+            currencyConverter.reverseConversion();
+        });
+        assertEquals("No currencies were found from provider.", illegalStateException.getMessage());
     }
 }
