@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -77,26 +78,18 @@ public class JSONCurrencyFileRepository implements RateProvider,
     }
 
     @Override
-    public Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
-        BigDecimal rate = null;
+    public Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
+        Map<String, BigDecimal> rate = null;
         try {
             JSONObject jsonObject = readFile();
             rate = rateParser.parseRate(jsonObject, base, target);
         } catch (IOException ex) {
-            registerLogException(Level.SEVERE, "An exception occours while "
+            registerLogException(Level.SEVERE, "An exception occurs while "
                     + "reading the JSON currencies file. {0}", ex);
         }
         return Optional.ofNullable(rate);
     }
 
-    /**
-     * Updates all the latest available currencies from the Free Currency Rates
-     * API in a local JSON file, in further case there is no available network
-     * connection.
-     *
-     * @param response A JSONObject to store from the Free Currency Rates API.
-     * @throws java.io.IOException
-     */
     @Override
     public void updateCurrencyRates(JSONObject response) throws IOException {
         JSONObject currentData = readFile();
