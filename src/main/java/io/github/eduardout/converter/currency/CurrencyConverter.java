@@ -17,25 +17,29 @@
 package io.github.eduardout.converter.currency;
 
 import io.github.eduardout.converter.currency.provider.RateProvider;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *
  * @author EduardoUT
  */
 public class CurrencyConverter {
 
+    private static final BigDecimal MIN_AMOUNT = BigDecimal.ONE;
+    private static final BigDecimal MAX_AMOUNT = new BigDecimal("999999999.9999");
+    public static final BigDecimal DEFAULT_AMOUNT = new BigDecimal("1.00");
     private CurrencyUnit base;
     private CurrencyUnit target;
     private RateProvider rateProvider;
     private BigDecimal amount;
-    private static final BigDecimal MIN_AMOUNT = BigDecimal.ONE;
-    private static final BigDecimal MAX_AMOUNT = new BigDecimal("999999999.9999");
-    private static final BigDecimal ORIGIN_AMOUNT = new BigDecimal("1000");
+    private Map<String, BigDecimal> mappedCurrencies;
 
     public CurrencyConverter(CurrencyUnit base, CurrencyUnit target,
-            RateProvider rateProvider, BigDecimal amount) {
+                             RateProvider rateProvider, BigDecimal amount) {
         validateBaseCurrencyUnit(base, target);
         validateTargetCurrencyUnit(target, base);
         validateRateProvider(rateProvider);
@@ -44,24 +48,67 @@ public class CurrencyConverter {
         this.target = target;
         this.rateProvider = rateProvider;
         this.amount = amount;
+        setMappedCurrencies(base, target);
     }
 
-    public BigDecimal getConvertion() {
-        return amount.multiply(getCurrencyRateFromProvider(base, target))
-                .setScale(2, RoundingMode.FLOOR);
+    /**
+     * Sets a map with the base and target key (currency code) and value (equivalent amount) obtained from the rate provider.
+     *
+     * @param base   The base currency unit to search by its iso-code.
+     * @param target The target currency unit to search by its iso-code.
+     */
+    private void setMappedCurrencies(CurrencyUnit base, CurrencyUnit target) {
+        mappedCurrencies = new HashMap<>();
+        mappedCurrencies.putAll(rateProvider.getCurrencyRates(base, target).orElseGet(Collections::emptyMap));
+        if (mappedCurrencies.isEmpty()) {
+            throw new IllegalStateException("No currencies were found from provider.");
+        }
     }
 
-    public BigDecimal reverseConvertion() {
-        BigDecimal originEquivalentAmount = ORIGIN_AMOUNT.divide(
-                getCurrencyRateFromProvider(base, target), 3, RoundingMode.FLOOR
-        ).movePointLeft(3);
-        return amount.multiply(originEquivalentAmount).setScale(
-                3, RoundingMode.FLOOR
-        );
+    /**
+     * @return The equivalent amount from the base currency.
+     */
+    public BigDecimal getBaseAmount() {
+        return mappedCurrencies.get(base.getCurrencyCode());
     }
 
-    private BigDecimal getCurrencyRateFromProvider(CurrencyUnit base, CurrencyUnit target) {
-        return rateProvider.getCurrencyRate(base, target);
+    /**
+     * @return The equivalent amount from the target currency.
+     */
+    public BigDecimal getTargetAmount() {
+        return mappedCurrencies.get(target.getCurrencyCode());
+    }
+
+    /**
+     * Performs the next formula to calculate the given amount:
+     * <p>
+     * USD to EUR
+     * <p>
+     * EUR = (USD * (DEFAULT_AMOUNT / baseAmount) / (DEFAULT_AMOUNT / targetAmount)
+     * <p>
+     * Being DEFAULT_AMOUNT a monetary representation of 1 unit.
+     * <p>
+     * Arguments can be swapped for example USD -> EUR or EUR -> USD, as the provider
+     * gets actual and valid values.
+     *
+     * @param baseAmount   Amount equivalent of the base currency unit.
+     * @param targetAmount Amount equivalent of the target currency unit.
+     * @return The conversion between the base amount and target amount.
+     */
+    private BigDecimal calculateAmount(BigDecimal baseAmount, BigDecimal targetAmount) {
+        return amount
+                .multiply(DEFAULT_AMOUNT.divide(baseAmount, baseAmount.scale(), RoundingMode.FLOOR))
+                .divide(DEFAULT_AMOUNT.divide(targetAmount, targetAmount.scale(), RoundingMode.FLOOR),
+                        4, RoundingMode.FLOOR
+                );
+    }
+
+    public BigDecimal getConversion() {
+        return calculateAmount(getBaseAmount(), getTargetAmount());
+    }
+
+    public BigDecimal reverseConversion() {
+        return calculateAmount(getTargetAmount(), getBaseAmount());
     }
 
     private void validateAmount(BigDecimal amount) {
