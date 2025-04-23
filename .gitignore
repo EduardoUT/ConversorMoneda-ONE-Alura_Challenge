@@ -8,3 +8,6 @@ nbactions.xml
 
 # Project
 /logs/
+
+# IntelliJ
+.idea
