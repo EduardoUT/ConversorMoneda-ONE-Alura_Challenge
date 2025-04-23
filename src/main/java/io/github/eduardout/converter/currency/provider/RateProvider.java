@@ -17,25 +17,25 @@
 package io.github.eduardout.converter.currency.provider;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
+
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 
 /**
- * Interface where online or offline implementations get the CurrencyRate.
+ * Interface where online or offline implementations get the currency rates.
  *
  * @author EduardoUT
  */
 public interface RateProvider {
 
     /**
-     * In this method we set the base CurrencyUnit to get the target monetary
+     * In this method we set the base CurrencyUnit to get its corresponding monetary
      * amount.
      *
-     * @param base CurrencyUnit as the base curreny.
-     * @param target CurrencyUnit as the target currency to get the equivalence
-     * amount.
-     * @return An Optional BigDecimal with the equivalence target amount of the
-     * base.
+     * @param base   CurrencyUnit as the base currency.
+     * @param target CurrencyUnit as the target currency.
+     * @return An Optional Map with the corresponding keys (currency code) and values (amount).
      */
-    Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target);
+    Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target);
 }
