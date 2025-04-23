@@ -19,28 +19,35 @@ package io.github.eduardout.converter.currency.provider;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.util.RateParser;
 import io.github.eduardout.converter.currency.CurrencyUnit;
+
 import static io.github.eduardout.converter.GlobalLogger.*;
+
+import io.github.eduardout.converter.currency.ISO4217Currency;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
+
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
+
 import org.json.JSONObject;
 
 /**
+ * <p>
  * This class is an implementation of a RateProvider interface, so we can fetch
  * the currency rates in real time from the Free Currency Exchange Rates API,
  * internet connection is needed to work correctly with request methods.
- *
+ * </p>
+ * <p>
  * Constats defined in this class must be the same as in the config.properties
- * file, currently ones are defined manually for example:
- *
- * key=value
- *
- * another.key=value
- *
+ * file, currently ones are defined manually for example:<br><br>
+ * key=value<br>
+ * another.key=value<br><br>
  * The Free Currency Exchange Rates API always takes the base as 1.00 monetary
- * unit and returns the equivalence target amount of that monetary unit.
+ * unit and returns the equivalence target amount of that monetary unit, so for this implementation
+ * was used the MXN currency as base to fetch data, these are configured on the links on properties file
+ * </p>
  *
  * @author EduardoUT
  */
@@ -52,41 +59,33 @@ public class FreeCurrencyExchangeRates implements RateProvider {
     private RateParser rateParser;
 
     public FreeCurrencyExchangeRates(APIClient apiClient,
-            PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
-            RateParser rateParser) throws IOException {
+                                     PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
+                                     RateParser rateParser) {
         this.apiClient = apiClient;
         this.propertiesConfig = propertiesConfig;
         this.fallbackProvider = fallbackProvider;
         this.rateParser = rateParser;
     }
 
-    /**
-     * Takes the currency rate amount obtained from the API response json and
-     * returns it as a BigDecimal.
-     *
-     * @param base The CurrencyUnit base in this API represents a 1.00 monetary
-     * amount.
-     * @param target The CurrencyUnit to return its equivalence given the base.
-     * @return The BigDecimal equivalence target amount of the given base
-     * CurrencyUnit ISO 4217.
-     */
     @Override
-    public Optional<BigDecimal> getCurrencyRate(CurrencyUnit base, CurrencyUnit target) {
-        BigDecimal rate;
+    public Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
+        Map<String, BigDecimal> rate;
+        CurrencyUnit apiBaseCurrencyUnit = new CurrencyUnit(ISO4217Currency.MXN);
         for (String key : propertiesConfig.getKeyProperties()) {
             try {
                 String url = propertiesConfig.getPropertyValue(key);
                 registerLog(Level.INFO, "Fetching data from API.");
                 JSONObject response = apiClient.fetchDataAsJSONObject(url);
-                fallbackProvider.updateCurrencyRates(response);
-                rate = rateParser.parseRate(response, base, target);
+                JSONObject apiBaseKey = response.getJSONObject(apiBaseCurrencyUnit.getCurrencyCode().toLowerCase());
+                fallbackProvider.updateCurrencyRates(apiBaseKey);
+                rate = rateParser.parseRate(apiBaseKey, base, target);
                 return Optional.ofNullable(rate);
             } catch (IOException | IllegalStateException e) {
                 registerLogException(Level.SEVERE, "Error while getting response "
                         + "from API {0} ", e);
             }
         }
-        registerLog(Level.SEVERE, "All response endpoinds faied, using JSON file.");
-        return fallbackProvider.getCurrencyRate(base, target);
+        registerLog(Level.SEVERE, "All response endpoints failed, using JSON file.");
+        return fallbackProvider.getCurrencyRates(base, target);
     }
 }
