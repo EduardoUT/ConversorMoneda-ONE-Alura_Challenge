@@ -1,4 +1,4 @@
-package io.github.eduardout.converter.ventanas;
+package io.github.eduardout.converter.view;
 
 import java.awt.Graphics;
 import java.awt.Image;
