@@ -93,6 +93,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         ventanaIngresoTemperatura.getGraphics().drawImage(imagesList.get(5), 0, 0, this);
         fondoPrincipal.getGraphics().drawImage(imagesList.get(6), 0, 0, this);
         fondoPrincipal.setOpaque(false);
+
     }
 
     public void mostrarVentanaBienvenida() {
