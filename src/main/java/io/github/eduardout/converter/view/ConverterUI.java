@@ -6,8 +6,11 @@ import io.github.eduardout.converter.util.ImageLoader;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -31,27 +34,25 @@ public final class ConverterUI extends javax.swing.JFrame {
     String resultadoConversion;
     CurrencyUnit pesoMexicano;
     BigDecimal valorConversionToBigDecimal;
-    Color transparent = new Color(0, 0, 0, 0);
-    Color darkRed = new Color(153, 0, 0, 255);
-    Color verdeClaroBtnMenu = new Color(26, 96, 62, 255);
-    Color verdeFuerteBtnMenu = new Color(14, 51, 33, 255);
-    Color verdeAzulado = new Color(50, 143, 143, 255);
-    Color verdeClaroBtnesDivisa = new Color(151, 208, 176, 255);
-    Color verdeFuerteBtnesDivisa = new Color(28, 113, 81, 255);
-    private List<Image> images;
-    private Window window;
-    private ImageLoader imageLoader;
+    
+    Color transparent;
+    Color darkRed;
+    Color darkGreen;
+    Color darksLateGreen;
+    Color darksLateGray;
+    Color darkCyan;
+    Color verdeClaroBtnesDivisa;
+    Color verdeFuerteBtnesDivisa;
 
     /**
      * Creates new form MenuConversion
      */
     public ConverterUI() {
         initComponents();
-        setBackground(transparent);
-        ventanaIngresoDivisa.setBackground(transparent);
-        ventanaIngresoTemperatura.setBackground(transparent);
-        btnCerrarVentana.setBackground(new Color(60, 63, 65, 255));
-        btnMinimizarVentana.setBackground(new Color(60, 63, 65, 255));
+        initialize();
+    }
+
+    private void initialize() {
         mostrarVentanaBienvenida();
         ocultarVentanaIngresoDivisa();
         ocultarPanelValorDivisa();
@@ -61,55 +62,49 @@ public final class ConverterUI extends javax.swing.JFrame {
         ocultarPanelValorTemperatura();
         ocultarPanelSeleccionTemperatura();
         ocultarPanelResultadosTemperatura();
-        initialize();
+        setUpColors();
+        setUpBackground();
     }
 
-    private void initialize() {
-        setUpImages();
+    private void setUpColors() {
+        Map<String, Color> colors = new HashMap<>();
+        colors.put("transparent", new Color(0, 0, 0, 0));
+        colors.put("darkslategray", new Color(60, 63, 65, 255));
+        colors.put("darkcyan", new Color(50, 143, 143, 255));
+        colors.put("darkslategreen", new Color(14, 51, 33, 255));
+        colors.put("darkgreen", new Color(26, 96, 62, 255));
+        colors.put("darkred", new Color(153, 0, 0, 255));
+        colors.put("ghostwhite", new Color(244, 246, 252, 255));
+        darkCyan = colors.get("darkcyan");
+        darksLateGreen = colors.get("darkslategreen");
+        darkGreen = colors.get("darkgreen");
+        darkRed = colors.get("darkred");
+        transparent = colors.get("transparent");
+        darksLateGray = colors.get("darkslategray");
     }
 
-    private void setUpImages() {
-        window = new Window(this);
-        String imagesPath = "resources/images/";
-        window.setIconImage(ImageLoader.getImage(imagesPath + "logo_personal.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "bannerConversor.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "challengeImage.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "FondoMenu.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "FondoPanelCurrency.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "FondoPanelTemperatura.png"));
-        window.setIconImage(ImageLoader.getImage(imagesPath + "Background2.png"));
-        
-        drawImages();
-    }
-
-    private void drawImages() {
-        List<Image> imagesList = window.getIconImages();
-        imagesList.forEach(e -> System.out.println(e));
-        this.setIconImage(imagesList.get(0));
-        this.getIconImage();
-        menuConversiones.getGraphics().drawImage(imagesList.get(3), 0, 0, this);
-        ventanaBienvenida.getGraphics().drawImage(imagesList.get(2), 0, 0, this);
-        ventanaIngresoDivisa.getGraphics().drawImage(imagesList.get(4), 0, 0, this);
-        ventanaIngresoTemperatura.getGraphics().drawImage(imagesList.get(5), 0, 0, this);
-        fondoPrincipal.getGraphics().drawImage(imagesList.get(6), 0, 0, this);
-        fondoPrincipal.setOpaque(false);
-
+    private void setUpBackground() {
+        setBackground(transparent);
+        panelIngresoDivisa.setBackground(transparent);
+        panelIngresoTemperatura.setBackground(transparent);
+        btnCerrarVentana.setBackground(darksLateGray);
+        btnMinimizarVentana.setBackground(darksLateGray);
     }
 
     public void mostrarVentanaBienvenida() {
-        ventanaBienvenida.setVisible(true);
+        panelBienvenida.setVisible(true);
     }
 
     public void ocultarVentanaBienvenida() {
-        ventanaBienvenida.setVisible(false);
+        panelBienvenida.setVisible(false);
     }
 
     public void mostrarVentanaIngresoDivisa() {
-        ventanaIngresoDivisa.setVisible(true);
+        panelIngresoDivisa.setVisible(true);
     }
 
     public void ocultarVentanaIngresoDivisa() {
-        ventanaIngresoDivisa.setVisible(false);
+        panelIngresoDivisa.setVisible(false);
     }
 
     public void mostrarPanelValorDivisa() {
@@ -170,11 +165,11 @@ public final class ConverterUI extends javax.swing.JFrame {
     }
 
     public void mostrarVentanaIngresoTemperatura() {
-        ventanaIngresoTemperatura.setVisible(true);
+        panelIngresoTemperatura.setVisible(true);
     }
 
     public void ocultarVentanaIngresoTemperatura() {
-        ventanaIngresoTemperatura.setVisible(false);
+        panelIngresoTemperatura.setVisible(false);
     }
 
     public void mostrarPanelValorTemperatura() {
@@ -253,57 +248,56 @@ public final class ConverterUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel4 = new javax.swing.JLabel();
-        menuConversiones = new javax.swing.JPanel();
+        panelMenu = new JPanelImageDrawer("images/FondoMenu.png");
         btnCerrarVentana = new javax.swing.JLabel();
         btnMinimizarVentana = new javax.swing.JLabel();
         btnConversionMoneda = new javax.swing.JLabel();
         btnConversionTemperatura = new javax.swing.JLabel();
         btnBienvenida = new javax.swing.JLabel();
-        ventanaBienvenida = new javax.swing.JPanel();
+        panelBienvenida = new JPanelImageDrawer("images/challengeImage.jpg");
         tituloBienvenida = new javax.swing.JLabel();
         nombreDesarrollador = new javax.swing.JLabel();
-        ventanaIngresoDivisa = new javax.swing.JPanel();
-        panelValorDivisa = new FondoPanelesPequenosCurrency();
+        panelIngresoDivisa = new JPanelImageDrawer("images/Background2.png");
+        panelValorDivisa = new JPanelImageDrawer("images/FondoPanelCurrency.png");
         instruccionCampoIngresoDivisa = new javax.swing.JLabel();
         campoIngresoDivisa = new javax.swing.JTextField();
         separadorCampoInngresoDivisa = new javax.swing.JSeparator();
         btnIngresoDivisa = new javax.swing.JLabel();
-        panelSeleccionDivisa = new FondoPanelesPequenosCurrency();
+        panelSeleccionDivisa = new javax.swing.JPanel();
         instruccionSeleccionDivisa = new javax.swing.JLabel();
         campoSeleccionDivisa = new javax.swing.JComboBox<>();
         btnSeleccionDivisa = new javax.swing.JLabel();
-        panelResultadosDivisa = new FondoPanelesPequenosCurrency();
+        panelResultadosDivisa = new javax.swing.JPanel();
         infoConversionUnoDivisa = new javax.swing.JLabel();
         infoConversionDosDivisa = new javax.swing.JLabel();
         resultadoDivisa = new javax.swing.JLabel();
         btnOtraConversionDivisa = new javax.swing.JLabel();
-        ventanaIngresoTemperatura = new javax.swing.JPanel();
-        panelValorTemperatura = new FondoPanelesPequenosTemperatura();
+        panelIngresoTemperatura = new JPanelImageDrawer("images/Background2.png");
+        panelValorTemperatura = new JPanelImageDrawer("images/FondoPanelTemperatura.png");
         instruccionCampoIngresoTemperatura = new javax.swing.JLabel();
         campoIngresoTemperatura = new javax.swing.JTextField();
         separadorCampoIngresoTemperatura = new javax.swing.JSeparator();
         btnIngresoTemperatura = new javax.swing.JLabel();
-        panelSeleccionTemperatura = new FondoPanelesPequenosTemperatura();
+        panelSeleccionTemperatura = new javax.swing.JPanel();
         instruccionSeleccionTemperatura = new javax.swing.JLabel();
         campoSeleccionTemperatura = new javax.swing.JComboBox<>();
         btnSeleccionTemperatura = new javax.swing.JLabel();
-        panelResultadosTemperatura = new FondoPanelesPequenosTemperatura();
+        panelResultadosTemperatura = new javax.swing.JPanel();
         infoConversionTemperaturaUno = new javax.swing.JLabel();
         infoConversionTemperaturaDos = new javax.swing.JLabel();
         resultadoTemperatura = new javax.swing.JLabel();
         btnOtraConversionTemperatura = new javax.swing.JLabel();
-        fondoPrincipal = new javax.swing.JLabel();
+        fondoPrincipal = new JLabelImageDrawer("images/Background2.png");
 
         jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-        setIconImage(getIconImage());
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        menuConversiones.setBackground(new java.awt.Color(0, 102, 153));
-        menuConversiones.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelMenu.setBackground(new java.awt.Color(0, 102, 153));
+        panelMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnCerrarVentana.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         btnCerrarVentana.setForeground(new java.awt.Color(255, 255, 255));
@@ -323,7 +317,7 @@ public final class ConverterUI extends javax.swing.JFrame {
                 btnCerrarVentanaMouseExited(evt);
             }
         });
-        menuConversiones.add(btnCerrarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 30));
+        panelMenu.add(btnCerrarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 30));
 
         btnMinimizarVentana.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnMinimizarVentana.setForeground(new java.awt.Color(255, 255, 255));
@@ -343,7 +337,7 @@ public final class ConverterUI extends javax.swing.JFrame {
                 btnMinimizarVentanaMouseExited(evt);
             }
         });
-        menuConversiones.add(btnMinimizarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 50, 30));
+        panelMenu.add(btnMinimizarVentana, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 0, 50, 30));
 
         btnConversionMoneda.setBackground(new java.awt.Color(14, 51, 33));
         btnConversionMoneda.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -363,7 +357,7 @@ public final class ConverterUI extends javax.swing.JFrame {
                 btnConversionMonedaMouseExited(evt);
             }
         });
-        menuConversiones.add(btnConversionMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 240, 30));
+        panelMenu.add(btnConversionMoneda, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 310, 240, 30));
 
         btnConversionTemperatura.setBackground(new java.awt.Color(14, 51, 33));
         btnConversionTemperatura.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -383,7 +377,7 @@ public final class ConverterUI extends javax.swing.JFrame {
                 btnConversionTemperaturaMouseExited(evt);
             }
         });
-        menuConversiones.add(btnConversionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 240, 30));
+        panelMenu.add(btnConversionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 240, 30));
 
         btnBienvenida.setBackground(new java.awt.Color(14, 51, 33));
         btnBienvenida.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -403,27 +397,27 @@ public final class ConverterUI extends javax.swing.JFrame {
                 btnBienvenidaMouseExited(evt);
             }
         });
-        menuConversiones.add(btnBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 240, 30));
+        panelMenu.add(btnBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 240, 30));
 
-        getContentPane().add(menuConversiones, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 240, 470));
+        getContentPane().add(panelMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 240, 470));
 
-        ventanaBienvenida.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelBienvenida.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tituloBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tituloBienvenida.setForeground(new java.awt.Color(0, 0, 0));
         tituloBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tituloBienvenida.setText("Bienvenido(a)");
-        ventanaBienvenida.add(tituloBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 620, -1));
+        panelBienvenida.add(tituloBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 620, -1));
 
         nombreDesarrollador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         nombreDesarrollador.setForeground(new java.awt.Color(0, 0, 0));
         nombreDesarrollador.setText("Desarrollado por: Eduardo Reyes Hernández");
-        ventanaBienvenida.add(nombreDesarrollador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 340, -1));
+        panelBienvenida.add(nombreDesarrollador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 340, -1));
 
-        getContentPane().add(ventanaBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
+        getContentPane().add(panelBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
 
-        ventanaIngresoDivisa.setBackground(new java.awt.Color(0, 204, 204));
-        ventanaIngresoDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelIngresoDivisa.setBackground(new java.awt.Color(0, 204, 204));
+        panelIngresoDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelValorDivisa.setBackground(new java.awt.Color(153, 0, 153));
         panelValorDivisa.setForeground(new java.awt.Color(244, 246, 252));
@@ -479,7 +473,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelValorDivisa.add(btnIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(235, 260, 110, 40));
 
-        ventanaIngresoDivisa.add(panelValorDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoDivisa.add(panelValorDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         panelSeleccionDivisa.setNextFocusableComponent(campoSeleccionDivisa);
         panelSeleccionDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -515,7 +509,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelSeleccionDivisa.add(btnSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(235, 260, 110, 40));
 
-        ventanaIngresoDivisa.add(panelSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoDivisa.add(panelSeleccionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         panelResultadosDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -559,11 +553,11 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelResultadosDivisa.add(btnOtraConversionDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 360, 190, 40));
 
-        ventanaIngresoDivisa.add(panelResultadosDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoDivisa.add(panelResultadosDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
-        getContentPane().add(ventanaIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
+        getContentPane().add(panelIngresoDivisa, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
 
-        ventanaIngresoTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelIngresoTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelValorTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -614,7 +608,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelValorTemperatura.add(btnIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(235, 260, 110, 40));
 
-        ventanaIngresoTemperatura.add(panelValorTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoTemperatura.add(panelValorTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         panelSeleccionTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -649,7 +643,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelSeleccionTemperatura.add(btnSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(235, 260, 110, 40));
 
-        ventanaIngresoTemperatura.add(panelSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoTemperatura.add(panelSeleccionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
         panelResultadosTemperatura.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -688,9 +682,9 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelResultadosTemperatura.add(btnOtraConversionTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(194, 360, 190, 40));
 
-        ventanaIngresoTemperatura.add(panelResultadosTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
+        panelIngresoTemperatura.add(panelResultadosTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 580, 430));
 
-        getContentPane().add(ventanaIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
+        getContentPane().add(panelIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
 
         fondoPrincipal.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -728,9 +722,9 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnConversionMonedaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionMonedaMouseClicked
         evt.consume();
-        if (ventanaBienvenida.isVisible());
+        if (panelBienvenida.isVisible());
         ocultarVentanaBienvenida();
-        if (ventanaIngresoTemperatura.isVisible());
+        if (panelIngresoTemperatura.isVisible());
         ocultarVentanaIngresoTemperatura();
 
         mostrarVentanaIngresoDivisa();
@@ -740,9 +734,9 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnConversionTemperaturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionTemperaturaMouseClicked
         evt.consume();
-        if (ventanaBienvenida.isVisible());
+        if (panelBienvenida.isVisible());
         ocultarVentanaBienvenida();
-        if (ventanaIngresoDivisa.isVisible());
+        if (panelIngresoDivisa.isVisible());
         ocultarVentanaIngresoDivisa();
 
         mostrarVentanaIngresoTemperatura();
@@ -763,9 +757,9 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnBienvenidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBienvenidaMouseClicked
         evt.consume();
-        if (ventanaIngresoDivisa.isVisible());
+        if (panelIngresoDivisa.isVisible());
         ocultarVentanaIngresoDivisa();
-        if (ventanaIngresoTemperatura.isVisible());
+        if (panelIngresoTemperatura.isVisible());
         ocultarVentanaIngresoTemperatura();
 
         mostrarVentanaBienvenida();
@@ -829,7 +823,7 @@ public final class ConverterUI extends javax.swing.JFrame {
             btnIngresoTemperatura.setEnabled(true);
         } else {
             btnIngresoTemperatura.setEnabled(false);
-            btnIngresoTemperatura.setBackground(verdeAzulado);
+            btnIngresoTemperatura.setBackground(darkCyan);
         }*/
     }//GEN-LAST:event_campoIngresoTemperaturaKeyReleased
 
@@ -938,33 +932,33 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnConversionMonedaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionMonedaMouseEntered
         evt.consume();
-        btnConversionMoneda.setBackground(verdeClaroBtnMenu);
+        btnConversionMoneda.setBackground(darkGreen);
 
     }//GEN-LAST:event_btnConversionMonedaMouseEntered
 
     private void btnConversionMonedaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionMonedaMouseExited
         evt.consume();
-        btnConversionMoneda.setBackground(verdeFuerteBtnMenu);
+        btnConversionMoneda.setBackground(darksLateGreen);
     }//GEN-LAST:event_btnConversionMonedaMouseExited
 
     private void btnConversionTemperaturaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionTemperaturaMouseEntered
         evt.consume();
-        btnConversionTemperatura.setBackground(verdeClaroBtnMenu);
+        btnConversionTemperatura.setBackground(darkGreen);
     }//GEN-LAST:event_btnConversionTemperaturaMouseEntered
 
     private void btnConversionTemperaturaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionTemperaturaMouseExited
         evt.consume();
-        btnConversionTemperatura.setBackground(verdeFuerteBtnMenu);
+        btnConversionTemperatura.setBackground(darksLateGreen);
     }//GEN-LAST:event_btnConversionTemperaturaMouseExited
 
     private void btnBienvenidaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBienvenidaMouseEntered
         evt.consume();
-        btnBienvenida.setBackground(verdeClaroBtnMenu);
+        btnBienvenida.setBackground(darkGreen);
     }//GEN-LAST:event_btnBienvenidaMouseEntered
 
     private void btnBienvenidaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBienvenidaMouseExited
         evt.consume();
-        btnBienvenida.setBackground(verdeFuerteBtnMenu);
+        btnBienvenida.setBackground(darksLateGreen);
     }//GEN-LAST:event_btnBienvenidaMouseExited
 
     private void btnIngresoTemperaturaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresoTemperaturaMouseEntered
@@ -978,7 +972,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     private void btnIngresoTemperaturaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresoTemperaturaMouseExited
         if (btnIngresoTemperatura.isEnabled()) {
             evt.consume();
-            btnIngresoTemperatura.setBackground(verdeAzulado);
+            btnIngresoTemperatura.setBackground(darkCyan);
         }
     }//GEN-LAST:event_btnIngresoTemperaturaMouseExited
 
@@ -989,7 +983,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnSeleccionTemperaturaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSeleccionTemperaturaMouseExited
         evt.consume();
-        btnSeleccionTemperatura.setBackground(verdeAzulado);
+        btnSeleccionTemperatura.setBackground(darkCyan);
     }//GEN-LAST:event_btnSeleccionTemperaturaMouseExited
 
     private void btnOtraConversionTemperaturaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionTemperaturaMouseEntered
@@ -999,7 +993,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void btnOtraConversionTemperaturaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionTemperaturaMouseExited
         evt.consume();
-        btnOtraConversionTemperatura.setBackground(verdeAzulado);
+        btnOtraConversionTemperatura.setBackground(darkCyan);
     }//GEN-LAST:event_btnOtraConversionTemperaturaMouseExited
 
     private void btnIngresoDivisaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnIngresoDivisaMouseEntered
@@ -1014,7 +1008,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         if (btnIngresoDivisa.isEnabled()) {
             evt.consume();
             btnIngresoDivisa.setBackground(verdeFuerteBtnesDivisa);
-            btnIngresoDivisa.setForeground(new Color(244, 246, 252, 255));
+            btnIngresoDivisa.setForeground(new Color(244, 246, 252, 255));//ghostwhite
         }
     }//GEN-LAST:event_btnIngresoDivisaMouseExited
 
@@ -1111,8 +1105,11 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JLabel instruccionSeleccionDivisa;
     private javax.swing.JLabel instruccionSeleccionTemperatura;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPanel menuConversiones;
     private javax.swing.JLabel nombreDesarrollador;
+    private javax.swing.JPanel panelBienvenida;
+    private javax.swing.JPanel panelIngresoDivisa;
+    private javax.swing.JPanel panelIngresoTemperatura;
+    private javax.swing.JPanel panelMenu;
     private javax.swing.JPanel panelResultadosDivisa;
     private javax.swing.JPanel panelResultadosTemperatura;
     private javax.swing.JPanel panelSeleccionDivisa;
@@ -1124,72 +1121,56 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JSeparator separadorCampoIngresoTemperatura;
     private javax.swing.JSeparator separadorCampoInngresoDivisa;
     private javax.swing.JLabel tituloBienvenida;
-    private javax.swing.JPanel ventanaBienvenida;
-    private javax.swing.JPanel ventanaIngresoDivisa;
-    private javax.swing.JPanel ventanaIngresoTemperatura;
     // End of variables declaration//GEN-END:variables
-    class BannerConversor extends JLabel {
+    class JPanelImageDrawer extends JPanel {
 
-        private Image imagen;
+        private String fileName;
+
+        public JPanelImageDrawer(String fileName) {
+            this.fileName = fileName;
+        }
 
         @Override
         public void paint(Graphics g) {
-            imagen = new ImageIcon(getClass().getResource("/Imagenes/bannerConversor.png")).getImage();
+            Image imagen = ImageLoader.getImage(fileName);
             g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
             setOpaque(false);
             super.paint(g);
         }
     }
 
-    class FondoPanelMenu extends JPanel {
+    class JLabelImageDrawer extends JLabel {
 
-        private Image imagen;
+        private String fileName;
+
+        public JLabelImageDrawer(String fileName) {
+            this.fileName = fileName;
+        }
 
         @Override
         public void paint(Graphics g) {
-            imagen = new ImageIcon(getClass().getResource("/Imagenes/FondoMenu.png")).getImage();
+            Image imagen = ImageLoader.getImage(fileName);
             g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
             setOpaque(false);
             super.paint(g);
         }
     }
 
-    class FondoBienvenida extends JPanel {
+    class JPanelDrawer extends JPanel {
 
-        private Image imagen;
+        private String fileName;
 
-        @Override
-        public void paint(Graphics g) {
-            imagen = new ImageIcon(getClass().getResource("/Imagenes/challengeImage.jpg")).getImage();
-            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
-            setOpaque(false);
-            super.paint(g);
+        public JPanelDrawer(String fileName) {
+            this.fileName = fileName;
         }
-    }
-
-    class FondoPanelesPequenosCurrency extends JPanel {
-
-        private Image imagen;
 
         @Override
         public void paint(Graphics g) {
-            imagen = new ImageIcon(getClass().getResource("/Imagenes/FondoPanelCurrency.png")).getImage();
+            Image imagen = ImageLoader.getImage(fileName);
             g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
             setOpaque(false);
-            super.paint(g);
-        }
-    }
+            super.paint(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
 
-    class FondoPanelesPequenosTemperatura extends JPanel {
-
-        private Image imagen;
-
-        @Override
-        public void paint(Graphics g) {
-            imagen = new ImageIcon(getClass().getResource("/Imagenes/FondoPanelTemperatura.png")).getImage();
-            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
-            setOpaque(false);
-            super.paint(g);
         }
     }
 }
