@@ -53,6 +53,8 @@ public final class ConverterUI extends javax.swing.JFrame {
     }
 
     private void initialize() {
+        setUpColors();
+        setUpBackground();
         mostrarVentanaBienvenida();
         ocultarVentanaIngresoDivisa();
         ocultarPanelValorDivisa();
@@ -62,8 +64,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         ocultarPanelValorTemperatura();
         ocultarPanelSeleccionTemperatura();
         ocultarPanelResultadosTemperatura();
-        setUpColors();
-        setUpBackground();
+        
     }
 
     private void setUpColors() {
@@ -90,6 +91,11 @@ public final class ConverterUI extends javax.swing.JFrame {
         panelIngresoTemperatura.setBackground(transparent);
         btnCerrarVentana.setBackground(darksLateGray);
         btnMinimizarVentana.setBackground(darksLateGray);
+    }
+
+    @Override
+    public Image getIconImage() {
+        return ImageLoader.getImage("images/logo_personal.png");
     }
 
     public void mostrarVentanaBienvenida() {
@@ -686,6 +692,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
         getContentPane().add(panelIngresoTemperatura, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 630, 470));
 
+        fondoPrincipal.setBackground(new java.awt.Color(0, 0, 0));
         fondoPrincipal.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 fondoPrincipalMouseDragged(evt);
