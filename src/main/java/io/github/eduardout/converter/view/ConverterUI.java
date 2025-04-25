@@ -25,24 +25,24 @@ import javax.swing.JPanel;
  */
 public final class ConverterUI extends javax.swing.JFrame {
 
-    int xMouse;
-    int yMouse;
-    String valorConversion;
-    double valorConversionToDouble;
-    String valorSeleccionTipoConversion;
-    String infoConversionRealizada;
-    String resultadoConversion;
-    CurrencyUnit pesoMexicano;
-    BigDecimal valorConversionToBigDecimal;
-    
-    Color transparent;
-    Color darkRed;
-    Color darkGreen;
-    Color darksLateGreen;
-    Color darksLateGray;
-    Color darkCyan;
-    Color verdeClaroBtnesDivisa;
-    Color verdeFuerteBtnesDivisa;
+    private int xMouse;
+    private int yMouse;
+    private String valorConversion;
+    private double valorConversionToDouble;
+    private String valorSeleccionTipoConversion;
+    private String infoConversionRealizada;
+    private String resultadoConversion;
+    private CurrencyUnit pesoMexicano;
+    private BigDecimal valorConversionToBigDecimal;
+    private Color transparent;
+    private Color darkRed;
+    private Color darkGreen;
+    private Color darksLateGreen;
+    private Color darksLateGray;
+    private Color darkCyan;
+    private Color verdeClaroBtnesDivisa;
+    private Color verdeFuerteBtnesDivisa;
+    private Color ghostWhite;
 
     /**
      * Creates new form MenuConversion
@@ -81,6 +81,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         darkRed = colors.get("darkred");
         transparent = colors.get("transparent");
         darksLateGray = colors.get("darkslategray");
+        ghostWhite = colors.get("ghostwhite");
     }
 
     private void setUpBackground() {
@@ -419,7 +420,6 @@ public final class ConverterUI extends javax.swing.JFrame {
         panelIngresoDivisa.setBackground(new java.awt.Color(0, 204, 204));
         panelIngresoDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        panelValorDivisa.setBackground(new java.awt.Color(153, 0, 153));
         panelValorDivisa.setForeground(new java.awt.Color(244, 246, 252));
         panelValorDivisa.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -1008,7 +1008,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         if (btnIngresoDivisa.isEnabled()) {
             evt.consume();
             btnIngresoDivisa.setBackground(verdeFuerteBtnesDivisa);
-            btnIngresoDivisa.setForeground(new Color(244, 246, 252, 255));//ghostwhite
+            btnIngresoDivisa.setForeground(ghostWhite);//ghostwhite
         }
     }//GEN-LAST:event_btnIngresoDivisaMouseExited
 
@@ -1021,7 +1021,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     private void btnSeleccionDivisaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSeleccionDivisaMouseExited
         evt.consume();
         btnSeleccionDivisa.setBackground(verdeFuerteBtnesDivisa);
-        btnSeleccionDivisa.setForeground(new Color(244, 246, 252, 255));
+        btnSeleccionDivisa.setForeground(ghostWhite);
     }//GEN-LAST:event_btnSeleccionDivisaMouseExited
 
     private void btnOtraConversionDivisaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionDivisaMouseEntered
@@ -1033,7 +1033,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     private void btnOtraConversionDivisaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnOtraConversionDivisaMouseExited
         evt.consume();
         btnOtraConversionDivisa.setBackground(verdeFuerteBtnesDivisa);
-        btnOtraConversionDivisa.setForeground(new Color(244, 246, 252, 255));
+        btnOtraConversionDivisa.setForeground(ghostWhite);
     }//GEN-LAST:event_btnOtraConversionDivisaMouseExited
 
     /**
@@ -1153,24 +1153,6 @@ public final class ConverterUI extends javax.swing.JFrame {
             g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
             setOpaque(false);
             super.paint(g);
-        }
-    }
-
-    class JPanelDrawer extends JPanel {
-
-        private String fileName;
-
-        public JPanelDrawer(String fileName) {
-            this.fileName = fileName;
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            Image imagen = ImageLoader.getImage(fileName);
-            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
-            setOpaque(false);
-            super.paint(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-
         }
     }
 }

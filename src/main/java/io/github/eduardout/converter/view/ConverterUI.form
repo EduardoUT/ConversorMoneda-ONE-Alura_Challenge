@@ -269,9 +269,6 @@
       <SubComponents>
         <Container class="javax.swing.JPanel" name="panelValorDivisa">
           <Properties>
-            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="99" green="0" red="99" type="rgb"/>
-            </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="fc" green="f6" red="f4" type="rgb"/>
             </Property>
