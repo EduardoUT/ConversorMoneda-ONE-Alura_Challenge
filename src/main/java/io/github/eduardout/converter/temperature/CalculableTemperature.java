@@ -23,4 +23,6 @@ package io.github.eduardout.converter.temperature;
 public interface CalculableTemperature {
 
     Double applyFormula(Double base);
+    TemperatureSymbol getBaseSymbol();
+    TemperatureSymbol getTargetSymbol();
 }
