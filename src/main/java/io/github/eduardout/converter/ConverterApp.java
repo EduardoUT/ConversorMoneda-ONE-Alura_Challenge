@@ -16,21 +16,14 @@
  */
 package io.github.eduardout.converter;
 
+import static javax.swing.UIManager.LookAndFeelInfo;
+import static javax.swing.UIManager.getInstalledLookAndFeels;
+import static javax.swing.UIManager.setLookAndFeel;
+import javax.swing.UnsupportedLookAndFeelException;
 import static io.github.eduardout.converter.GlobalLogger.*;
-import io.github.eduardout.converter.currency.ISO4217Currency;
-import io.github.eduardout.converter.currency.CurrencyConverter;
-import io.github.eduardout.converter.currency.CurrencyUnit;
-import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.currency.provider.APIClient;
-import io.github.eduardout.converter.currency.provider.FreeCurrencyExchangeRates;
-import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
-import io.github.eduardout.converter.util.DefaultRateParser;
-import io.github.eduardout.converter.util.RateParser;
+import io.github.eduardout.converter.view.ConverterUI;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.logging.Level;
-
-import javax.swing.*;
 
 /**
  *
@@ -39,27 +32,28 @@ import javax.swing.*;
 public class ConverterApp {
 
     public static void main(String[] args) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
         try {
+            for (LookAndFeelInfo info : getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+            //</editor-fold>
             GlobalLogger.setUpLoggerConfigurationFile();
-            APIClient apiClient = APIClient.getInstance();
-            PropertiesConfig config = PropertiesConfig.fromFile("config.properties", "fcera.");
-            JSONCurrencyFileRepository repository = new JSONCurrencyFileRepository("");
-            RateParser rateParser = new DefaultRateParser();
-            CurrencyConverter cc = new CurrencyConverter(
-                    new CurrencyUnit(ISO4217Currency.USD),
-                    new CurrencyUnit(ISO4217Currency.MXN),
-                    new FreeCurrencyExchangeRates(apiClient, config, repository, rateParser),
-                    new BigDecimal("1.00")
-            );
-
-            System.out.println(cc.getConversion());
-            System.out.println(cc.reverseConversion());
-
-
-        } catch (IOException | IllegalStateException ex) {
-            JOptionPane.showMessageDialog(null, "Algo salió mal al consultar las divisas.", "Error al obtener divisas.", JOptionPane.ERROR_MESSAGE);
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(() -> new ConverterUI().setVisible(true));
+        } catch (ClassNotFoundException
+                | InstantiationException
+                | IllegalAccessException
+                | UnsupportedLookAndFeelException
+                | IOException ex) {
             registerLogException(Level.SEVERE, "Error: {0}", ex);
-
         }
     }
 }
