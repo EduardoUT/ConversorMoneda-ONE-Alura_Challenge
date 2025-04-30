@@ -16,20 +16,41 @@
  */
 package io.github.eduardout.converter.currency;
 
-import io.github.eduardout.converter.view.ConverterUI;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 /**
  *
  * @author EduardoUT
  */
-public class CurrencyController {
+public class CurrencyConverterController {
 
-    private CurrencyService currencyService;
+    private FreeCurrencyExchangeRatesService currencyService;
     private CurrencyConverter currencyConverter;
-    private ConverterUI converterUI;
 
-    public CurrencyController(CurrencyConverter currencyConverter) {
-        currencyService = new CurrencyService(currencyConverter);
+    public CurrencyConverterController(CurrencyConverter currencyConverter, FreeCurrencyExchangeRatesService exhangeRatesService) {
+        this.currencyConverter = currencyConverter;
+        this.currencyService = exhangeRatesService;
+    }
+
+    public void setConversion(JTextField campoIngresoDivisa, JTextField campoConversion, JComboBox<CurrencyUnit> base,
+            JComboBox<CurrencyUnit> target) {
+        CurrencyUnit baseSelection = (CurrencyUnit) base.getSelectedItem();
+        CurrencyUnit targetSelection = (CurrencyUnit) target.getSelectedItem();
+        BigDecimal amount = new BigDecimal(campoIngresoDivisa.getText());
+        BigDecimal result = currencyConverter.convert(baseSelection, targetSelection, amount);
+        campoConversion.setText(result.toString());
+    }
+
+    public void loadAvailableCurrencies(JComboBox<CurrencyUnit> comboBoxCurrencies) {
+        Optional<List<CurrencyUnit>> apiAvailableCurrencies = currencyService.availableCurrencyCodes();
+        apiAvailableCurrencies
+                .orElseGet(Collections::emptyList)
+                .forEach(item -> comboBoxCurrencies.addItem(item));
     }
 
 }
