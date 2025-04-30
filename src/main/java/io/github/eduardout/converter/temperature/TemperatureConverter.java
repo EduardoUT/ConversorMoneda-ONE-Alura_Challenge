@@ -28,20 +28,25 @@ public class TemperatureConverter {
         validateCalculableTemperature(calculableTemperature);
         this.calculableTemperature = calculableTemperature;
     }
-
+    
+    public CalculableTemperature getCalculableTemperature() {
+        validateCalculableTemperature(calculableTemperature);
+        return calculableTemperature;
+    }
+    
     public void setCalculableTemperature(CalculableTemperature calculableTemperature) {
         validateCalculableTemperature(calculableTemperature);
         this.calculableTemperature = calculableTemperature;
     }
     
     private void validateCalculableTemperature(CalculableTemperature calculableTemperature) {
-        if(calculableTemperature == null) {
+        if (calculableTemperature == null) {
             throw new IllegalArgumentException("Class instance is null.");
         }
     }
 
     public Double compute(Double base) {
-        if (base < Double.MIN_VALUE || base > Double.MAX_VALUE || base.isNaN()) {
+        if (Double.isInfinite(base) || Double.isNaN(base)) {
             throw new IllegalArgumentException("Base value out of boundary.");
         }
         return Double.valueOf(
