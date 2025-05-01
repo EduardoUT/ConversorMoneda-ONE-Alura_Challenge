@@ -16,7 +16,7 @@
  */
 package io.github.eduardout.converter.view;
 
-import io.github.eduardout.converter.util.EvaluateDoubleValue;
+import static io.github.eduardout.converter.util.EvaluateDoubleValue.*;
 import io.github.eduardout.converter.GlobalLogger;
 import io.github.eduardout.converter.currency.CurrencyConverter;
 import io.github.eduardout.converter.currency.CurrencyConverterController;
@@ -845,7 +845,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void inputTextTemperatureFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputTextTemperatureFocusLost
         inputValue = inputTextTemperature.getText();
-        if (EvaluateDoubleValue.esValorDecimalOpcionalNegativo(inputValue)) {
+        if (esValorDecimalOpcionalNegativo(inputValue)) {
             evt.getID();
             btnCalculateTemperature.setEnabled(true);
             btnCalculateTemperature.addMouseListener(btnCalculateTemperatureClickEvent());
@@ -857,7 +857,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void inputTextCurrencyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputTextCurrencyFocusLost
         inputValue = inputTextCurrency.getText();
-        if (EvaluateDoubleValue.esValorDecimal(inputValue)) {
+        if (esValorDecimal(inputValue)) {
             evt.getID();
             btnCalculateCurrency.addMouseListener(btnCalculateCurrencyClickEvent());
             btnCalculateCurrency.setEnabled(true);
