@@ -92,6 +92,7 @@ public class JSONCurrencyFileRepository implements RateProvider,
 
     @Override
     public void updateCurrencyRates(JSONObject response) throws IOException {
+        registerLog(Level.INFO, "Checking for changes...");
         JSONObject currentData = readFile();
         if (!response.similar(currentData)) {
             readWriteLock.writeLock().lock();
