@@ -4,6 +4,10 @@
  */
 package io.github.eduardout.converter.currency;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Enum representation of a currency code from the availableCurrencies static
  * method from Java API Currency class.
@@ -61,5 +65,17 @@ public enum ISO4217Currency {
 
     public String getCurrencyCode() {
         return currencyCode;
+    }
+
+    public ISO4217Currency getISO4217Currency() {
+        return this;
+    }
+
+    public static Map<String, ISO4217Currency> getISO4217Currencies() {
+        return Stream.of(values())
+                .collect(Collectors.toMap(
+                        ISO4217Currency::getCurrencyCode,
+                        ISO4217Currency::getISO4217Currency)
+                );
     }
 }
