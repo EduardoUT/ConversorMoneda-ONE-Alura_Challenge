@@ -16,21 +16,62 @@
  */
 package io.github.eduardout.converter.currency;
 
-import io.github.eduardout.converter.currency.provider.RateProvider;
+import io.github.eduardout.converter.currency.config.PropertiesConfig;
+import io.github.eduardout.converter.currency.provider.APIClient;
+import io.github.eduardout.converter.currency.provider.FreeCurrencyExchangeRates;
+import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
+import io.github.eduardout.converter.util.RateParser;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author EduardoUT
  */
-public class CurrencyService {
-    
-    private CurrencyConverter currencyConverter;
-    private RateProvider rateProvider;
+public class FreeCurrencyExchangeRatesService {
 
-    public CurrencyService(CurrencyConverter currencyConverter) {
-        this.currencyConverter = currencyConverter;
+    private FreeCurrencyExchangeRates freeCurrencyExchangeRates;
+
+    public FreeCurrencyExchangeRatesService(APIClient apiClient,
+            PropertiesConfig propertiesConfig,
+            JSONCurrencyFileRepository jSONCurrencyFileRepository,
+            RateParser rateParser) {
+        freeCurrencyExchangeRates = new FreeCurrencyExchangeRates(apiClient,
+                propertiesConfig, jSONCurrencyFileRepository, rateParser
+        );
     }
-    
-    
-    
+
+    /**
+     * Filters the available currencies from API and creates a new CurrencyUnit
+     * instance if its compatible with ISO4217Currency enum.
+     *
+     * @return A sorted List of CurrencyUnit fetched from the
+     * FreeCurrencyExhangeRates API.
+     */
+    public Optional<List<CurrencyUnit>> availableCurrencyCodes() {
+        Map<String, ISO4217Currency> appCurrencies = ISO4217Currency.getISO4217Currencies();
+        List<CurrencyUnit> apiCurrencies = freeCurrencyExchangeRates.getCurrencies()
+                .get()
+                .stream()
+                .filter(apiCurrency -> appCurrencies.containsKey(apiCurrency))
+                .map(apiCurrency -> {
+                    ISO4217Currency iSO4217Currency = appCurrencies.get(apiCurrency);
+                    return new CurrencyUnit(iSO4217Currency);
+                })
+                .sorted(Comparator.comparing(CurrencyUnit::getCurrencyCode))
+                .collect(Collectors.toList());
+        return Optional.ofNullable(apiCurrencies);
+    }
+
+    /**
+     *
+     * @return The FreeCurrencyExchange API RateProvider.
+     */
+    public FreeCurrencyExchangeRates getFreeCurrencyExchangeRates() {
+        return freeCurrencyExchangeRates;
+    }
+
 }
