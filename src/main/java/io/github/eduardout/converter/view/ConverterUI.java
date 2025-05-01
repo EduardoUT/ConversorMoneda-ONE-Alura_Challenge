@@ -16,6 +16,7 @@
  */
 package io.github.eduardout.converter.view;
 
+import io.github.eduardout.converter.util.EvaluateDoubleValue;
 import io.github.eduardout.converter.GlobalLogger;
 import io.github.eduardout.converter.currency.CurrencyConverter;
 import io.github.eduardout.converter.currency.CurrencyConverterController;
@@ -292,7 +293,6 @@ public final class ConverterUI extends javax.swing.JFrame {
         arrowLabelTwo = new javax.swing.JLabel();
         targetTemperatureComboBox = new javax.swing.JComboBox<>();
         btnCalculateTemperature = new javax.swing.JLabel();
-        fondoPrincipal = new JLabelImageDrawer("images/Background2.png");
 
         jLabel4.setText("jLabel4");
 
@@ -717,33 +717,9 @@ public final class ConverterUI extends javax.swing.JFrame {
 
         getContentPane().add(panelTemperature, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
 
-        fondoPrincipal.setBackground(new java.awt.Color(0, 0, 0));
-        fondoPrincipal.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                fondoPrincipalMouseDragged(evt);
-            }
-        });
-        fondoPrincipal.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                fondoPrincipalMousePressed(evt);
-            }
-        });
-        getContentPane().add(fondoPrincipal, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 860, 470));
-
         setSize(new java.awt.Dimension(975, 510));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fondoPrincipalMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoPrincipalMousePressed
-        xMouse = evt.getX();
-        yMouse = evt.getY();
-    }//GEN-LAST:event_fondoPrincipalMousePressed
-
-    private void fondoPrincipalMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoPrincipalMouseDragged
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        this.setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_fondoPrincipalMouseDragged
 
     private void inputTextCurrencyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_inputTextCurrencyKeyTyped
         char car = evt.getKeyChar();
@@ -869,7 +845,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void inputTextTemperatureFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputTextTemperatureFocusLost
         inputValue = inputTextTemperature.getText();
-        if (ComprobarValorNumerico.esValorDecimalOpcionalNegativo(inputValue)) {
+        if (EvaluateDoubleValue.esValorDecimalOpcionalNegativo(inputValue)) {
             evt.getID();
             btnCalculateTemperature.setEnabled(true);
             btnCalculateTemperature.addMouseListener(btnCalculateTemperatureClickEvent());
@@ -881,7 +857,7 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void inputTextCurrencyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_inputTextCurrencyFocusLost
         inputValue = inputTextCurrency.getText();
-        if (ComprobarValorNumerico.esValorDecimal(inputValue)) {
+        if (EvaluateDoubleValue.esValorDecimal(inputValue)) {
             evt.getID();
             btnCalculateCurrency.addMouseListener(btnCalculateCurrencyClickEvent());
             btnCalculateCurrency.setEnabled(true);
@@ -917,7 +893,6 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JLabel btnConversionMoneda;
     private javax.swing.JLabel btnConversionTemperatura;
     private javax.swing.JLabel btnMinimizarVentana;
-    private javax.swing.JLabel fondoPrincipal;
     private javax.swing.JTextField inputTextCurrency;
     private javax.swing.JTextField inputTextTemperature;
     private javax.swing.JLabel instruccionCampoIngresoDivisa;
