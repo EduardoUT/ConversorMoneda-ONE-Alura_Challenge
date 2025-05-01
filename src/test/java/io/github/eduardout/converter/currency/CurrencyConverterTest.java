@@ -49,9 +49,9 @@ class CurrencyConverterTest {
 
     private CurrencyConverter currencyConverter;
     private IllegalArgumentException illegalArgumentException;
-    private BigDecimal amount = new BigDecimal("100.00");
-    private CurrencyUnit baseDefault = new CurrencyUnit(USD);
-    private CurrencyUnit targetDefault = new CurrencyUnit(EUR);
+    private final BigDecimal amount = new BigDecimal("100.00");
+    private final CurrencyUnit baseDefault = new CurrencyUnit(USD);
+    private final CurrencyUnit targetDefault = new CurrencyUnit(EUR);
     private RateProvider rateProvider;
 
     @SuppressWarnings("unused")
@@ -62,9 +62,9 @@ class CurrencyConverterTest {
 
     BigDecimal calculateAmount(BigDecimal baseAmount, BigDecimal targetAmount) {
         return amount
-                .multiply(DEFAULT_AMOUNT.divide(baseAmount, baseAmount.scale(), RoundingMode.FLOOR))
-                .divide(DEFAULT_AMOUNT.divide(targetAmount, targetAmount.scale(), RoundingMode.FLOOR),
-                        4, RoundingMode.FLOOR
+                .multiply(DEFAULT_AMOUNT.divide(baseAmount, baseAmount.scale(), RoundingMode.HALF_UP))
+                .divide(DEFAULT_AMOUNT.divide(targetAmount, targetAmount.scale(), RoundingMode.HALF_UP),
+                        4, RoundingMode.HALF_UP
                 );
     }
 
