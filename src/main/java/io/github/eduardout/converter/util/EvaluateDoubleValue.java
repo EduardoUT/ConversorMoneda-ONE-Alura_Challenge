@@ -23,9 +23,9 @@ import jdk.nashorn.internal.runtime.JSType;
  * 
  * @author EduardoUT
  */
-public class ComprobarValorNumerico {
+public class EvaluateDoubleValue {
 
-    private ComprobarValorNumerico() {
+    private EvaluateDoubleValue() {
         throw new UnsupportedOperationException("Utility class.");
     }
 
