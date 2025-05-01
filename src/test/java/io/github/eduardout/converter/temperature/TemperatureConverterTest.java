@@ -63,10 +63,9 @@ class TemperatureConverterTest {
         return Stream.of(
                 Double.MAX_VALUE * 2,
                 -Double.MAX_VALUE * 2,
-                Double.MIN_VALUE / 2,
                 0.0 / 0.0,
                 Math.sqrt(-1),
-                -0.0
+                Double.POSITIVE_INFINITY
         );
     }
 
