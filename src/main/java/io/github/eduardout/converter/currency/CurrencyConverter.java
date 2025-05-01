@@ -32,29 +32,19 @@ public class CurrencyConverter {
     private static final BigDecimal MIN_AMOUNT = BigDecimal.ONE;
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("999999999.9999");
     public static final BigDecimal DEFAULT_AMOUNT = new BigDecimal("1.00");
-    private CurrencyUnit base;
-    private CurrencyUnit target;
     private RateProvider rateProvider;
-    private BigDecimal amount;
     private Map<String, BigDecimal> mappedCurrencies;
 
-    public CurrencyConverter(CurrencyUnit base, CurrencyUnit target,
-                             RateProvider rateProvider, BigDecimal amount) {
-        validateBaseCurrencyUnit(base, target);
-        validateTargetCurrencyUnit(target, base);
+    public CurrencyConverter(RateProvider rateProvider) {
         validateRateProvider(rateProvider);
-        validateAmount(amount);
-        this.base = base;
-        this.target = target;
         this.rateProvider = rateProvider;
-        this.amount = amount;
-        setMappedCurrencies(base, target);
     }
 
     /**
-     * Sets a map with the base and target key (currency code) and value (equivalent amount) obtained from the rate provider.
+     * Sets a map with the base and target key (currency code) and value
+     * (equivalent amount) obtained from the rate provider.
      *
-     * @param base   The base currency unit to search by its iso-code.
+     * @param base The base currency unit to search by its iso-code.
      * @param target The target currency unit to search by its iso-code.
      */
     private void setMappedCurrencies(CurrencyUnit base, CurrencyUnit target) {
@@ -66,49 +56,39 @@ public class CurrencyConverter {
     }
 
     /**
-     * @return The equivalent amount from the base currency.
-     */
-    public BigDecimal getBaseAmount() {
-        return mappedCurrencies.get(base.getCurrencyCode());
-    }
-
-    /**
-     * @return The equivalent amount from the target currency.
-     */
-    public BigDecimal getTargetAmount() {
-        return mappedCurrencies.get(target.getCurrencyCode());
-    }
-
-    /**
      * Performs the next formula to calculate the given amount:
      * <p>
      * USD to EUR
      * <p>
-     * EUR = (USD * (DEFAULT_AMOUNT / baseAmount) / (DEFAULT_AMOUNT / targetAmount)
+     * EUR = (USD * (DEFAULT_AMOUNT / baseAmount) / (DEFAULT_AMOUNT /
+     * targetAmount)
      * <p>
      * Being DEFAULT_AMOUNT a monetary representation of 1 unit.
      * <p>
-     * Arguments can be swapped for example USD -> EUR or EUR -> USD, as the provider
-     * gets actual and valid values.
+     * Arguments can be swapped for example USD -> EUR or EUR -> USD, as the
+     * provider gets actual and valid values.
      *
-     * @param baseAmount   Amount equivalent of the base currency unit.
+     * @param baseAmount Amount equivalent of the base currency unit.
      * @param targetAmount Amount equivalent of the target currency unit.
      * @return The conversion between the base amount and target amount.
      */
-    private BigDecimal calculateAmount(BigDecimal baseAmount, BigDecimal targetAmount) {
+    private BigDecimal calculateAmount(BigDecimal baseAmount,
+            BigDecimal targetAmount, BigDecimal amount) {
+        int scale = Math.max(baseAmount.scale(), targetAmount.scale());
         return amount
-                .multiply(DEFAULT_AMOUNT.divide(baseAmount, baseAmount.scale(), RoundingMode.FLOOR))
-                .divide(DEFAULT_AMOUNT.divide(targetAmount, targetAmount.scale(), RoundingMode.FLOOR),
-                        4, RoundingMode.FLOOR
+                .multiply(DEFAULT_AMOUNT.divide(baseAmount, scale, RoundingMode.HALF_UP))
+                .divide(DEFAULT_AMOUNT.divide(targetAmount, scale, RoundingMode.HALF_UP),
+                        4, RoundingMode.HALF_UP
                 );
     }
 
-    public BigDecimal getConversion() {
-        return calculateAmount(getBaseAmount(), getTargetAmount());
-    }
-
-    public BigDecimal reverseConversion() {
-        return calculateAmount(getTargetAmount(), getBaseAmount());
+    public BigDecimal convert(CurrencyUnit base, CurrencyUnit target, BigDecimal amount) {
+        validateCurrencyUnits(base, target);
+        validateAmount(amount);
+        setMappedCurrencies(base, target);
+        BigDecimal baseAmount = mappedCurrencies.get(base.getCurrencyCode());
+        BigDecimal targetAmount = mappedCurrencies.get(target.getCurrencyCode());
+        return calculateAmount(baseAmount, targetAmount, amount);
     }
 
     private void validateAmount(BigDecimal amount) {
@@ -127,20 +107,17 @@ public class CurrencyConverter {
         }
     }
 
-    private void validateBaseCurrencyUnit(CurrencyUnit base, CurrencyUnit target) {
+    private void validateCurrencyUnits(CurrencyUnit base, CurrencyUnit target) {
         if (base == null) {
             throw new IllegalArgumentException("Base CurrencyUnit is null.");
+        }
+        if (target == null) {
+            throw new IllegalArgumentException("Target CurrencyUnit is null.");
         }
         if (base.equals(target)) {
             throw new IllegalArgumentException("Invalid base CurrencyUnit: same "
                     + "type or same reference as target CurrencyUnit argument "
                     + "were provided.");
-        }
-    }
-
-    private void validateTargetCurrencyUnit(CurrencyUnit target, CurrencyUnit base) {
-        if (target == null) {
-            throw new IllegalArgumentException("Target CurrencyUnit is null.");
         }
         if (target.equals(base)) {
             throw new IllegalArgumentException("Invalid target CurrencyUnit: same "
