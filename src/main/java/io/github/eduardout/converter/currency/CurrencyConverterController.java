@@ -29,8 +29,8 @@ import javax.swing.JTextField;
  */
 public class CurrencyConverterController {
 
-    private FreeCurrencyExchangeRatesService currencyService;
-    private CurrencyConverter currencyConverter;
+    private final FreeCurrencyExchangeRatesService currencyService;
+    private final CurrencyConverter currencyConverter;
 
     public CurrencyConverterController(CurrencyConverter currencyConverter, FreeCurrencyExchangeRatesService exhangeRatesService) {
         this.currencyConverter = currencyConverter;
@@ -46,11 +46,16 @@ public class CurrencyConverterController {
         campoConversion.setText(result.toString());
     }
 
-    public void loadAvailableCurrencies(JComboBox<CurrencyUnit> comboBoxCurrencies) {
-        Optional<List<CurrencyUnit>> apiAvailableCurrencies = currencyService.availableCurrencyCodes();
-        apiAvailableCurrencies
-                .orElseGet(Collections::emptyList)
-                .forEach(item -> comboBoxCurrencies.addItem(item));
+    public void loadAvailableCurrencies(JComboBox<CurrencyUnit> baseComboBoxCurrencies,
+            JComboBox<CurrencyUnit> targetComboBoxCurrencies) {
+        Optional<List<CurrencyUnit>> currencies = currencyService.availableCurrencyCodes();
+        addCurrenciesAsComboBoxItems(currencies, baseComboBoxCurrencies);
+        addCurrenciesAsComboBoxItems(currencies, targetComboBoxCurrencies);
     }
 
+    private void addCurrenciesAsComboBoxItems(Optional<List<CurrencyUnit>> currencies,
+            JComboBox<CurrencyUnit> comboBox) {
+        currencies.orElseGet(Collections::emptyList)
+                .forEach(currency -> comboBox.addItem(currency));
+    }
 }
