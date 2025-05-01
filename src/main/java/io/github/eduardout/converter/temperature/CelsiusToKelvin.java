@@ -17,6 +17,8 @@
 package io.github.eduardout.converter.temperature;
 
 import static io.github.eduardout.converter.temperature.TemperatureSymbol.KELVIN;
+import static io.github.eduardout.converter.temperature.TemperatureSymbol.CELSIUS;
+import java.util.Objects;
 
 /**
  *
@@ -27,5 +29,35 @@ public class CelsiusToKelvin implements CalculableTemperature {
     @Override
     public Double applyFormula(Double target) {
         return target + KELVIN.getFreezingPoint();
+    }
+
+    @Override
+    public TemperatureSymbol getBaseSymbol() {
+        return CELSIUS;
+    }
+
+    @Override
+    public TemperatureSymbol getTargetSymbol() {
+        return KELVIN;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        CelsiusToKelvin other = (CelsiusToKelvin) obj;
+        return Objects.equals(getBaseSymbol(), other.getBaseSymbol())
+                && Objects.equals(getTargetSymbol(), other.getTargetSymbol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBaseSymbol(), getTargetSymbol());
     }
 }

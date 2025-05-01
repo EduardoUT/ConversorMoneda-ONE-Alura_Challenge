@@ -18,6 +18,7 @@ package io.github.eduardout.converter.temperature;
 
 import static io.github.eduardout.converter.temperature.TemperatureSymbol.FARENHEIT;
 import static io.github.eduardout.converter.temperature.TemperatureSymbol.KELVIN;
+import java.util.Objects;
 
 /**
  *
@@ -28,5 +29,35 @@ public class KelvinToFarenheit implements CalculableTemperature {
     @Override
     public Double applyFormula(Double base) {
         return ((9 * (base - KELVIN.getFreezingPoint())) / 5) + FARENHEIT.getFreezingPoint();
+    }
+
+    @Override
+    public TemperatureSymbol getBaseSymbol() {
+        return KELVIN;
+    }
+
+    @Override
+    public TemperatureSymbol getTargetSymbol() {
+        return FARENHEIT;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        KelvinToFarenheit other = (KelvinToFarenheit) obj;
+        return Objects.equals(getBaseSymbol(), other.getBaseSymbol())
+                && Objects.equals(getTargetSymbol(), other.getTargetSymbol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBaseSymbol(), getTargetSymbol());
     }
 }

@@ -17,6 +17,8 @@
 package io.github.eduardout.converter.temperature;
 
 import static io.github.eduardout.converter.temperature.TemperatureSymbol.FARENHEIT;
+import static io.github.eduardout.converter.temperature.TemperatureSymbol.CELSIUS;
+import java.util.Objects;
 
 /**
  *
@@ -25,7 +27,37 @@ import static io.github.eduardout.converter.temperature.TemperatureSymbol.FARENH
 public class CelsiusToFarenheit implements CalculableTemperature {
 
     @Override
-    public Double applyFormula(Double target) {
-        return ((9 * target) / 5) + FARENHEIT.getFreezingPoint();
+    public Double applyFormula(Double temperature) {
+        return ((9 * temperature) / 5) + FARENHEIT.getFreezingPoint();
+    }
+
+    @Override
+    public TemperatureSymbol getBaseSymbol() {
+        return CELSIUS;
+    }
+
+    @Override
+    public TemperatureSymbol getTargetSymbol() {
+        return FARENHEIT;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        CelsiusToFarenheit other = (CelsiusToFarenheit) obj;
+        return Objects.equals(getBaseSymbol(), other.getBaseSymbol())
+                && Objects.equals(getTargetSymbol(), other.getTargetSymbol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBaseSymbol(), getTargetSymbol());
     }
 }
