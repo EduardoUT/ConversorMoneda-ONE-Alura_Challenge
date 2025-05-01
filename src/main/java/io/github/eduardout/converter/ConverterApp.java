@@ -19,6 +19,7 @@ package io.github.eduardout.converter;
 import static javax.swing.UIManager.LookAndFeelInfo;
 import static javax.swing.UIManager.getInstalledLookAndFeels;
 import static javax.swing.UIManager.setLookAndFeel;
+import static java.awt.EventQueue.invokeLater;
 import javax.swing.UnsupportedLookAndFeelException;
 import static io.github.eduardout.converter.GlobalLogger.*;
 import io.github.eduardout.converter.view.ConverterUI;
@@ -45,9 +46,9 @@ public class ConverterApp {
                 }
             }
             //</editor-fold>
-            GlobalLogger.setUpLoggerConfigurationFile();
+            setUpLoggerConfigurationFile();
             /* Create and display the form */
-            java.awt.EventQueue.invokeLater(() -> new ConverterUI().setVisible(true));
+            invokeLater(() -> new ConverterUI().setVisible(true));
         } catch (ClassNotFoundException
                 | InstantiationException
                 | IllegalAccessException
