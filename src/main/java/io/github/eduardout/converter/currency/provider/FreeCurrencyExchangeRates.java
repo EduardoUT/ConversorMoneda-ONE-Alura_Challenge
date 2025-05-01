@@ -16,21 +16,19 @@
  */
 package io.github.eduardout.converter.currency.provider;
 
+import static io.github.eduardout.converter.GlobalLogger.*;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.util.RateParser;
 import io.github.eduardout.converter.currency.CurrencyUnit;
-
-import static io.github.eduardout.converter.GlobalLogger.*;
-
 import io.github.eduardout.converter.currency.ISO4217Currency;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
-
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
-
+import java.util.stream.Collectors;
 import org.json.JSONObject;
 
 /**
@@ -45,13 +43,14 @@ import org.json.JSONObject;
  * key=value<br>
  * another.key=value<br><br>
  * The Free Currency Exchange Rates API always takes the base as 1.00 monetary
- * unit and returns the equivalence target amount of that monetary unit, so for this implementation
- * was used the MXN currency as base to fetch data, these are configured on the links on properties file
+ * unit and returns the equivalence target amount of that monetary unit, so for
+ * this implementation was used the MXN currency as base to fetch data, these
+ * are configured on the links on properties file
  * </p>
  *
  * @author EduardoUT
  */
-public class FreeCurrencyExchangeRates implements RateProvider {
+public class FreeCurrencyExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
 
     private APIClient apiClient;
     private PropertiesConfig propertiesConfig;
@@ -59,8 +58,8 @@ public class FreeCurrencyExchangeRates implements RateProvider {
     private RateParser rateParser;
 
     public FreeCurrencyExchangeRates(APIClient apiClient,
-                                     PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
-                                     RateParser rateParser) {
+            PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
+            RateParser rateParser) {
         this.apiClient = apiClient;
         this.propertiesConfig = propertiesConfig;
         this.fallbackProvider = fallbackProvider;
@@ -87,5 +86,22 @@ public class FreeCurrencyExchangeRates implements RateProvider {
         }
         registerLog(Level.SEVERE, "All response endpoints failed, using JSON file.");
         return fallbackProvider.getCurrencyRates(base, target);
+    }
+
+    @Override
+    public Optional<List<String>> getCurrencies() {
+        List<String> apiCurrencies = null;
+        try {
+            PropertiesConfig properties = PropertiesConfig.fromFile("config.properties", "available.");
+            String url = properties.getPropertyValue("fcera.currencies");
+            JSONObject response = apiClient.fetchDataAsJSONObject(url);
+            apiCurrencies = response.toMap().entrySet()
+                    .stream()
+                    .map(entry -> entry.getKey().toUpperCase())
+                    .collect(Collectors.toList());
+        } catch (IOException ex) {
+            registerLogException(Level.SEVERE, "Error {0} ", ex);
+        }
+        return Optional.ofNullable(apiCurrencies);
     }
 }
