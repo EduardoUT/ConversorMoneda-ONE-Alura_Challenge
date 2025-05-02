@@ -46,4 +46,9 @@ public enum TemperatureSymbol {
     public Double getFreezingPoint() {
         return freezingPoint;
     }
+
+    @Override
+    public String toString() {
+        return symbolName + " - " + symbol;
+    }
 }
