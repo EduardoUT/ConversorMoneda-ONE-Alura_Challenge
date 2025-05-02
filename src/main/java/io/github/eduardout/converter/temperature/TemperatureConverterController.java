@@ -73,8 +73,11 @@ public class TemperatureConverterController {
                 .findFirst();
     }
 
-    public void loadComboBoxSymbols(JComboBox<TemperatureSymbol> comboBoxSymbols) {
+    public void loadComboBoxSymbols(JComboBox<TemperatureSymbol> baseComboBoxSymbols,
+            JComboBox<TemperatureSymbol> targetComboBoxSymbols) {
         List<TemperatureSymbol> symbols = Arrays.asList(TemperatureSymbol.values());
-        symbols.forEach(symbol -> comboBoxSymbols.addItem(symbol));
+        symbols.forEach(symbol -> baseComboBoxSymbols.addItem(symbol));
+        symbols.forEach(symbol -> targetComboBoxSymbols.addItem(symbol));
     }
+
 }
