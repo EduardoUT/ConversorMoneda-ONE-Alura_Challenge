@@ -67,7 +67,9 @@ public class APIClient {
             throw new IllegalArgumentException("Argument url is null, check if "
                     + "provided links are correct in properties file");
         }
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request.Builder().url(url)
+                .addHeader("Accept", "application/json")
+                .build();
         try (Response response = okHttpClient.newCall(request).execute()) {
             ResponseBody responseBody = response.body();
             if (!response.isSuccessful()) {
