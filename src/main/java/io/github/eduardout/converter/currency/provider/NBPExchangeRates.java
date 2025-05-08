@@ -20,6 +20,7 @@ import static io.github.eduardout.converter.GlobalLogger.*;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
+import io.github.eduardout.converter.util.NBPExchangeRatesParser;
 import io.github.eduardout.converter.util.RateParser;
 
 import java.io.IOException;
@@ -33,16 +34,19 @@ import org.json.JSONArray;
 /**
  * @author EduardoUT
  */
-public class NBPExchangeRates implements RateProvider, RateParser, RateProviderAvailableCurrencies {
+public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
 
     public static final String CURRENCY_KEY = "currency";
     private APIClient apiClient;
     private PropertiesConfig propertiesConfig;
+    private RateParser rateParser;
 
     public NBPExchangeRates(APIClient aPIClient,
-                            PropertiesConfig propertiesConfig) {
+                            PropertiesConfig propertiesConfig,
+                            RateParser rateParser) {
         this.apiClient = aPIClient;
         this.propertiesConfig = propertiesConfig;
+        this.rateParser = rateParser;
     }
 
     @Override
@@ -52,29 +56,11 @@ public class NBPExchangeRates implements RateProvider, RateParser, RateProviderA
             String url = propertiesConfig.getPropertyValue("exchangerates");
             registerLog(Level.INFO, "Fetching data from API.");
             JSONArray response = apiClient.fetchDataAsJSONArray(url);
-            rates = parseRate(response, base, target);
+            rates = rateParser.parseRate(response, base, target);
         } catch (IOException | IllegalStateException e) {
             registerLogException(Level.SEVERE, "Error: {0}", e);
         }
         return Optional.ofNullable(rates);
-    }
-
-    @Override
-    public Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target) {
-        JSONArray jsonArray = new JSONArray(response.toString());
-        JSONArray rates = jsonArray.getJSONObject(0).getJSONArray("rates");
-        return rates.toList()
-                .stream()
-                .filter(HashMap.class::isInstance)
-                .map(HashMap.class::cast)
-                .filter(hashMap -> hashMap.containsValue(base.getCurrencyCode())
-                        || hashMap.containsValue(target.getCurrencyCode()))
-                .filter(hashMap -> hashMap.remove(CURRENCY_KEY, hashMap.get(CURRENCY_KEY)))
-                .collect(Collectors.toMap(
-                                key -> key.get("code").toString(),
-                                value -> new BigDecimal(value.get("mid").toString())
-                        )
-                );
     }
 
     @Override
