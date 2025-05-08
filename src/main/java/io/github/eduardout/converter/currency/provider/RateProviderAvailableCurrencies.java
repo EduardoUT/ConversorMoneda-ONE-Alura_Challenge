@@ -31,5 +31,5 @@ public interface RateProviderAvailableCurrencies {
      *
      * @return A list of the available ISO code currencies of the API.
      */
-    Optional<List<String>> getCurrencies();
+    List<String> getCurrencies();
 }
