@@ -45,7 +45,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
  * @author EduardoUT
  */
 @ExtendWith(MockitoExtension.class)
-class ExchangeRatesAPITest {
+class ExchangeAPITest {
 
     @Mock
     private APIClient mockApiClient;
@@ -66,7 +66,7 @@ class ExchangeRatesAPITest {
     private CurrencyUnit mockTarget;
 
     @InjectMocks
-    private ExchangeRatesAPI rates;
+    private ExchangeAPI rates;
 
     @Test
     void testSuccessfulApiCall() throws Exception {
