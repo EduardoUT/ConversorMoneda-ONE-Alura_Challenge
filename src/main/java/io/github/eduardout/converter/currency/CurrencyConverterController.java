@@ -48,14 +48,13 @@ public class CurrencyConverterController {
 
     public void loadAvailableCurrencies(JComboBox<CurrencyUnit> baseComboBoxCurrencies,
             JComboBox<CurrencyUnit> targetComboBoxCurrencies) {
-        Optional<List<CurrencyUnit>> currencies = exchangesAPIService.availableCurrencyCodes();
+        List<CurrencyUnit> currencies = exchangesAPIService.availableCurrencyCodes();
         addCurrenciesAsComboBoxItems(currencies, baseComboBoxCurrencies);
         addCurrenciesAsComboBoxItems(currencies, targetComboBoxCurrencies);
     }
 
-    private void addCurrenciesAsComboBoxItems(Optional<List<CurrencyUnit>> currencies,
+    private void addCurrenciesAsComboBoxItems(List<CurrencyUnit> currencies,
             JComboBox<CurrencyUnit> comboBox) {
-        currencies.orElseGet(Collections::emptyList)
-                .forEach(currency -> comboBox.addItem(currency));
+        currencies.forEach(comboBox::addItem);
     }
 }
