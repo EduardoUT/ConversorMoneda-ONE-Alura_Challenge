@@ -35,13 +35,11 @@ public class ExchangeAPIParser implements RateParser {
     @Override
     public Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target) {
         JSONObject jsonObject = new JSONObject(response.toString());
-        String baseCode = base.getCurrencyCode();
-        String targetCode = target.getCurrencyCode();
         return jsonObject.toMap().entrySet()
                 .stream()
                 .filter(entrySet ->
-                        entrySet.getKey().equalsIgnoreCase(baseCode)
-                                || entrySet.getKey().equalsIgnoreCase(targetCode))
+                        entrySet.getKey().equalsIgnoreCase(base.getCurrencyCode())
+                                || entrySet.getKey().equalsIgnoreCase(target.getCurrencyCode()))
                 .collect(Collectors.toMap(
                                 entryKey -> entryKey.getKey().toUpperCase(),
                                 entryValue -> new BigDecimal(entryValue.getValue().toString())
