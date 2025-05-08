@@ -24,6 +24,7 @@ import io.github.eduardout.converter.currency.ISO4217Currency;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,8 +89,8 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
     }
 
     @Override
-    public Optional<List<String>> getCurrencies() {
-        List<String> apiCurrencies = null;
+    public List<String> getCurrencies() {
+        List<String> apiCurrencies = Collections.emptyList();
         try {
             PropertiesConfig properties = PropertiesConfig.fromFile("config.properties", "available.");
             String url = properties.getPropertyValue("fcera.currencies");
@@ -101,6 +102,6 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
         } catch (IOException ex) {
             registerLogException(Level.SEVERE, "Error: {0} ", ex);
         }
-        return Optional.ofNullable(apiCurrencies);
+        return apiCurrencies;
     }
 }
