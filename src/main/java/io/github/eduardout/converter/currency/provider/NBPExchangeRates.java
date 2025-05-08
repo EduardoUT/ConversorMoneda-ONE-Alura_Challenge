@@ -63,8 +63,8 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
     }
 
     @Override
-    public Optional<List<String>> getCurrencies() {
-        List<String> currencies = null;
+    public List<String> getCurrencies() {
+        List<String> currencies = Collections.emptyList();
         try {
             String currencyKey = "currency";
             String midKey = "mid";
@@ -82,6 +82,6 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
         } catch (IOException e) {
             registerLogException(Level.SEVERE, "Error: {0}", e);
         }
-        return Optional.ofNullable(currencies);
+        return currencies;
     }
 }
