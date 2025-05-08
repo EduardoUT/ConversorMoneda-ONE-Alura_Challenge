@@ -18,7 +18,7 @@ package io.github.eduardout.converter.currency;
 
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.currency.provider.APIClient;
-import io.github.eduardout.converter.currency.provider.FreeCurrencyExchangeRates;
+import io.github.eduardout.converter.currency.provider.ExchangeRatesAPI;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.util.RateParser;
 import java.util.Comparator;
@@ -33,13 +33,13 @@ import java.util.stream.Collectors;
  */
 public class FreeCurrencyExchangeRatesService {
 
-    private FreeCurrencyExchangeRates freeCurrencyExchangeRates;
+    private ExchangeRatesAPI exchangeRatesAPI;
 
     public FreeCurrencyExchangeRatesService(APIClient apiClient,
             PropertiesConfig propertiesConfig,
             JSONCurrencyFileRepository jSONCurrencyFileRepository,
             RateParser rateParser) {
-        freeCurrencyExchangeRates = new FreeCurrencyExchangeRates(apiClient,
+        exchangeRatesAPI = new ExchangeRatesAPI(apiClient,
                 propertiesConfig, jSONCurrencyFileRepository, rateParser
         );
     }
@@ -53,7 +53,7 @@ public class FreeCurrencyExchangeRatesService {
      */
     public Optional<List<CurrencyUnit>> availableCurrencyCodes() {
         Map<String, ISO4217Currency> appCurrencies = ISO4217Currency.getISO4217Currencies();
-        List<CurrencyUnit> apiCurrencies = freeCurrencyExchangeRates.getCurrencies()
+        List<CurrencyUnit> apiCurrencies = exchangeRatesAPI.getCurrencies()
                 .get()
                 .stream()
                 .filter(apiCurrency -> appCurrencies.containsKey(apiCurrency))
@@ -70,8 +70,8 @@ public class FreeCurrencyExchangeRatesService {
      *
      * @return The FreeCurrencyExchange API RateProvider.
      */
-    public FreeCurrencyExchangeRates getFreeCurrencyExchangeRates() {
-        return freeCurrencyExchangeRates;
+    public ExchangeRatesAPI getFreeCurrencyExchangeRates() {
+        return exchangeRatesAPI;
     }
 
 }

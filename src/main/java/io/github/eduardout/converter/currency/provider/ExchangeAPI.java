@@ -50,16 +50,16 @@ import org.json.JSONObject;
  *
  * @author EduardoUT
  */
-public class FreeCurrencyExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
+public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencies {
 
     private APIClient apiClient;
     private PropertiesConfig propertiesConfig;
     private JSONCurrencyFileRepository fallbackProvider;
     private RateParser rateParser;
 
-    public FreeCurrencyExchangeRates(APIClient apiClient,
-            PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
-            RateParser rateParser) {
+    public ExchangeAPI(APIClient apiClient,
+                       PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
+                       RateParser rateParser) {
         this.apiClient = apiClient;
         this.propertiesConfig = propertiesConfig;
         this.fallbackProvider = fallbackProvider;

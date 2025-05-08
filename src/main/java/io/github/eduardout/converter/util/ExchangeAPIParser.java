@@ -30,18 +30,21 @@ import org.json.JSONObject;
  *
  * @author EduardoUT
  */
-public class DefaultRateParser implements RateParser {
+public class FreeCurrencyExchangeRatesParser implements RateParser {
 
     @Override
-    public Map<String, BigDecimal> parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target) {
-        return response.toMap().entrySet()
+    public Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target) {
+        JSONObject jsonObject = new JSONObject(response);
+        String baseCode = base.getCurrencyCode();
+        String targetCode = target.getCurrencyCode();
+        return jsonObject.toMap().entrySet()
                 .stream()
                 .filter(entrySet ->
-                        entrySet.getKey().equalsIgnoreCase(base.getCurrencyCode())
-                                || entrySet.getKey().equalsIgnoreCase(target.getCurrencyCode()))
+                        entrySet.getKey().equalsIgnoreCase(baseCode)
+                                || entrySet.getKey().equalsIgnoreCase(targetCode))
                 .collect(Collectors.toMap(
-                                keyEntry -> keyEntry.getKey().toUpperCase(),
-                                valueEntry -> new BigDecimal(valueEntry.getValue().toString())
+                                entryKey -> entryKey.getKey().toUpperCase(),
+                                entryValue -> new BigDecimal(entryValue.getValue().toString())
                         )
                 );
     }
