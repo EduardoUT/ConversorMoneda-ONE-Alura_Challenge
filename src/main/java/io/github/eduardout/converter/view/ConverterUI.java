@@ -21,7 +21,7 @@ import io.github.eduardout.converter.GlobalLogger;
 import io.github.eduardout.converter.currency.CurrencyConverter;
 import io.github.eduardout.converter.currency.CurrencyConverterController;
 import io.github.eduardout.converter.currency.CurrencyUnit;
-import io.github.eduardout.converter.currency.FreeCurrencyExchangeRatesService;
+import io.github.eduardout.converter.currency.ExchangeAPIService;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.currency.provider.APIClient;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
@@ -29,7 +29,7 @@ import io.github.eduardout.converter.temperature.CelsiusToFarenheit;
 import io.github.eduardout.converter.temperature.TemperatureConverter;
 import io.github.eduardout.converter.temperature.TemperatureConverterController;
 import io.github.eduardout.converter.temperature.TemperatureSymbol;
-import io.github.eduardout.converter.util.DefaultRateParser;
+import io.github.eduardout.converter.util.ExchangeAPIParser;
 import io.github.eduardout.converter.util.ImageLoader;
 import io.github.eduardout.converter.util.RateParser;
 import java.awt.*;
@@ -124,9 +124,9 @@ public final class ConverterUI extends javax.swing.JFrame {
         try {
             APIClient apiClient = APIClient.getInstance();
             PropertiesConfig propertiesConfig = PropertiesConfig.fromFile("config.properties", "fcera.");
-            JSONCurrencyFileRepository jSONCurrencyFileRepository = new JSONCurrencyFileRepository("");
-            RateParser rateParser = new DefaultRateParser();
-            FreeCurrencyExchangeRatesService currencyExchangeRatesService = new FreeCurrencyExchangeRatesService(
+            RateParser rateParser = new ExchangeAPIParser();
+            JSONCurrencyFileRepository jSONCurrencyFileRepository = new JSONCurrencyFileRepository("", rateParser);
+            ExchangeAPIService currencyExchangeRatesService = new ExchangeAPIService(
                     apiClient, propertiesConfig, jSONCurrencyFileRepository, rateParser
             );
             converterController = new CurrencyConverterController(
