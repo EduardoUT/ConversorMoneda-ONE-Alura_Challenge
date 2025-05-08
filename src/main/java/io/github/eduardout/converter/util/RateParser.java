@@ -38,5 +38,5 @@ public interface RateParser {
      * @param target   The currency unit to convert.
      * @return A Map with the currency codes as keys and its amount as values.
      */
-    Map<String, BigDecimal> parseRate(JSONObject response, CurrencyUnit base, CurrencyUnit target);
+    Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target);
 }
