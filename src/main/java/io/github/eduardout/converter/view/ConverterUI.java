@@ -130,7 +130,7 @@ public final class ConverterUI extends javax.swing.JFrame {
                     apiClient, propertiesConfig, jSONCurrencyFileRepository, rateParser
             );
             converterController = new CurrencyConverterController(
-                    new CurrencyConverter(currencyExchangeRatesService.getFreeCurrencyExchangeRates()),
+                    new CurrencyConverter(currencyExchangeRatesService.getExchangeAPI()),
                     currencyExchangeRatesService
             );
             converterController.loadAvailableCurrencies(baseCurrencyComboBox, targetCurrencyComboBox);
