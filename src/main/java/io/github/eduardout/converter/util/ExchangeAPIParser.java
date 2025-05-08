@@ -30,11 +30,11 @@ import org.json.JSONObject;
  *
  * @author EduardoUT
  */
-public class FreeCurrencyExchangeRatesParser implements RateParser {
+public class ExchangeAPIParser implements RateParser {
 
     @Override
     public Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target) {
-        JSONObject jsonObject = new JSONObject(response);
+        JSONObject jsonObject = new JSONObject(response.toString());
         String baseCode = base.getCurrencyCode();
         String targetCode = target.getCurrencyCode();
         return jsonObject.toMap().entrySet()
