@@ -21,14 +21,13 @@ import io.github.eduardout.converter.currency.provider.APIClient;
 import io.github.eduardout.converter.currency.provider.ExchangeAPI;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.util.RateParser;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author EduardoUT
  */
 public class ExchangeAPIService {
@@ -51,26 +50,24 @@ public class ExchangeAPIService {
      * @return A sorted List of CurrencyUnit fetched from the
      * FreeCurrencyExhangeRates API.
      */
-    public Optional<List<CurrencyUnit>> availableCurrencyCodes() {
+    public List<CurrencyUnit> availableCurrencyCodes() {
         Map<String, ISO4217Currency> appCurrencies = ISO4217Currency.getISO4217Currencies();
-        List<CurrencyUnit> apiCurrencies = exchangeAPI.getCurrencies()
-                .get()
+        return exchangeAPI
+                .getCurrencies()
                 .stream()
-                .filter(apiCurrency -> appCurrencies.containsKey(apiCurrency))
+                .filter(appCurrencies::containsKey)
                 .map(apiCurrency -> {
                     ISO4217Currency iSO4217Currency = appCurrencies.get(apiCurrency);
                     return new CurrencyUnit(iSO4217Currency);
                 })
                 .sorted(Comparator.comparing(CurrencyUnit::getCurrencyCode))
                 .collect(Collectors.toList());
-        return Optional.ofNullable(apiCurrencies);
     }
 
     /**
-     *
      * @return The FreeCurrencyExchange API RateProvider.
      */
-    public ExchangeAPI getFreeCurrencyExchangeRates() {
+    public ExchangeAPI getExchangeAPI() {
         return exchangeAPI;
     }
 
