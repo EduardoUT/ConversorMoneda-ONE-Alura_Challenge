@@ -29,12 +29,12 @@ import javax.swing.JTextField;
  */
 public class CurrencyConverterController {
 
-    private final FreeCurrencyExchangeRatesService currencyService;
+    private final ExchangeAPIService exchangesAPIService;
     private final CurrencyConverter currencyConverter;
 
-    public CurrencyConverterController(CurrencyConverter currencyConverter, FreeCurrencyExchangeRatesService exhangeRatesService) {
+    public CurrencyConverterController(CurrencyConverter currencyConverter, ExchangeAPIService exchangeAPIService) {
         this.currencyConverter = currencyConverter;
-        this.currencyService = exhangeRatesService;
+        this.exchangesAPIService = exchangeAPIService;
     }
 
     public void setConversion(JTextField campoIngresoDivisa, JTextField campoConversion, JComboBox<CurrencyUnit> base,
@@ -48,7 +48,7 @@ public class CurrencyConverterController {
 
     public void loadAvailableCurrencies(JComboBox<CurrencyUnit> baseComboBoxCurrencies,
             JComboBox<CurrencyUnit> targetComboBoxCurrencies) {
-        Optional<List<CurrencyUnit>> currencies = currencyService.availableCurrencyCodes();
+        Optional<List<CurrencyUnit>> currencies = exchangesAPIService.availableCurrencyCodes();
         addCurrenciesAsComboBoxItems(currencies, baseComboBoxCurrencies);
         addCurrenciesAsComboBoxItems(currencies, targetComboBoxCurrencies);
     }
