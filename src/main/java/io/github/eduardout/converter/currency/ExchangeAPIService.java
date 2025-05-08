@@ -18,7 +18,7 @@ package io.github.eduardout.converter.currency;
 
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.currency.provider.APIClient;
-import io.github.eduardout.converter.currency.provider.ExchangeRatesAPI;
+import io.github.eduardout.converter.currency.provider.ExchangeAPI;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.util.RateParser;
 import java.util.Comparator;
@@ -31,15 +31,15 @@ import java.util.stream.Collectors;
  *
  * @author EduardoUT
  */
-public class FreeCurrencyExchangeRatesService {
+public class ExchangeAPIService {
 
-    private ExchangeRatesAPI exchangeRatesAPI;
+    private ExchangeAPI exchangeAPI;
 
-    public FreeCurrencyExchangeRatesService(APIClient apiClient,
-            PropertiesConfig propertiesConfig,
-            JSONCurrencyFileRepository jSONCurrencyFileRepository,
-            RateParser rateParser) {
-        exchangeRatesAPI = new ExchangeRatesAPI(apiClient,
+    public ExchangeAPIService(APIClient apiClient,
+                              PropertiesConfig propertiesConfig,
+                              JSONCurrencyFileRepository jSONCurrencyFileRepository,
+                              RateParser rateParser) {
+        exchangeAPI = new ExchangeAPI(apiClient,
                 propertiesConfig, jSONCurrencyFileRepository, rateParser
         );
     }
@@ -53,7 +53,7 @@ public class FreeCurrencyExchangeRatesService {
      */
     public Optional<List<CurrencyUnit>> availableCurrencyCodes() {
         Map<String, ISO4217Currency> appCurrencies = ISO4217Currency.getISO4217Currencies();
-        List<CurrencyUnit> apiCurrencies = exchangeRatesAPI.getCurrencies()
+        List<CurrencyUnit> apiCurrencies = exchangeAPI.getCurrencies()
                 .get()
                 .stream()
                 .filter(apiCurrency -> appCurrencies.containsKey(apiCurrency))
@@ -70,8 +70,8 @@ public class FreeCurrencyExchangeRatesService {
      *
      * @return The FreeCurrencyExchange API RateProvider.
      */
-    public ExchangeRatesAPI getFreeCurrencyExchangeRates() {
-        return exchangeRatesAPI;
+    public ExchangeAPI getFreeCurrencyExchangeRates() {
+        return exchangeAPI;
     }
 
 }
