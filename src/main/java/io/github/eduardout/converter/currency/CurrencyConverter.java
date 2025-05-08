@@ -20,7 +20,6 @@ import io.github.eduardout.converter.currency.provider.RateProvider;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,11 +116,6 @@ public class CurrencyConverter {
         if (base.equals(target)) {
             throw new IllegalArgumentException("Invalid base CurrencyUnit: same "
                     + "type or same reference as target CurrencyUnit argument "
-                    + "were provided.");
-        }
-        if (target.equals(base)) {
-            throw new IllegalArgumentException("Invalid target CurrencyUnit: same "
-                    + "type or same reference as base CurrencyUnit argument "
                     + "were provided.");
         }
     }
