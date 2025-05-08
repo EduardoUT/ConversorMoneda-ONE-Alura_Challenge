@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.*;
 
+import io.github.eduardout.converter.util.ExchangeAPIParser;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
@@ -43,6 +44,7 @@ class JSONCurrencyFileRepositoryTest {
     static Path tempDir;
 
     private JSONCurrencyFileRepository jSONCurrencyFileRepository;
+    private ExchangeAPIParser exchangeAPIParser;
     private Path testFilePath;
     private CurrencyUnit baseCurrency;
     private CurrencyUnit targetCurrency;
@@ -53,11 +55,12 @@ class JSONCurrencyFileRepositoryTest {
         testFilePath = tempDir.resolve("test-rates.json");
         baseCurrency = new CurrencyUnit(MXN);
         targetCurrency = new CurrencyUnit(GBP);
+        exchangeAPIParser = new ExchangeAPIParser();
     }
 
     @Test
     void testReadWriteOperations() throws IOException {
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString());
+        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
         JSONObject testData = new JSONObject("{}");
         testData.put("gbp", 0.037968493);
         testData.put("mxn", 1);
@@ -75,7 +78,7 @@ class JSONCurrencyFileRepositoryTest {
     void testReadInvalidCurrencyPair() throws IOException {
         JSONObject invalidData = new JSONObject("{}");
         invalidData.put("usd", 0.75);
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString());
+        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
         jSONCurrencyFileRepository.updateCurrencyRates(invalidData);
         Optional<Map<String, BigDecimal>> response = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
         assertEquals(Collections.emptyMap(), response.orElseGet(Collections::emptyMap));
@@ -91,7 +94,7 @@ class JSONCurrencyFileRepositoryTest {
                 .put("gbp", 0.038013551);
         JSONObject newData = new JSONObject("{}")
                 .put("gbp", 0.038013554);
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString());
+        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
         jSONCurrencyFileRepository.updateCurrencyRates(currentData);
         jSONCurrencyFileRepository.updateCurrencyRates(currentData);
         jSONCurrencyFileRepository.updateCurrencyRates(newData);
