@@ -67,6 +67,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
         List<String> currencies = null;
         try {
             String currencyKey = "currency";
+            String midKey = "mid";
             String url = propertiesConfig.getPropertyValue("exchangerates");
             JSONArray response = apiClient.fetchDataAsJSONArray(url);
             JSONArray rates = response.getJSONObject(0).getJSONArray("rates");
@@ -75,7 +76,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
                     .filter(HashMap.class::isInstance)
                     .map(HashMap.class::cast)
                     .filter(hashMap -> hashMap.remove(currencyKey, hashMap.get(currencyKey)))
-                    .filter(hashMap -> hashMap.remove("mid", hashMap.get("mid")))
+                    .filter(hashMap -> hashMap.remove(midKey, hashMap.get(midKey)))
                     .map(hashMap -> hashMap.get("code").toString())
                     .collect(Collectors.toList());
         } catch (IOException e) {
