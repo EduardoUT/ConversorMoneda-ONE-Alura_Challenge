@@ -22,6 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -62,7 +63,7 @@ public class APIClient {
      * @throws IOException When request was not successful or body response is
      * null.
      */
-    public String fetchDataAsString(String url) throws IOException {
+    public String fetchData(String url) throws IOException {
         if (url == null) {
             throw new IllegalArgumentException("Argument url is null, check if "
                     + "provided links are correct in properties file");
@@ -94,15 +95,22 @@ public class APIClient {
      * API.
      *
      * @param url The url source to fetch data.
-     * @return A JSONObject that contains all the available curencies of this
+     * @return A JSONObject that contains all the available currencies of this
      * API provider.
-     * @throws IOException When the fetchDataAsString request method was not
+     * @throws IOException When the fetchData request method was not
      * successful, the body of the response is null or there is a problem while
      * read, write or open the local JSON file.
      */
     public JSONObject fetchDataAsJSONObject(String url) throws IOException {
-        String response;
-        response = fetchDataAsString(url);
-        return new JSONObject(response);
+        return new JSONObject(fetchData(url));
+    }
+
+    /**
+     * If the response JSON starts with brackets this method can be useful.
+     * @param url The url to fetch data.
+     * @return A JSONArray containing the body response of the requested url.
+     */
+    public JSONArray fetchDataAsJSONArray(String url) throws IOException {
+        return new JSONArray(fetchData(url));
     }
 }
