@@ -33,14 +33,14 @@ import org.json.JSONArray;
 /**
  * @author EduardoUT
  */
-public class NationalBankOfPoland implements RateProvider, RateParser, RateProviderAvailableCurrencies {
+public class NBPExchangeRates implements RateProvider, RateParser, RateProviderAvailableCurrencies {
 
     public static final String CURRENCY_KEY = "currency";
     private APIClient apiClient;
     private PropertiesConfig propertiesConfig;
 
-    public NationalBankOfPoland(APIClient aPIClient,
-                                PropertiesConfig propertiesConfig) {
+    public NBPExchangeRates(APIClient aPIClient,
+                            PropertiesConfig propertiesConfig) {
         this.apiClient = aPIClient;
         this.propertiesConfig = propertiesConfig;
     }
