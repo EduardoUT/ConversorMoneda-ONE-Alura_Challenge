@@ -19,7 +19,6 @@ package io.github.eduardout.converter.currency.repository;
 import static io.github.eduardout.converter.GlobalLogger.*;
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.provider.RateProvider;
-import io.github.eduardout.converter.util.DefaultRateParser;
 import io.github.eduardout.converter.util.RateParser;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -45,12 +44,12 @@ public class JSONCurrencyFileRepository implements RateProvider,
     private static final String DEFAULT_DIR = "currency_data";
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Path jsonFilePath;
-    private final RateParser rateParser;
+    private RateParser rateParser;
 
-    public JSONCurrencyFileRepository(String customPath) throws IOException {
+    public JSONCurrencyFileRepository(String customPath, RateParser rateParser) throws IOException {
         jsonFilePath = resolvePortablePath(customPath);
         createFileIfNeeded();
-        rateParser = new DefaultRateParser();
+        this.rateParser = rateParser;
     }
 
     private Path resolvePortablePath(String customPath) {
