@@ -37,5 +37,5 @@ public interface RateProvider {
      * @param target CurrencyUnit as the target currency.
      * @return An Optional Map with the corresponding keys (currency code) and values (amount).
      */
-    Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target);
+    Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target);
 }

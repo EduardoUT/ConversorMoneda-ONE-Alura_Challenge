@@ -49,7 +49,7 @@ public class CurrencyConverter {
      */
     private void setMappedCurrencies(CurrencyUnit base, CurrencyUnit target) {
         mappedCurrencies = new HashMap<>();
-        mappedCurrencies.putAll(rateProvider.getCurrencyRates(base, target).orElseGet(Collections::emptyMap));
+        mappedCurrencies.putAll(rateProvider.getCurrencyRates(base, target));
         if (mappedCurrencies.isEmpty()) {
             throw new IllegalStateException("No currencies were found from provider.");
         }

@@ -87,9 +87,9 @@ class ExchangeAPITest {
                 .thenReturn(mockResponse);
         when(mockRateParser.parseRate(mockResponse.getJSONObject("mxn"), mockBase, mockTarget))
                 .thenReturn(expectedRates);
-        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
-        BigDecimal baseAmount = result.orElseThrow(NoSuchElementException::new).get("usd");
-        BigDecimal targetAmount = result.orElseThrow(NoSuchElementException::new).get("eur");
+        Map<String, BigDecimal> result = rates.getCurrencyRates(mockBase, mockTarget);
+        BigDecimal baseAmount = result.get("usd");
+        BigDecimal targetAmount = result.get("eur");
         assertEquals(expectedRates.get("usd"), baseAmount);
         assertEquals(expectedRates.get("eur"), targetAmount);
         verify(mockFallbackProvider).updateCurrencyRates(mockResponse.getJSONObject("mxn"));
@@ -106,9 +106,9 @@ class ExchangeAPITest {
         when(mockApiClient.fetchDataAsJSONObject(anyString()))
                 .thenThrow(new IOException("Connection failed."));
         when(mockFallbackProvider.getCurrencyRates(mockBase, mockTarget))
-                .thenReturn(Optional.of(expected));
-        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
-        assertEquals(new BigDecimal("1.25"), result.orElseThrow(NoSuchElementException::new).get("MXN"));
+                .thenReturn(expected);
+        Map<String, BigDecimal> result = rates.getCurrencyRates(mockBase, mockTarget);
+        assertEquals(new BigDecimal("1.25"), result.get("MXN"));
         verify(mockFallbackProvider).getCurrencyRates(mockBase, mockTarget);
     }
 
@@ -136,9 +136,9 @@ class ExchangeAPITest {
                 .thenReturn(goodResponse);
         when(mockRateParser.parseRate(goodResponse.getJSONObject("mxn"), mockBase, mockTarget))
                 .thenReturn(expected);
-        Optional<Map<String, BigDecimal>> result = rates.getCurrencyRates(mockBase, mockTarget);
-        BigDecimal baseAmount = result.orElseThrow(NoSuchElementException::new).get("usd");
-        BigDecimal targetAmount = result.orElseThrow(NoSuchElementException::new).get("jpy");
+        Map<String, BigDecimal> result = rates.getCurrencyRates(mockBase, mockTarget);
+        BigDecimal baseAmount = result.get("usd");
+        BigDecimal targetAmount = result.get("jpy");
         assertEquals(expected.get("usd"), baseAmount);
         assertEquals(expected.get("jpy"), targetAmount);
         verify(mockApiClient, times(2)).fetchDataAsJSONObject(anyString());

@@ -49,8 +49,8 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
     }
 
     @Override
-    public Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
-        Map<String, BigDecimal> rates = null;
+    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
+        Map<String, BigDecimal> rates = Collections.emptyMap();
         try {
             String url = propertiesConfig.getPropertyValue("exchangerates");
             registerLog(Level.INFO, "Fetching data from API.");
@@ -59,7 +59,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
         } catch (IOException | IllegalStateException e) {
             registerLogException(Level.SEVERE, "Error: {0}", e);
         }
-        return Optional.ofNullable(rates);
+        return rates;
     }
 
     @Override

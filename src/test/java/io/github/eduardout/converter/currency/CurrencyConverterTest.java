@@ -190,7 +190,7 @@ class CurrencyConverterTest {
         expectedRate.put(baseDefault.getCurrencyCode(), new BigDecimal("0.05075398"));
         expectedRate.put(targetDefault.getCurrencyCode(), new BigDecimal("0.044226646"));
         when(rateProvider.getCurrencyRates(baseDefault, targetDefault))
-                .thenReturn(Optional.of(expectedRate));
+                .thenReturn(expectedRate);
         currencyConverter = new CurrencyConverter(rateProvider);
         BigDecimal result = currencyConverter.convert(baseDefault, targetDefault, amount);
         assertEquals(calculateAmount(expectedRate.get(baseDefault.getCurrencyCode()),
@@ -204,7 +204,7 @@ class CurrencyConverterTest {
         expectedRate.put(baseDefault.getCurrencyCode(), new BigDecimal("0.05075398"));
         expectedRate.put(targetDefault.getCurrencyCode(), new BigDecimal("0.044226646"));
         when(rateProvider.getCurrencyRates(targetDefault, baseDefault))
-                .thenReturn(Optional.of(expectedRate));
+                .thenReturn(expectedRate);
         currencyConverter = new CurrencyConverter(rateProvider);
         BigDecimal result = currencyConverter.convert(targetDefault, baseDefault, amount);
         assertEquals(calculateAmount(expectedRate.get(targetDefault.getCurrencyCode()),
@@ -217,7 +217,7 @@ class CurrencyConverterTest {
         IllegalStateException illegalStateException;
         illegalStateException = assertThrowsExactly(IllegalStateException.class, () -> {
             when(rateProvider.getCurrencyRates(baseDefault, targetDefault))
-                    .thenReturn(Optional.of(Collections.emptyMap()));
+                    .thenReturn(Collections.emptyMap());
             currencyConverter = new CurrencyConverter(rateProvider);
             currencyConverter.convert(baseDefault, targetDefault, amount);
         });

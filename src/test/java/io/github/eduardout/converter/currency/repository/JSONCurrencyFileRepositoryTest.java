@@ -65,9 +65,9 @@ class JSONCurrencyFileRepositoryTest {
         testData.put("gbp", 0.037968493);
         testData.put("mxn", 1);
         jSONCurrencyFileRepository.updateCurrencyRates(testData);
-        Optional<Map<String, BigDecimal>> targetRate = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        BigDecimal baseAmount = targetRate.orElseThrow(NoSuchElementException::new).get(baseCurrency.getCurrencyCode());
-        BigDecimal targetAmount = targetRate.orElseThrow(NoSuchElementException::new).get(targetCurrency.getCurrencyCode());
+        Map<String, BigDecimal> targetRate = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
+        BigDecimal baseAmount = targetRate.get(baseCurrency.getCurrencyCode());
+        BigDecimal targetAmount = targetRate.get(targetCurrency.getCurrencyCode());
         assertEquals(BigDecimal.ONE, baseAmount);
         assertEquals(new BigDecimal("0.037968493"), targetAmount);
     }
@@ -80,8 +80,8 @@ class JSONCurrencyFileRepositoryTest {
         invalidData.put("usd", 0.75);
         jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
         jSONCurrencyFileRepository.updateCurrencyRates(invalidData);
-        Optional<Map<String, BigDecimal>> response = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        assertEquals(Collections.emptyMap(), response.orElseGet(Collections::emptyMap));
+        Map<String, BigDecimal> response = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
+        assertEquals(Collections.emptyMap(), response);
     }
 
     @DisplayName("Debería actualizar el repositorio solo cuando los datos del "
@@ -99,7 +99,7 @@ class JSONCurrencyFileRepositoryTest {
         jSONCurrencyFileRepository.updateCurrencyRates(currentData);
         jSONCurrencyFileRepository.updateCurrencyRates(newData);
         jSONCurrencyFileRepository.updateCurrencyRates(newData);
-        Optional<Map<String, BigDecimal>> result = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        assertNotEquals(unexpected.get("gbp"), result.orElseThrow(NoSuchElementException::new).get("gbp"));
+        Map<String, BigDecimal> result = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
+        assertNotEquals(unexpected.get("gbp"), result.get("gbp"));
     }
 }

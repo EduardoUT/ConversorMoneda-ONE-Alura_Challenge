@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,8 +78,8 @@ public class JSONCurrencyFileRepository implements RateProvider,
     }
 
     @Override
-    public Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
-        Map<String, BigDecimal> rate = null;
+    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
+        Map<String, BigDecimal> rate = Collections.emptyMap();
         try {
             JSONObject jsonObject = readFile();
             rate = rateParser.parseRate(jsonObject, base, target);
@@ -86,7 +87,7 @@ public class JSONCurrencyFileRepository implements RateProvider,
             registerLogException(Level.SEVERE, "An exception occurs while "
                     + "reading the JSON currencies file. {0}", ex);
         }
-        return Optional.ofNullable(rate);
+        return rate;
     }
 
     @Override

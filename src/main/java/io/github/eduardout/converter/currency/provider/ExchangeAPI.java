@@ -68,7 +68,7 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
     }
 
     @Override
-    public Optional<Map<String, BigDecimal>> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
+    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
         Map<String, BigDecimal> rate;
         CurrencyUnit apiBaseCurrencyUnit = new CurrencyUnit(ISO4217Currency.MXN);
         for (String key : propertiesConfig.getKeyProperties()) {
@@ -79,7 +79,7 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
                 JSONObject apiBaseKey = response.getJSONObject(apiBaseCurrencyUnit.getCurrencyCode().toLowerCase());
                 fallbackProvider.updateCurrencyRates(apiBaseKey);
                 rate = rateParser.parseRate(apiBaseKey, base, target);
-                return Optional.ofNullable(rate);
+                return rate;
             } catch (IOException | IllegalStateException e) {
                 registerLogException(Level.SEVERE, "Error: {0} ", e);
             }
