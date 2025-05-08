@@ -36,7 +36,6 @@ import org.json.JSONArray;
  */
 public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
 
-    public static final String CURRENCY_KEY = "currency";
     private APIClient apiClient;
     private PropertiesConfig propertiesConfig;
     private RateParser rateParser;
@@ -67,6 +66,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
     public Optional<List<String>> getCurrencies() {
         List<String> currencies = null;
         try {
+            String currencyKey = "currency";
             String url = propertiesConfig.getPropertyValue("exchangerates");
             JSONArray response = apiClient.fetchDataAsJSONArray(url);
             JSONArray rates = response.getJSONObject(0).getJSONArray("rates");
@@ -74,7 +74,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
                     .stream()
                     .filter(HashMap.class::isInstance)
                     .map(HashMap.class::cast)
-                    .filter(hashMap -> hashMap.remove(CURRENCY_KEY, hashMap.get(CURRENCY_KEY)))
+                    .filter(hashMap -> hashMap.remove(currencyKey, hashMap.get(currencyKey)))
                     .filter(hashMap -> hashMap.remove("mid", hashMap.get("mid")))
                     .map(hashMap -> hashMap.get("code").toString())
                     .collect(Collectors.toList());
