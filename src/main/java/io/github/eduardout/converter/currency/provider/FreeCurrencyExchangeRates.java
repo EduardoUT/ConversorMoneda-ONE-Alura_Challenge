@@ -80,8 +80,7 @@ public class FreeCurrencyExchangeRates implements RateProvider, RateProviderAvai
                 rate = rateParser.parseRate(apiBaseKey, base, target);
                 return Optional.ofNullable(rate);
             } catch (IOException | IllegalStateException e) {
-                registerLogException(Level.SEVERE, "Error while getting response "
-                        + "from API {0} ", e);
+                registerLogException(Level.SEVERE, "Error: {0} ", e);
             }
         }
         registerLog(Level.SEVERE, "All response endpoints failed, using JSON file.");
@@ -95,12 +94,12 @@ public class FreeCurrencyExchangeRates implements RateProvider, RateProviderAvai
             PropertiesConfig properties = PropertiesConfig.fromFile("config.properties", "available.");
             String url = properties.getPropertyValue("fcera.currencies");
             JSONObject response = apiClient.fetchDataAsJSONObject(url);
-            apiCurrencies = response.toMap().entrySet()
+            apiCurrencies = response.toMap().keySet()
                     .stream()
-                    .map(entry -> entry.getKey().toUpperCase())
+                    .map(String::toUpperCase)
                     .collect(Collectors.toList());
         } catch (IOException ex) {
-            registerLogException(Level.SEVERE, "Error {0} ", ex);
+            registerLogException(Level.SEVERE, "Error: {0} ", ex);
         }
         return Optional.ofNullable(apiCurrencies);
     }
