@@ -17,7 +17,7 @@
 package io.github.eduardout.converter.currency;
 
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.currency.provider.APIClient;
+import io.github.eduardout.converter.currency.provider.HttpClient;
 import io.github.eduardout.converter.currency.provider.ExchangeAPI;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.util.RateParser;
@@ -34,11 +34,11 @@ public class ExchangeAPIService {
 
     private ExchangeAPI exchangeAPI;
 
-    public ExchangeAPIService(APIClient apiClient,
+    public ExchangeAPIService(HttpClient httpClient,
                               PropertiesConfig propertiesConfig,
                               JSONCurrencyFileRepository jSONCurrencyFileRepository,
                               RateParser rateParser) {
-        exchangeAPI = new ExchangeAPI(apiClient,
+        exchangeAPI = new ExchangeAPI(httpClient,
                 propertiesConfig, jSONCurrencyFileRepository, rateParser
         );
     }
