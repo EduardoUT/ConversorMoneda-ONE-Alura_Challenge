@@ -23,7 +23,7 @@ import io.github.eduardout.converter.currency.CurrencyConverterController;
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.ExchangeAPIService;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.currency.provider.APIClient;
+import io.github.eduardout.converter.currency.provider.HttpClient;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
 import io.github.eduardout.converter.temperature.CelsiusToFarenheit;
 import io.github.eduardout.converter.temperature.TemperatureConverter;
@@ -122,12 +122,12 @@ public final class ConverterUI extends javax.swing.JFrame {
 
     private void setUpCurrencyConverterController() {
         try {
-            APIClient apiClient = APIClient.getInstance();
+            HttpClient httpClient = HttpClient.getInstance();
             PropertiesConfig propertiesConfig = PropertiesConfig.fromFile("config.properties", "fcera.");
             RateParser rateParser = new ExchangeAPIParser();
             JSONCurrencyFileRepository jSONCurrencyFileRepository = new JSONCurrencyFileRepository("", rateParser);
             ExchangeAPIService currencyExchangeRatesService = new ExchangeAPIService(
-                    apiClient, propertiesConfig, jSONCurrencyFileRepository, rateParser
+                    httpClient, propertiesConfig, jSONCurrencyFileRepository, rateParser
             );
             converterController = new CurrencyConverterController(
                     new CurrencyConverter(currencyExchangeRatesService.getExchangeAPI()),
