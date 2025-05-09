@@ -18,6 +18,7 @@ package io.github.eduardout.converter.currency.provider;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -26,15 +27,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
  * @author EduardoUT
  */
-public class APIClient {
+public class HttpClient {
 
-    private static APIClient instance;
     private final OkHttpClient okHttpClient;
 
-    private APIClient() {
+    private HttpClient() {
         okHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -43,16 +42,19 @@ public class APIClient {
     }
 
     /**
-     * This is a thread-safe synchronized method which ensures all the threads
-     * use this resource once its unused.
-     *
-     * @return APIClient object with the OkkhttpClient.
+     * Static class to initialize thread-safe a new HttpClient instance.
      */
-    public static synchronized APIClient getInstance() {
-        if (instance == null) {
-            instance = new APIClient();
-        }
-        return instance;
+    private static class InstanceHolder {
+        private static final HttpClient INSTANCE = new HttpClient();
+    }
+
+    /**
+     * Implementing lazy initialization.
+     *
+     * @return HttpClient instance of this class.
+     */
+    public static HttpClient getInstance() {
+        return InstanceHolder.INSTANCE;
     }
 
     /**
@@ -61,7 +63,7 @@ public class APIClient {
      * @param url The url from the API Rest Service.
      * @return The body response in a String.
      * @throws IOException When request was not successful or body response is
-     * null.
+     *                     null.
      */
     public String fetchData(String url) throws IOException {
         if (url == null) {
@@ -98,8 +100,8 @@ public class APIClient {
      * @return A JSONObject that contains all the available currencies of this
      * API provider.
      * @throws IOException When the fetchData request method was not
-     * successful, the body of the response is null or there is a problem while
-     * read, write or open the local JSON file.
+     *                     successful, the body of the response is null or there is a problem while
+     *                     read, write or open the local JSON file.
      */
     public JSONObject fetchDataAsJSONObject(String url) throws IOException {
         return new JSONObject(fetchData(url));
@@ -107,6 +109,7 @@ public class APIClient {
 
     /**
      * If the response JSON starts with brackets this method can be useful.
+     *
      * @param url The url to fetch data.
      * @return A JSONArray containing the body response of the requested url.
      */
