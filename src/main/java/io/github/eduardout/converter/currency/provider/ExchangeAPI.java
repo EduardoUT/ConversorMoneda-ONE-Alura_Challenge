@@ -52,15 +52,15 @@ import org.json.JSONObject;
  */
 public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencies {
 
-    private APIClient apiClient;
+    private HttpClient httpClient;
     private PropertiesConfig propertiesConfig;
     private JSONCurrencyFileRepository fallbackProvider;
     private RateParser rateParser;
 
-    public ExchangeAPI(APIClient apiClient,
+    public ExchangeAPI(HttpClient httpClient,
                        PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
                        RateParser rateParser) {
-        this.apiClient = apiClient;
+        this.httpClient = httpClient;
         this.propertiesConfig = propertiesConfig;
         this.fallbackProvider = fallbackProvider;
         this.rateParser = rateParser;
@@ -73,7 +73,7 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
             try {
                 String url = propertiesConfig.getPropertyValue(key);
                 registerLog(Level.INFO, "Fetching data from API.");
-                JSONObject response = apiClient.fetchDataAsJSONObject(url);
+                JSONObject response = httpClient.fetchDataAsJSONObject(url);
                 JSONObject apiBaseKey = response.getJSONObject(apiBaseCurrencyUnit.getCurrencyCode().toLowerCase());
                 fallbackProvider.updateCurrencyRates(apiBaseKey);
                 return rateParser.parseRate(apiBaseKey, base, target);
@@ -91,7 +91,7 @@ public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencie
         try {
             PropertiesConfig properties = PropertiesConfig.fromFile("config.properties", "available.");
             String url = properties.getPropertyValue("fcera.currencies");
-            JSONObject response = apiClient.fetchDataAsJSONObject(url);
+            JSONObject response = httpClient.fetchDataAsJSONObject(url);
             apiCurrencies = response.toMap().keySet()
                     .stream()
                     .map(String::toUpperCase)
