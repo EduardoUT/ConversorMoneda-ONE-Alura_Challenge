@@ -20,7 +20,6 @@ import static io.github.eduardout.converter.GlobalLogger.*;
 
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.util.NBPExchangeRatesParser;
 import io.github.eduardout.converter.util.RateParser;
 
 import java.io.IOException;
@@ -36,14 +35,14 @@ import org.json.JSONArray;
  */
 public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
 
-    private APIClient apiClient;
+    private HttpClient httpClient;
     private PropertiesConfig propertiesConfig;
     private RateParser rateParser;
 
-    public NBPExchangeRates(APIClient aPIClient,
+    public NBPExchangeRates(HttpClient httpClient,
                             PropertiesConfig propertiesConfig,
                             RateParser rateParser) {
-        this.apiClient = aPIClient;
+        this.httpClient = httpClient;
         this.propertiesConfig = propertiesConfig;
         this.rateParser = rateParser;
     }
@@ -54,7 +53,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
         try {
             String url = propertiesConfig.getPropertyValue("exchangerates");
             registerLog(Level.INFO, "Fetching data from API.");
-            JSONArray response = apiClient.fetchDataAsJSONArray(url);
+            JSONArray response = httpClient.fetchDataAsJSONArray(url);
             rates = rateParser.parseRate(response, base, target);
         } catch (IOException | IllegalStateException e) {
             registerLogException(Level.SEVERE, "Error: {0}", e);
@@ -69,7 +68,7 @@ public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurr
             String currencyKey = "currency";
             String midKey = "mid";
             String url = propertiesConfig.getPropertyValue("exchangerates");
-            JSONArray response = apiClient.fetchDataAsJSONArray(url);
+            JSONArray response = httpClient.fetchDataAsJSONArray(url);
             JSONArray rates = response.getJSONObject(0).getJSONArray("rates");
             currencies = rates.toList()
                     .stream()
