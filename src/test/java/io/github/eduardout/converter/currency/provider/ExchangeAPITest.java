@@ -48,7 +48,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ExchangeAPITest {
 
     @Mock
-    private APIClient mockApiClient;
+    private HttpClient mockHttpClient;
 
     @Mock
     private PropertiesConfig mockPropertiesConfig;
@@ -83,7 +83,7 @@ class ExchangeAPITest {
                 .thenReturn(Collections.singletonList("api.endpoint"));
         when(mockPropertiesConfig.getPropertyValue("api.endpoint"))
                 .thenReturn(testUrl);
-        when(mockApiClient.fetchDataAsJSONObject(testUrl))
+        when(mockHttpClient.fetchDataAsJSONObject(testUrl))
                 .thenReturn(mockResponse);
         when(mockRateParser.parseRate(mockResponse.getJSONObject("mxn"), mockBase, mockTarget))
                 .thenReturn(expectedRates);
@@ -103,7 +103,7 @@ class ExchangeAPITest {
                 .thenReturn(Arrays.asList("endpoint.one", "endpoint.two"));
         when(mockPropertiesConfig.getPropertyValue(anyString()))
                 .thenReturn("https://api.example.com");
-        when(mockApiClient.fetchDataAsJSONObject(anyString()))
+        when(mockHttpClient.fetchDataAsJSONObject(anyString()))
                 .thenThrow(new IOException("Connection failed."));
         when(mockFallbackProvider.getCurrencyRates(mockBase, mockTarget))
                 .thenReturn(expected);
@@ -130,9 +130,9 @@ class ExchangeAPITest {
                 .thenReturn(badUrl);
         when(mockPropertiesConfig.getPropertyValue("second"))
                 .thenReturn(goodUrl);
-        when(mockApiClient.fetchDataAsJSONObject(badUrl))
+        when(mockHttpClient.fetchDataAsJSONObject(badUrl))
                 .thenThrow(new IOException("Connection failed"));
-        when(mockApiClient.fetchDataAsJSONObject(goodUrl))
+        when(mockHttpClient.fetchDataAsJSONObject(goodUrl))
                 .thenReturn(goodResponse);
         when(mockRateParser.parseRate(goodResponse.getJSONObject("mxn"), mockBase, mockTarget))
                 .thenReturn(expected);
@@ -141,6 +141,6 @@ class ExchangeAPITest {
         BigDecimal targetAmount = result.get("jpy");
         assertEquals(expected.get("usd"), baseAmount);
         assertEquals(expected.get("jpy"), targetAmount);
-        verify(mockApiClient, times(2)).fetchDataAsJSONObject(anyString());
+        verify(mockHttpClient, times(2)).fetchDataAsJSONObject(anyString());
     }
 }
