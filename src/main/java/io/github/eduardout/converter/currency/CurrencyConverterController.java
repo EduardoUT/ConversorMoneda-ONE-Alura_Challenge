@@ -17,9 +17,7 @@
 package io.github.eduardout.converter.currency;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -29,12 +27,12 @@ import javax.swing.JTextField;
  */
 public class CurrencyConverterController {
 
-    private final ExchangeAPIService exchangesAPIService;
+    private final RateProviderService rateProviderService;
     private final CurrencyConverter currencyConverter;
 
-    public CurrencyConverterController(CurrencyConverter currencyConverter, ExchangeAPIService exchangeAPIService) {
+    public CurrencyConverterController(CurrencyConverter currencyConverter, RateProviderService rateProviderService) {
         this.currencyConverter = currencyConverter;
-        this.exchangesAPIService = exchangeAPIService;
+        this.rateProviderService = rateProviderService;
     }
 
     public void setConversion(JTextField campoIngresoDivisa, JTextField campoConversion, JComboBox<CurrencyUnit> base,
@@ -48,7 +46,7 @@ public class CurrencyConverterController {
 
     public void loadAvailableCurrencies(JComboBox<CurrencyUnit> baseComboBoxCurrencies,
             JComboBox<CurrencyUnit> targetComboBoxCurrencies) {
-        List<CurrencyUnit> currencies = exchangesAPIService.availableCurrencyCodes();
+        List<CurrencyUnit> currencies = rateProviderService.availableCurrencyUnits();
         addCurrenciesAsComboBoxItems(currencies, baseComboBoxCurrencies);
         addCurrenciesAsComboBoxItems(currencies, targetComboBoxCurrencies);
     }
