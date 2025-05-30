@@ -34,9 +34,7 @@ public interface RateParser {
 
     /**
      * @param response The response from the API Provider.
-     * @param base     The currency unit as base.
-     * @param target   The currency unit to convert.
      * @return A Map with the currency codes as keys and its amount as values.
      */
-    Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target);
+    Map<String, BigDecimal> parseRate(String response);
 }
