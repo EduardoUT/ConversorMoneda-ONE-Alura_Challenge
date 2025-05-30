@@ -45,7 +45,7 @@ public class NBPExchangeRates extends AbstractCurrencyProvider {
     public Map<String, BigDecimal> getCurrencyRates() {
         Map<String, BigDecimal> currencyRates = Collections.emptyMap();
         try {
-            String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), "exchangerates");
+            String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), "exchange-rates");
             registerLog(Level.INFO, "Fetching data from National Bank Of Poland API");
             String response = super.getHttpClient().fetchData(url);
             currencyRates = rateParser.parseRate(response);
