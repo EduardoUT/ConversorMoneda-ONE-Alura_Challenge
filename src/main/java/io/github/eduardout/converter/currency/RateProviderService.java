@@ -20,7 +20,7 @@ import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.currency.provider.HttpClient;
 import io.github.eduardout.converter.currency.provider.ExchangeAPI;
 import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
-import io.github.eduardout.converter.util.RateParser;
+import io.github.eduardout.converter.util.ExchangeAPIParser;
 
 import java.util.Comparator;
 import java.util.List;
@@ -37,9 +37,12 @@ public class ExchangeAPIService {
     public ExchangeAPIService(HttpClient httpClient,
                               PropertiesConfig propertiesConfig,
                               JSONCurrencyFileRepository jSONCurrencyFileRepository,
-                              RateParser rateParser) {
-        exchangeAPI = new ExchangeAPI(httpClient,
-                propertiesConfig, jSONCurrencyFileRepository, rateParser
+                              ExchangeAPIParser exchangeAPIParser) {
+        exchangeAPI = new ExchangeAPI(
+                httpClient,
+                propertiesConfig,
+                jSONCurrencyFileRepository,
+                exchangeAPIParser
         );
     }
 

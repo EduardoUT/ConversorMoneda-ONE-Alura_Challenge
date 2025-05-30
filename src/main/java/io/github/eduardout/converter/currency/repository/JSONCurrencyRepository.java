@@ -17,19 +17,14 @@
 package io.github.eduardout.converter.currency.repository;
 
 import static io.github.eduardout.converter.GlobalLogger.*;
-import io.github.eduardout.converter.currency.CurrencyUnit;
-import io.github.eduardout.converter.currency.provider.RateProvider;
 import io.github.eduardout.converter.util.RateParser;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import org.json.JSONObject;
@@ -38,19 +33,21 @@ import org.json.JSONObject;
  *
  * @author EduardoUT
  */
-public class JSONCurrencyFileRepository implements RateProvider,
-        UpdateCurrencyFileRepository {
+public class JSONCurrencyFileRepository implements UpdateCurrencyFileRepository {
 
     private static final String JSON_FILE = "currency-rates.json";
     private static final String DEFAULT_DIR = "currency_data";
+    private static final String ROOT_KEY = "rate-providers";
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private Path jsonFilePath;
-    private RateParser rateParser;
+    private String keyProvider;
+    private JSONObject defaultFormat;
+    private Map<String, Object> storedProviders;
 
-    public JSONCurrencyFileRepository(String customPath, RateParser rateParser) throws IOException {
+    public JSONCurrencyFileRepository(String customPath, String keyProvider) throws IOException {
         jsonFilePath = resolvePortablePath(customPath);
         createFileIfNeeded();
-        this.rateParser = rateParser;
+        this.keyProvider = keyProvider;
     }
 
     private Path resolvePortablePath(String customPath) {
@@ -65,56 +62,90 @@ public class JSONCurrencyFileRepository implements RateProvider,
     }
 
     /**
-     * Creates a directory and a JSON file to store currencies locally, creates
-     * a new directory if not exists and same with the json file.
+     * Writes the new JSON file with the default format content
+     * once has the path directories defined in
+     * resolvePortablePath.
      *
      * @throws IOException When an I/O error occurs with the given file.
      */
     private void createFileIfNeeded() throws IOException {
+        storedProviders = new HashMap<>();
         Files.createDirectories(jsonFilePath.getParent());
         if (!Files.exists(jsonFilePath)) {
-            Files.write(jsonFilePath, "{}".getBytes());
+            String brackets = "{}";
+            defaultFormat = new JSONObject(brackets);
+            defaultFormat.put(ROOT_KEY, new JSONObject(brackets));
+            Files.write(jsonFilePath, defaultFormat.toString().getBytes());
         }
     }
 
-    @Override
-    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
-        Map<String, BigDecimal> rate = Collections.emptyMap();
+    public JSONObject readCurrencyRates() {
         try {
-            JSONObject jsonObject = readFile();
-            rate = rateParser.parseRate(jsonObject, base, target);
+            return readFile();
         } catch (IOException ex) {
             registerLogException(Level.SEVERE, "An exception occurs while "
                     + "reading the JSON currencies file. {0}", ex);
         }
-        return rate;
+        return null;
     }
 
     @Override
-    public void updateCurrencyRates(JSONObject response) throws IOException {
+    public void updateCurrencyRates(String response) throws IOException {
         registerLog(Level.INFO, "Checking for changes...");
         JSONObject currentData = readFile();
-        if (!response.similar(currentData)) {
+        String queryRateProvider = currentData.query("/" + ROOT_KEY + "/" + keyProvider).toString();
+        if(!queryRateProvider.contains(response)) {
             readWriteLock.writeLock().lock();
             try {
-                registerLog(Level.INFO, "Updating currencies from local JSON file.");
-                Path tempFile = Files.createTempFile("temp", ".json");
-                Files.write(tempFile, response.toString().getBytes());
-                Files.move(tempFile, jsonFilePath, StandardCopyOption.REPLACE_EXISTING);
+                registerLog(Level.INFO, "Updating currencies from key provider "
+                        + keyProvider + " on local JSON file repository.");
+                currentData.put(keyProvider, response);
+                Files.write(jsonFilePath, currentData.toString().getBytes());
             } finally {
                 readWriteLock.writeLock().unlock();
             }
         }
+
+        //After successful query compare to the response, otherwise do nothing
+        //When query changes update the currentData with the response according to its keyProvider in a JSONObject
+        //Re-write currentData with the changes.
+
+        /*
+        if (!response.contains(currentData.toString())) {
+            readWriteLock.writeLock().lock();
+            try {
+                registerLog(Level.INFO, "Updating currencies from local JSON file.");
+                Files.write(jsonFilePath, response.getBytes());
+
+                Path tempFile = Files.createTempFile("temp", ".json");
+                Files.write(tempFile, response.getBytes());
+                Files.move(tempFile, jsonFilePath, StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                readWriteLock.writeLock().unlock();
+            }
+        }*/
     }
 
     private JSONObject readFile() throws IOException {
         readWriteLock.readLock().lock();
         try {
             registerLog(Level.INFO, "Reading local JSON currencies file.");
-            List<String> content = Files.readAllLines(jsonFilePath);
-            return new JSONObject(content.get(0));
+            // Map the stored providers line by line in JSON  file here.
+             List<String> lines = Files.readAllLines(jsonFilePath);
+             String line = lines.get(0);
+             if (line.isEmpty()) {
+                 return defaultFormat;
+             }
+            return new JSONObject(line);
+            /*
+            for (String line : lines) {
+                if(line.contains(keyProvider)) {
+                    return line;
+                }
+            }*/
         } finally {
             readWriteLock.readLock().unlock();
         }
+        //return Collections.emptyList();
     }
 }

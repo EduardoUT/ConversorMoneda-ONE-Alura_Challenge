@@ -27,29 +27,24 @@ import java.util.stream.Collectors;
  * This class have two ways to handle key, value properties of a resource like a
  * database, an API, or a concrete file in the resources package, this last one
  * must be defined in the resources package and must have properties to read.
- *
+ * <p>
  * When using a file must have the .properties extention.
  *
  * @author EduardoUT
  */
 public class PropertiesConfig {
 
-    private Properties properties;
-    private String propertyKeyPrefix;
+    private final Properties properties;
 
-    private PropertiesConfig(Properties properties, String propertyKeyPrefix) {
+    private PropertiesConfig(Properties properties) {
         this.properties = properties;
-        this.propertyKeyPrefix = propertyKeyPrefix;
     }
 
-    public static PropertiesConfig fromFile(String propertiesPath, String propertyKeyPrefix)
+    public static PropertiesConfig fromFile(String propertiesPath)
             throws IOException {
         if (propertiesPath == null || propertiesPath.isEmpty()) {
             throw new IllegalArgumentException("Properties path cannot be null "
                     + "or empty.");
-        }
-        if (propertyKeyPrefix == null || propertyKeyPrefix.isEmpty()) {
-            throw new IllegalArgumentException("The property key prefix is null or empty.");
         }
 
         try (InputStream input = PropertiesConfig.class.getClassLoader()
@@ -63,22 +58,20 @@ public class PropertiesConfig {
                 throw new IllegalStateException("Properties file cannot be left "
                         + "empty.");
             }
-            return new PropertiesConfig(props, propertyKeyPrefix);
+            return new PropertiesConfig(props);
         }
     }
 
-    public String getPropertyKeyPrefix() {
-        return propertyKeyPrefix;
-    }
-
-    public List<String> getKeyProperties() {
+    public List<String> getKeyProperties(String propertyKeyPrefix) {
+        validatePropertyKeyPrefix(propertyKeyPrefix);
         return properties.keySet().stream()
                 .filter(key -> key.toString().startsWith(propertyKeyPrefix))
                 .map(key -> key.toString().replace(propertyKeyPrefix, ""))
                 .collect(Collectors.toList());
     }
 
-    public String getPropertyValue(String key) {
+    public String getPropertyValue(String propertyKeyPrefix, String key) {
+        validatePropertyKeyPrefix(propertyKeyPrefix);
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Property key provided is null "
                     + "or empty.");
@@ -93,6 +86,17 @@ public class PropertiesConfig {
             validateUrlFormat(value, key);
         }
         return value;
+    }
+
+    private void validatePropertyKeyPrefix(String propertyKeyPrefix) {
+        if (propertyKeyPrefix == null || propertyKeyPrefix.isEmpty()) {
+            throw new IllegalArgumentException("The property key prefix is null or empty.");
+        }
+
+        if(!propertyKeyPrefix.endsWith(".")) {
+            throw new IllegalArgumentException("The property key prefix must end with a point character" +
+                    " the given was: " + propertyKeyPrefix);
+        }
     }
 
     private void validateUrlFormat(String url, String key) {
