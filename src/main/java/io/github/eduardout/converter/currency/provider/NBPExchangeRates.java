@@ -18,7 +18,6 @@ package io.github.eduardout.converter.currency.provider;
 
 import static io.github.eduardout.converter.GlobalLogger.*;
 
-import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
 import io.github.eduardout.converter.util.RateParser;
 
@@ -26,61 +25,34 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
-
-import org.json.JSONArray;
 
 /**
  * @author EduardoUT
  */
-public class NBPExchangeRates implements RateProvider, RateProviderAvailableCurrencies {
+public class NBPExchangeRates extends AbstractCurrencyProvider {
 
-    private HttpClient httpClient;
-    private PropertiesConfig propertiesConfig;
     private RateParser rateParser;
 
     public NBPExchangeRates(HttpClient httpClient,
                             PropertiesConfig propertiesConfig,
+                            String propertyKeyPrefix,
                             RateParser rateParser) {
-        this.httpClient = httpClient;
-        this.propertiesConfig = propertiesConfig;
+        super(httpClient, propertiesConfig, propertyKeyPrefix);
         this.rateParser = rateParser;
     }
 
     @Override
-    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
-        Map<String, BigDecimal> rates = Collections.emptyMap();
+    public Map<String, BigDecimal> getCurrencyRates() {
+        Map<String, BigDecimal> currencyRates = Collections.emptyMap();
         try {
-            String url = propertiesConfig.getPropertyValue("exchangerates");
-            registerLog(Level.INFO, "Fetching data from API.");
-            JSONArray response = httpClient.fetchDataAsJSONArray(url);
-            rates = rateParser.parseRate(response, base, target);
+            String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), "exchangerates");
+            registerLog(Level.INFO, "Fetching data from National Bank Of Poland API");
+            String response = super.getHttpClient().fetchData(url);
+            currencyRates = rateParser.parseRate(response);
         } catch (IOException | IllegalStateException e) {
             registerLogException(Level.SEVERE, "Error: {0}", e);
+            registerLog(Level.SEVERE, "Endpoint response for National Bank Of Poland failed.");
         }
-        return rates;
-    }
-
-    @Override
-    public List<String> getCurrencies() {
-        List<String> currencies = Collections.emptyList();
-        try {
-            String currencyKey = "currency";
-            String midKey = "mid";
-            String url = propertiesConfig.getPropertyValue("exchangerates");
-            JSONArray response = httpClient.fetchDataAsJSONArray(url);
-            JSONArray rates = response.getJSONObject(0).getJSONArray("rates");
-            currencies = rates.toList()
-                    .stream()
-                    .filter(HashMap.class::isInstance)
-                    .map(HashMap.class::cast)
-                    .filter(hashMap -> hashMap.remove(currencyKey, hashMap.get(currencyKey)))
-                    .filter(hashMap -> hashMap.remove(midKey, hashMap.get(midKey)))
-                    .map(hashMap -> hashMap.get("code").toString())
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            registerLogException(Level.SEVERE, "Error: {0}", e);
-        }
-        return currencies;
+        return currencyRates;
     }
 }
