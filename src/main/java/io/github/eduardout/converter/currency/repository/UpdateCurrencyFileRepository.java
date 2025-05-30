@@ -17,6 +17,9 @@
 package io.github.eduardout.converter.currency.repository;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Map;
+
 import org.json.JSONObject;
 
 /**
@@ -30,7 +33,7 @@ public interface UpdateCurrencyFileRepository {
      * in a local JSON file, in case there is no available network
      * connection.
      *
-     * @param jSONObject A JSONObject to store.
+     * @param currencies A Map with the currency code and the equivalent monetary amount to store.
      */
-    void updateCurrencyRates(JSONObject jSONObject) throws IOException;
+    void updateCurrencyRates(Map<String, BigDecimal> currencies) throws IOException;
 }
