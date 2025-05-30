@@ -19,6 +19,7 @@ package io.github.eduardout.converter.currency.provider;
 import io.github.eduardout.converter.currency.CurrencyUnit;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,9 +34,7 @@ public interface RateProvider {
      * In this method we set the base CurrencyUnit to get its corresponding monetary
      * amount.
      *
-     * @param base   CurrencyUnit as the base currency.
-     * @param target CurrencyUnit as the target currency.
      * @return An Optional Map with the corresponding keys (currency code) and values (amount).
      */
-    Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target);
+    Map<String, BigDecimal> getCurrencyRates();
 }
