@@ -32,18 +32,33 @@ import org.json.JSONObject;
  */
 public class ExchangeAPIParser implements RateParser {
 
+    private CurrencyUnit baseCurrencyUnitKey;
+
+    public void setBaseCurrencyUnitKey(CurrencyUnit baseCurrencyUnitKey) {
+        validateBaseCurrencyUnitKey(baseCurrencyUnitKey);
+        this.baseCurrencyUnitKey = baseCurrencyUnitKey;
+    }
+
     @Override
-    public Map<String, BigDecimal> parseRate(Object response, CurrencyUnit base, CurrencyUnit target) {
-        JSONObject jsonObject = new JSONObject(response.toString());
-        return jsonObject.toMap().entrySet()
+    public Map<String, BigDecimal> parseRate(String response) {
+        if(baseCurrencyUnitKey == null) {
+            throw new IllegalStateException("The base currency unit key was not provided.");
+        }
+        JSONObject jsonObject = new JSONObject(response);
+        return jsonObject.getJSONObject(baseCurrencyUnitKey.getCurrencyCode().toLowerCase())
+                .toMap()
+                .entrySet()
                 .stream()
-                .filter(entrySet ->
-                        entrySet.getKey().equalsIgnoreCase(base.getCurrencyCode())
-                                || entrySet.getKey().equalsIgnoreCase(target.getCurrencyCode()))
                 .collect(Collectors.toMap(
                                 entryKey -> entryKey.getKey().toUpperCase(),
                                 entryValue -> new BigDecimal(entryValue.getValue().toString())
                         )
                 );
+    }
+
+    private void validateBaseCurrencyUnitKey(CurrencyUnit baseCurrencyUnitKey) {
+        if(baseCurrencyUnitKey == null || baseCurrencyUnitKey.getCurrencyCode().isEmpty()) {
+            throw new IllegalArgumentException("Base currency unit key is null or empty.");
+        }
     }
 }
