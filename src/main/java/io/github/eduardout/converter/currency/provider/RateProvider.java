@@ -16,12 +16,8 @@
  */
 package io.github.eduardout.converter.currency.provider;
 
-import io.github.eduardout.converter.currency.CurrencyUnit;
-
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Interface where online or offline implementations get the currency rates.
