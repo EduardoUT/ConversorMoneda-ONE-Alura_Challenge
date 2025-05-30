@@ -17,19 +17,17 @@
 package io.github.eduardout.converter.currency.provider;
 
 import static io.github.eduardout.converter.GlobalLogger.*;
+
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.util.RateParser;
+import io.github.eduardout.converter.util.ExchangeAPIParser;
 import io.github.eduardout.converter.currency.CurrencyUnit;
 import io.github.eduardout.converter.currency.ISO4217Currency;
-import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
-import org.json.JSONObject;
 
 /**
  * <p>
@@ -50,55 +48,107 @@ import org.json.JSONObject;
  *
  * @author EduardoUT
  */
-public class ExchangeAPI implements RateProvider, RateProviderAvailableCurrencies {
+public class ExchangeAPI extends AbstractCurrencyProvider {
 
-    private HttpClient httpClient;
-    private PropertiesConfig propertiesConfig;
-    private JSONCurrencyFileRepository fallbackProvider;
-    private RateParser rateParser;
+    public static final String ENDPOINT_VERSION = "/v1";
+    public static final String ENDPOINT_CURRENCIES = "/currencies";
+    public static final CurrencyUnit DEFAULT_CURRENCY_UNIT = new CurrencyUnit(ISO4217Currency.MXN);
+    public static final String JSON_EXTENSION = ".min.json";
+    private CurrencyUnit baseCurrencyParameter;
+    private String endPointVersion;
+    private ExchangeAPIParser exchangeAPIParser;
 
     public ExchangeAPI(HttpClient httpClient,
-                       PropertiesConfig propertiesConfig, JSONCurrencyFileRepository fallbackProvider,
-                       RateParser rateParser) {
-        this.httpClient = httpClient;
-        this.propertiesConfig = propertiesConfig;
-        this.fallbackProvider = fallbackProvider;
-        this.rateParser = rateParser;
+                       PropertiesConfig propertiesConfig,
+                       String propertyKeyPrefix,
+                       ExchangeAPIParser exchangeAPIParser) {
+        super(httpClient, propertiesConfig, propertyKeyPrefix);
+        this.exchangeAPIParser = exchangeAPIParser;
+        this.endPointVersion = ENDPOINT_VERSION;
+        this.baseCurrencyParameter = DEFAULT_CURRENCY_UNIT;
+    }
+
+    /**
+     * <p>Must have to start with a / sign, version can be changed too as it doesn't work,
+     * check the logger console or file it will provide when it fails or is not correct.
+     * </p>
+     *
+     * @param endPointVersion Sets to a new version.
+     */
+    public void setEndPointVersion(String endPointVersion) {
+        if (this.endPointVersion == null || this.endPointVersion.isEmpty()) {
+            throw new IllegalArgumentException("Endpoint version is null or empty.");
+        }
+        if (!this.endPointVersion.startsWith("/")) {
+            throw new IllegalArgumentException("Endpoint version must start with /");
+        }
+        this.endPointVersion = endPointVersion;
+    }
+
+    public CurrencyUnit getBaseCurrencyParameter() {
+        return baseCurrencyParameter;
+    }
+
+    /**
+     * @param baseCurrencyParameter Sets the base currency unit to fetch the currency
+     *                              rates if the default (MXN) is not the desired.
+     */
+    public void setBaseCurrencyParameter(CurrencyUnit baseCurrencyParameter) {
+        this.baseCurrencyParameter = baseCurrencyParameter;
     }
 
     @Override
-    public Map<String, BigDecimal> getCurrencyRates(CurrencyUnit base, CurrencyUnit target) {
-        CurrencyUnit apiBaseCurrencyUnit = new CurrencyUnit(ISO4217Currency.MXN);
-        for (String key : propertiesConfig.getKeyProperties()) {
+    public Map<String, BigDecimal> getCurrencyRates() {
+        for (String key : super.getPropertiesConfig().getKeyProperties(super.getPropertyKeyPrefix())) {
             try {
-                String url = propertiesConfig.getPropertyValue(key);
-                registerLog(Level.INFO, "Fetching data from API.");
-                JSONObject response = httpClient.fetchDataAsJSONObject(url);
-                JSONObject apiBaseKey = response.getJSONObject(apiBaseCurrencyUnit.getCurrencyCode().toLowerCase());
-                fallbackProvider.updateCurrencyRates(apiBaseKey);
-                return rateParser.parseRate(apiBaseKey, base, target);
+                String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), key);
+                registerLog(Level.INFO, "Fetching data from Free Exchange Rates API.");
+                String response = super.getHttpClient().fetchData(buildUrlWithParams(url));
+                exchangeAPIParser.setBaseCurrencyUnitKey(baseCurrencyParameter);
+                return exchangeAPIParser.parseRate(response);
             } catch (IOException | IllegalStateException e) {
                 registerLogException(Level.SEVERE, "Error: {0} ", e);
             }
         }
-        registerLog(Level.SEVERE, "All response endpoints failed, using JSON file.");
-        return fallbackProvider.getCurrencyRates(base, target);
+        registerLog(Level.SEVERE, "All response endpoints for Free Exchange Rates API failed.");
+        return Collections.emptyMap();
     }
 
-    @Override
-    public List<String> getCurrencies() {
-        List<String> apiCurrencies = Collections.emptyList();
-        try {
-            PropertiesConfig properties = PropertiesConfig.fromFile("config.properties", "available.");
-            String url = properties.getPropertyValue("fcera.currencies");
-            JSONObject response = httpClient.fetchDataAsJSONObject(url);
-            apiCurrencies = response.toMap().keySet()
-                    .stream()
-                    .map(String::toUpperCase)
-                    .collect(Collectors.toList());
-        } catch (IOException ex) {
-            registerLogException(Level.SEVERE, "Error: {0} ", ex);
+    /**
+     * <p>This concatenates in order the parameters needed by the url endpoints to build
+     * the next result:</p>
+     * <p>/v1/currencies/mxn.min.json</p>
+     * <p>Where the params are:</p>
+     * <p>Version: /v1</p>
+     * <p>Currencies: /currencies</p>
+     * <p>Base currency code: mxn</p>
+     * <p>JSON Extension: .min.json</p>
+     * <p>
+     * Note: As all the url endpoints have different domains, the params
+     * will only change and can be set in execution time.
+     * </p>
+     *
+     * <p>
+     * The url with base currency code parameter will provide the currency rates,
+     * while the url without this parameter will provide all the available currencies
+     * of this API provider.
+     * </p>
+     *
+     * @param url The url to concatenate all params.
+     * @return The new url with all the parameters.
+     */
+    private String buildUrlWithParams(String url) {
+        String emptyUrl = "";
+        if (url == null) {
+            return emptyUrl;
         }
-        return apiCurrencies;
+        if (!url.isEmpty()) {
+            return url.concat(endPointVersion)
+                    .concat(ENDPOINT_CURRENCIES)
+                    .concat("/")
+                    .concat(baseCurrencyParameter.getCurrencyCode().toLowerCase())
+                    .concat(JSON_EXTENSION);
+        }
+        return emptyUrl;
     }
 }
