@@ -66,8 +66,8 @@ public class HttpClient {
      *                     null.
      */
     public String fetchData(String url) throws IOException {
-        if (url == null) {
-            throw new IllegalArgumentException("Argument url is null, check if "
+        if (url == null || url.isEmpty()) {
+            throw new IllegalArgumentException("Argument url is null or empty, check if "
                     + "provided links are correct in properties file");
         }
         Request request = new Request.Builder().url(url)
@@ -90,30 +90,5 @@ public class HttpClient {
             }
             return responseBody.string();
         }
-    }
-
-    /**
-     * Request all the available currencies from Free Currency Exchange Rates
-     * API.
-     *
-     * @param url The url source to fetch data.
-     * @return A JSONObject that contains all the available currencies of this
-     * API provider.
-     * @throws IOException When the fetchData request method was not
-     *                     successful, the body of the response is null or there is a problem while
-     *                     read, write or open the local JSON file.
-     */
-    public JSONObject fetchDataAsJSONObject(String url) throws IOException {
-        return new JSONObject(fetchData(url));
-    }
-
-    /**
-     * If the response JSON starts with brackets this method can be useful.
-     *
-     * @param url The url to fetch data.
-     * @return A JSONArray containing the body response of the requested url.
-     */
-    public JSONArray fetchDataAsJSONArray(String url) throws IOException {
-        return new JSONArray(fetchData(url));
     }
 }
