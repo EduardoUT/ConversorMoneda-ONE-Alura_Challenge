@@ -25,8 +25,6 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.*;
 
-import io.github.eduardout.converter.util.ExchangeAPIParser;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,13 +36,12 @@ import org.junit.jupiter.api.io.TempDir;
 /**
  * @author EduardoUT
  */
-class JSONCurrencyFileRepositoryTest {
+class JSONCurrencyRepositoryTest {
 
     @TempDir
     static Path tempDir;
 
-    private JSONCurrencyFileRepository jSONCurrencyFileRepository;
-    private ExchangeAPIParser exchangeAPIParser;
+    private JSONCurrencyRepository jSONCurrencyRepository;
     private Path testFilePath;
     private CurrencyUnit baseCurrency;
     private CurrencyUnit targetCurrency;
@@ -55,33 +52,33 @@ class JSONCurrencyFileRepositoryTest {
         testFilePath = tempDir.resolve("test-rates.json");
         baseCurrency = new CurrencyUnit(MXN);
         targetCurrency = new CurrencyUnit(GBP);
-        exchangeAPIParser = new ExchangeAPIParser();
     }
+
 
     @Test
     void testReadWriteOperations() throws IOException {
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
-        JSONObject testData = new JSONObject("{}");
-        testData.put("gbp", 0.037968493);
-        testData.put("mxn", 1);
-        jSONCurrencyFileRepository.updateCurrencyRates(testData);
-        Map<String, BigDecimal> targetRate = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        BigDecimal baseAmount = targetRate.get(baseCurrency.getCurrencyCode());
-        BigDecimal targetAmount = targetRate.get(targetCurrency.getCurrencyCode());
+        jSONCurrencyRepository = new JSONCurrencyRepository(testFilePath.toString());
+        Map<String, BigDecimal> currencyRates = new HashMap<>();
+        currencyRates.put("GBP", new BigDecimal("0.037968493"));
+        currencyRates.put("MXN", new BigDecimal("1"));
+        jSONCurrencyRepository.updateCurrencyRates(currencyRates);
+        Map<String, BigDecimal> repositoryCurrencyRates = jSONCurrencyRepository.getCurrencyRates();
+        BigDecimal baseAmount = repositoryCurrencyRates.get(baseCurrency.getCurrencyCode());
+        BigDecimal targetAmount = repositoryCurrencyRates.get(targetCurrency.getCurrencyCode());
         assertEquals(BigDecimal.ONE, baseAmount);
         assertEquals(new BigDecimal("0.037968493"), targetAmount);
     }
 
-    @DisplayName("Debería devolver un Optional con un Map vacío cuando los códigos de " +
-            "divisa no existan.")
+    @DisplayName("Debería validar como inexistentes divisas que no estan registradas.")
     @Test
     void testReadInvalidCurrencyPair() throws IOException {
-        JSONObject invalidData = new JSONObject("{}");
-        invalidData.put("usd", 0.75);
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
-        jSONCurrencyFileRepository.updateCurrencyRates(invalidData);
-        Map<String, BigDecimal> response = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        assertEquals(Collections.emptyMap(), response);
+        Map<String, BigDecimal> currencyRates = new HashMap<>();
+        currencyRates.put("USD", new BigDecimal("0.75"));
+        jSONCurrencyRepository = new JSONCurrencyRepository(testFilePath.toString());
+        Map<String, BigDecimal> response = jSONCurrencyRepository.getCurrencyRates();
+        for(String key : currencyRates.keySet()) {
+            assertFalse(response.containsKey(key));
+        }
     }
 
     @DisplayName("Debería actualizar el repositorio solo cuando los datos del "
@@ -89,17 +86,17 @@ class JSONCurrencyFileRepositoryTest {
     @Test
     void testUpdateWhenThereIsNewData() throws IOException {
         Map<String, BigDecimal> unexpected = new HashMap<>();
-        unexpected.put("gbp", new BigDecimal("0.038013551"));
-        JSONObject currentData = new JSONObject("{}")
-                .put("gbp", 0.038013551);
-        JSONObject newData = new JSONObject("{}")
-                .put("gbp", 0.038013554);
-        jSONCurrencyFileRepository = new JSONCurrencyFileRepository(testFilePath.toString(), exchangeAPIParser);
-        jSONCurrencyFileRepository.updateCurrencyRates(currentData);
-        jSONCurrencyFileRepository.updateCurrencyRates(currentData);
-        jSONCurrencyFileRepository.updateCurrencyRates(newData);
-        jSONCurrencyFileRepository.updateCurrencyRates(newData);
-        Map<String, BigDecimal> result = jSONCurrencyFileRepository.getCurrencyRates(baseCurrency, targetCurrency);
-        assertNotEquals(unexpected.get("gbp"), result.get("gbp"));
+        unexpected.put("GBP", new BigDecimal("0.038013551"));
+        Map<String, BigDecimal> currentData = new HashMap<>();
+        currentData.put("GBP", new BigDecimal("0.038013551"));
+        Map<String, BigDecimal> newData = new HashMap<>();
+        newData.put("GBP", new BigDecimal("0.038013554"));
+        jSONCurrencyRepository = new JSONCurrencyRepository(testFilePath.toString());
+        jSONCurrencyRepository.updateCurrencyRates(currentData);
+        jSONCurrencyRepository.updateCurrencyRates(currentData);
+        jSONCurrencyRepository.updateCurrencyRates(newData);
+        jSONCurrencyRepository.updateCurrencyRates(newData);
+        Map<String, BigDecimal> result = jSONCurrencyRepository.getCurrencyRates();
+        assertNotEquals(unexpected.get("GBP"), result.get("GBP"));
     }
 }
