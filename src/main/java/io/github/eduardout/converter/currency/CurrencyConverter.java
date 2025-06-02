@@ -16,42 +16,54 @@
  */
 package io.github.eduardout.converter.currency;
 
-import io.github.eduardout.converter.currency.provider.RateProvider;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * @author EduardoUT
  */
 public class CurrencyConverter {
 
-    private static final BigDecimal MIN_AMOUNT = BigDecimal.ONE;
+    public static final BigDecimal DEFAULT_AMOUNT = BigDecimal.ONE;
+    private static final BigDecimal MIN_AMOUNT = DEFAULT_AMOUNT;
     private static final BigDecimal MAX_AMOUNT = new BigDecimal("999999999.9999");
-    public static final BigDecimal DEFAULT_AMOUNT = new BigDecimal("1.00");
-    private RateProvider rateProvider;
+    private final RateProviderService rateProviderService;
     private Map<String, BigDecimal> mappedCurrencies;
 
-    public CurrencyConverter(RateProvider rateProvider) {
-        validateRateProvider(rateProvider);
-        this.rateProvider = rateProvider;
+    public CurrencyConverter(RateProviderService rateProviderService) {
+        validateRateProvider(rateProviderService);
+        this.rateProviderService = rateProviderService;
     }
 
     /**
      * Sets a map with the base and target key (currency code) and value
      * (equivalent amount) obtained from the rate provider.
      *
-     * @param base The base currency unit to search by its iso-code.
+     * @param base   The base currency unit to search by its iso-code.
      * @param target The target currency unit to search by its iso-code.
      */
     private void setMappedCurrencies(CurrencyUnit base, CurrencyUnit target) {
         mappedCurrencies = new HashMap<>();
-        mappedCurrencies.putAll(rateProvider.getCurrencyRates(base, target));
+        Map<String, BigDecimal> currencyRates = rateProviderService.filterCurrencyRatesFromAvailableProvider();
+        mappedCurrencies.putAll(currencyRates);
+        filterSelectedCurrencies(mappedCurrencies, base, target);
+    }
+
+    private void filterSelectedCurrencies(Map<String, BigDecimal> currencies, CurrencyUnit base, CurrencyUnit target) {
         if (mappedCurrencies.isEmpty()) {
             throw new IllegalStateException("No currencies were found from provider.");
         }
+        Map<String, ISO4217Currency> enumCurrencies = ISO4217Currency.getISO4217Currencies();
+        currencies.entrySet()
+                .stream()
+                .filter(entrySet -> enumCurrencies.containsKey(entrySet.getKey()))
+                .filter(entrySet -> entrySet.getKey().equalsIgnoreCase(base.getCurrencyCode())
+                        || entrySet.getKey().equalsIgnoreCase(target.getCurrencyCode()))
+                .findFirst().orElseThrow(() -> new NoSuchElementException("Currencies " + base.getCurrencyCode()
+                        + " or " + target.getCurrencyCode() + " not supported for this currencies provider."));
     }
 
     /**
@@ -67,18 +79,20 @@ public class CurrencyConverter {
      * Arguments can be swapped for example USD -> EUR or EUR -> USD, as the
      * provider gets actual and valid values.
      *
-     * @param baseAmount Amount equivalent of the base currency unit.
+     * @param baseAmount   Amount equivalent of the base currency unit.
      * @param targetAmount Amount equivalent of the target currency unit.
      * @return The conversion between the base amount and target amount.
      */
     private BigDecimal calculateAmount(BigDecimal baseAmount,
-            BigDecimal targetAmount, BigDecimal amount) {
+                                       BigDecimal targetAmount, BigDecimal amount) {
         int scale = Math.max(baseAmount.scale(), targetAmount.scale());
-        return amount
-                .multiply(DEFAULT_AMOUNT.divide(baseAmount, scale, RoundingMode.HALF_UP))
-                .divide(DEFAULT_AMOUNT.divide(targetAmount, scale, RoundingMode.HALF_UP),
-                        4, RoundingMode.HALF_UP
-                );
+        if ((baseAmount.equals(DEFAULT_AMOUNT) && targetAmount.intValue() == 0)
+                || (baseAmount.intValue() == 0 && targetAmount.equals(DEFAULT_AMOUNT))) {
+            baseAmount = DEFAULT_AMOUNT.divide(baseAmount, scale, RoundingMode.HALF_UP);
+            targetAmount = DEFAULT_AMOUNT.divide(targetAmount, scale, RoundingMode.HALF_UP);
+        }
+        return amount.multiply(baseAmount)
+                .divide(targetAmount, scale, RoundingMode.HALF_UP);
     }
 
     public BigDecimal convert(CurrencyUnit base, CurrencyUnit target, BigDecimal amount) {
@@ -120,9 +134,9 @@ public class CurrencyConverter {
         }
     }
 
-    private void validateRateProvider(RateProvider rateProvider) {
-        if (rateProvider == null) {
-            throw new IllegalArgumentException("RateProvider argument is null.");
+    private void validateRateProvider(RateProviderService rateProviderService) {
+        if (rateProviderService == null) {
+            throw new IllegalArgumentException("RateProviderService argument is null.");
         }
     }
 }
