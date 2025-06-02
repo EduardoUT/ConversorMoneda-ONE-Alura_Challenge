@@ -17,38 +17,37 @@
 package io.github.eduardout.converter.view;
 
 import static io.github.eduardout.converter.util.EvaluateDoubleValue.*;
+
 import io.github.eduardout.converter.GlobalLogger;
 import io.github.eduardout.converter.currency.CurrencyConverter;
 import io.github.eduardout.converter.currency.CurrencyConverterController;
 import io.github.eduardout.converter.currency.CurrencyUnit;
-import io.github.eduardout.converter.currency.ExchangeAPIService;
+import io.github.eduardout.converter.currency.RateProviderService;
 import io.github.eduardout.converter.currency.config.PropertiesConfig;
-import io.github.eduardout.converter.currency.provider.HttpClient;
-import io.github.eduardout.converter.currency.repository.JSONCurrencyFileRepository;
+import io.github.eduardout.converter.currency.provider.*;
+import io.github.eduardout.converter.currency.repository.JSONCurrencyRepository;
 import io.github.eduardout.converter.temperature.CelsiusToFarenheit;
 import io.github.eduardout.converter.temperature.TemperatureConverter;
 import io.github.eduardout.converter.temperature.TemperatureConverterController;
 import io.github.eduardout.converter.temperature.TemperatureSymbol;
 import io.github.eduardout.converter.util.ExchangeAPIParser;
 import io.github.eduardout.converter.util.ImageLoader;
-import io.github.eduardout.converter.util.RateParser;
+import io.github.eduardout.converter.util.NBPExchangeRatesParser;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 /**
- *
  * @author EduardoUT
  */
 public final class ConverterUI extends javax.swing.JFrame {
@@ -56,8 +55,8 @@ public final class ConverterUI extends javax.swing.JFrame {
     private int xMouse;
     private int yMouse;
     private String inputValue;
-    private CurrencyConverterController converterController;
-    private TemperatureConverterController temperatureConverterController;
+    private transient CurrencyConverterController converterController;
+    private transient TemperatureConverterController temperatureConverterController;
     private Color transparent;
     private Color darkRed;
     private Color darkGreen;
@@ -92,6 +91,18 @@ public final class ConverterUI extends javax.swing.JFrame {
     }
 
     private void setUpColors() {
+        Map<String, Color> colors = getColors();
+        darkCyan = colors.get("darkcyan");
+        darksLateGreen = colors.get("darkslategreen");
+        darkGreen = colors.get("darkgreen");
+        darkRed = colors.get("darkred");
+        dimGray = colors.get("dimgray");
+        transparent = colors.get("transparent");
+        darksLateGray = colors.get("darkslategray");
+        ghostWhite = colors.get("ghostwhite");
+    }
+
+    private static Map<String, Color> getColors() {
         Map<String, Color> colors = new HashMap<>();
         colors.put("transparent", new Color(0, 0, 0, 0));
         colors.put("darkslategray", new Color(60, 63, 65, 255));
@@ -101,14 +112,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         colors.put("darkred", new Color(153, 0, 0, 255));
         colors.put("ghostwhite", new Color(244, 246, 252, 255));
         colors.put("dimgray", new Color(102, 102, 102, 255));
-        darkCyan = colors.get("darkcyan");
-        darksLateGreen = colors.get("darkslategreen");
-        darkGreen = colors.get("darkgreen");
-        darkRed = colors.get("darkred");
-        dimGray = colors.get("dimgray");
-        transparent = colors.get("transparent");
-        darksLateGray = colors.get("darkslategray");
-        ghostWhite = colors.get("ghostwhite");
+        return colors;
     }
 
     private void setUpBackground() {
@@ -123,22 +127,28 @@ public final class ConverterUI extends javax.swing.JFrame {
     private void setUpCurrencyConverterController() {
         try {
             HttpClient httpClient = HttpClient.getInstance();
-            PropertiesConfig propertiesConfig = PropertiesConfig.fromFile("config.properties", "fcera.");
-            RateParser rateParser = new ExchangeAPIParser();
-            JSONCurrencyFileRepository jSONCurrencyFileRepository = new JSONCurrencyFileRepository("", rateParser);
-            ExchangeAPIService currencyExchangeRatesService = new ExchangeAPIService(
-                    httpClient, propertiesConfig, jSONCurrencyFileRepository, rateParser
+            PropertiesConfig propertiesConfig = PropertiesConfig.fromFile("config.properties");
+            Set<RateProvider> rateProviders = new LinkedHashSet<>();
+            //rateProviders.add(new ExchangeAPI(httpClient, propertiesConfig, "free-currency-exchange-rates-api.", new ExchangeAPIParser()));
+            rateProviders.add(new NBPExchangeRates(httpClient, propertiesConfig, "nbp-web-api.", new NBPExchangeRatesParser()));
+            RateProviderRegistry rateProviderRegistry = new RateProviderRegistry(rateProviders);
+            RateProviderService rateProviderService = new RateProviderService(
+                    rateProviderRegistry, new JSONCurrencyRepository("")
             );
-            converterController = new CurrencyConverterController(
-                    new CurrencyConverter(currencyExchangeRatesService.getExchangeAPI()),
-                    currencyExchangeRatesService
-            );
-            converterController.loadAvailableCurrencies(baseCurrencyComboBox, targetCurrencyComboBox);
+            //Map<String, BigDecimal> currencyRates = rateProviderService.filterCurrencyRatesFromAvailableProvider();
+            //if (!currencyRates.isEmpty()) {
+                rateProviderService.updateCurrencyRates();
+                converterController = new CurrencyConverterController(
+                        new CurrencyConverter(rateProviderService),
+                        rateProviderService
+                );
+                converterController.loadAvailableCurrencies(baseCurrencyComboBox, targetCurrencyComboBox);
+            //}
         } catch (IOException ex) {
             GlobalLogger.registerLogException(Level.SEVERE, "Error {0}", ex);
             JOptionPane.showMessageDialog(this, "Servicio de divisas no disponible, "
-                    + "conéctese a internet o inténtelo más tarde.",
-                    "Error al obtener divisas.",
+                            + "conéctese a internet o inténtelo más tarde.",
+                    "Problemas al obtener divisas.",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -156,7 +166,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(
                 this,
                 "Error al recibir el valor ingresado: \n"
-                + "Verifique que los valores de la lista desplegable sean diferentes.",
+                        + "Verifique que los valores de la lista desplegable sean diferentes.",
                 "Valor inválido.",
                 JOptionPane.ERROR_MESSAGE
         );
@@ -189,7 +199,7 @@ public final class ConverterUI extends javax.swing.JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isValidInputValue(inputValue) && Double.parseDouble(inputValue) > 0
-                        && !isEqualsComboBoxSelection(baseCurrencyComboBox, targetCurrencyComboBox)) {
+                        && hasEqualsComboBoxSelectedIndex(baseCurrencyComboBox, targetCurrencyComboBox)) {
                     converterController.setConversion(inputTextCurrency, outputTextCurrency,
                             baseCurrencyComboBox, targetCurrencyComboBox
                     );
@@ -219,7 +229,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCalculateTemperature.setBackground(darkCyan);
         btnCalculateTemperature.setVisible(true);
         btnCalculateTemperature.setEnabled(false);
-        
+
     }
 
     private MouseAdapter btnCalculateTemperatureClickEvent() {
@@ -227,7 +237,7 @@ public final class ConverterUI extends javax.swing.JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isValidInputValue(inputValue)
-                        && !isEqualsComboBoxSelection(baseTemperatureComboBox, targetTemperatureComboBox)) {
+                        && hasEqualsComboBoxSelectedIndex(baseTemperatureComboBox, targetTemperatureComboBox)) {
                     temperatureConverterController.setConversion(
                             baseTemperatureComboBox, targetTemperatureComboBox,
                             inputTextTemperature, outputTextTemperature
@@ -249,16 +259,16 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCalculateTemperature.setVisible(false);
     }
 
-    private boolean isValidInputValue(String valorUsuario) {
-        return valorUsuario != null
-                && !valorUsuario.isEmpty();
+    private boolean isValidInputValue(String userValue) {
+        return userValue != null
+                && !userValue.isEmpty();
     }
 
-    private <T> boolean isEqualsComboBoxSelection(JComboBox<T> baseComboBox,
-            JComboBox<T> targetComboBox) {
+    private <T> boolean hasEqualsComboBoxSelectedIndex(JComboBox<T> baseComboBox,
+                                                       JComboBox<T> targetComboBox) {
         int baseComboBoxIndex = baseComboBox.getSelectedIndex();
         int targetComboBoxIndex = targetComboBox.getSelectedIndex();
-        return baseComboBox.getItemAt(baseComboBoxIndex)
+        return !baseComboBox.getItemAt(baseComboBoxIndex)
                 .equals(targetComboBox.getItemAt(targetComboBoxIndex));
     }
 
@@ -278,6 +288,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        javax.swing.JLabel backgroundReference;
         java.awt.GridBagConstraints gridBagConstraints;
 
         panelMenu = new JPanelImageDrawer("images/FondoMenu.png");
@@ -332,9 +343,11 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseExited(evt);
             }
@@ -352,9 +365,11 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseExited(evt);
             }
@@ -372,9 +387,11 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseExited(evt);
             }
@@ -392,9 +409,11 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseExited(evt);
             }
@@ -412,9 +431,11 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseClicked(evt);
             }
+
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseExited(evt);
             }
@@ -583,6 +604,7 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCalculateCurrencyMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCalculateCurrencyMouseExited(evt);
             }
@@ -735,6 +757,7 @@ public final class ConverterUI extends javax.swing.JFrame {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCalculateTemperatureMouseEntered(evt);
             }
+
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCalculateTemperatureMouseExited(evt);
             }
@@ -940,7 +963,6 @@ public final class ConverterUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowLabelOne;
     private javax.swing.JLabel arrowLabelTwo;
-    private javax.swing.JLabel backgroundReference;
     private javax.swing.JComboBox<CurrencyUnit> baseCurrencyComboBox;
     private javax.swing.JComboBox<TemperatureSymbol> baseTemperatureComboBox;
     private javax.swing.JLabel btnBienvenida;
@@ -968,29 +990,13 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<CurrencyUnit> targetCurrencyComboBox;
     private javax.swing.JComboBox<TemperatureSymbol> targetTemperatureComboBox;
     private javax.swing.JLabel tituloBienvenida;
+
     // End of variables declaration//GEN-END:variables
-    class JPanelImageDrawer extends JPanel {
+    static class JPanelImageDrawer extends JPanel {
 
         private String fileName;
 
         public JPanelImageDrawer(String fileName) {
-            this.fileName = fileName;
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            Image imagen = ImageLoader.getImage(fileName);
-            g.drawImage(imagen, 0, 0, getWidth(), getHeight(), this);
-            setOpaque(false);
-            super.paint(g);
-        }
-    }
-
-    class JLabelImageDrawer extends JLabel {
-
-        private String fileName;
-
-        public JLabelImageDrawer(String fileName) {
             this.fileName = fileName;
         }
 
