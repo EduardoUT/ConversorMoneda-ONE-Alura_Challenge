@@ -18,7 +18,7 @@ package io.github.eduardout.converter.view;
 
 import static io.github.eduardout.converter.util.EvaluateDoubleValue.*;
 
-import io.github.eduardout.converter.GlobalLogger;
+import static io.github.eduardout.converter.GlobalLogger.*;
 import io.github.eduardout.converter.currency.CurrencyConverter;
 import io.github.eduardout.converter.currency.CurrencyConverterController;
 import io.github.eduardout.converter.currency.CurrencyUnit;
@@ -57,6 +57,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     private String inputValue;
     private transient CurrencyConverterController converterController;
     private transient TemperatureConverterController temperatureConverterController;
+    private RateProviderService rateProviderService;
     private Color transparent;
     private Color darkRed;
     private Color darkGreen;
@@ -85,6 +86,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         setUpBackground();
         showPanelWelcome();
         hidePanelCurrency();
+        hidePanelCurrencyError();
         hidePanelTemperature();
         setUpCurrencyConverterController();
         setUpTemperatureConverterController();
@@ -129,27 +131,43 @@ public final class ConverterUI extends javax.swing.JFrame {
             HttpClient httpClient = HttpClient.getInstance();
             PropertiesConfig propertiesConfig = PropertiesConfig.fromFile("config.properties");
             Set<RateProvider> rateProviders = new LinkedHashSet<>();
-            //rateProviders.add(new ExchangeAPI(httpClient, propertiesConfig, "free-currency-exchange-rates-api.", new ExchangeAPIParser()));
+            rateProviders.add(new ExchangeAPI(httpClient, propertiesConfig, "free-currency-exchange-rates-api.", new ExchangeAPIParser()));
             rateProviders.add(new NBPExchangeRates(httpClient, propertiesConfig, "nbp-web-api.", new NBPExchangeRatesParser()));
             RateProviderRegistry rateProviderRegistry = new RateProviderRegistry(rateProviders);
-            RateProviderService rateProviderService = new RateProviderService(
+            rateProviderService = new RateProviderService(
                     rateProviderRegistry, new JSONCurrencyRepository("")
             );
-            //Map<String, BigDecimal> currencyRates = rateProviderService.filterCurrencyRatesFromAvailableProvider();
-            //if (!currencyRates.isEmpty()) {
-                rateProviderService.updateCurrencyRates();
-                converterController = new CurrencyConverterController(
-                        new CurrencyConverter(rateProviderService),
-                        rateProviderService
-                );
-                converterController.loadAvailableCurrencies(baseCurrencyComboBox, targetCurrencyComboBox);
-            //}
+            converterController = new CurrencyConverterController(
+                    new CurrencyConverter(rateProviderService),
+                    rateProviderService
+            );
+            loadCurrencyConverterUI(rateProviderService);
         } catch (IOException ex) {
-            GlobalLogger.registerLogException(Level.SEVERE, "Error {0}", ex);
-            JOptionPane.showMessageDialog(this, "Servicio de divisas no disponible, "
-                            + "conéctese a internet o inténtelo más tarde.",
-                    "Problemas al obtener divisas.",
-                    JOptionPane.INFORMATION_MESSAGE);
+            registerLogException(Level.SEVERE, "Error: {0} ", ex);
+            loadCurrencyConverterUI(rateProviderService);
+        }
+    }
+
+    /**
+     * Load the UI interface of the currency converter according to the
+     * currencyRates returned form the rate provider, validates if the rate
+     * provider has returned currency rates, if not it means that all the rate
+     * providers are unavailable due to network connection or the repository has
+     * no data, so we load a panel with the error message and a button to try to
+     * reload the data.
+     *
+     * @param rateProviderService The service class to retrieve all the related
+     * info from the rate provider.
+     */
+    private void loadCurrencyConverterUI(RateProviderService rateProviderService) {
+        if (converterController.hasAvailableCurrencyUnits()) {
+            showPanelCurrency();
+            hidePanelCurrencyError();
+            converterController.loadAvailableCurrencies(baseCurrencyComboBox, targetCurrencyComboBox);
+            rateProviderService.updateCurrencyRates();
+        } else {
+            hidePanelCurrency();
+            showPanelCurrencyError();
         }
     }
 
@@ -166,7 +184,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(
                 this,
                 "Error al recibir el valor ingresado: \n"
-                        + "Verifique que los valores de la lista desplegable sean diferentes.",
+                + "Verifique que los valores de la lista desplegable sean diferentes.",
                 "Valor inválido.",
                 JOptionPane.ERROR_MESSAGE
         );
@@ -194,15 +212,29 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCalculateCurrency.setForeground(ghostWhite);
     }
 
+    private void showPanelCurrencyError() {
+        removeExistingMouseListeners(inputTextCurrency);
+        panelCurrencyError.setVisible(true);
+
+    }
+
     private MouseAdapter btnCalculateCurrencyClickEvent() {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (isValidInputValue(inputValue) && Double.parseDouble(inputValue) > 0
                         && hasEqualsComboBoxSelectedIndex(baseCurrencyComboBox, targetCurrencyComboBox)) {
-                    converterController.setConversion(inputTextCurrency, outputTextCurrency,
-                            baseCurrencyComboBox, targetCurrencyComboBox
-                    );
+                    try {
+                        converterController.setConversion(
+                                inputTextCurrency,
+                                outputTextCurrency,
+                                baseCurrencyComboBox,
+                                targetCurrencyComboBox
+                        );
+                    } catch (IllegalStateException ex) {
+                        registerLog(Level.SEVERE, "Servicio de divisas no disponible: {0} " + ex);
+                        loadCurrencyConverterUI(rateProviderService);
+                    }
                 } else {
                     showInputErrorMessage();
                 }
@@ -218,6 +250,10 @@ public final class ConverterUI extends javax.swing.JFrame {
         inputTextCurrency.setVisible(false);
         instruccionCampoIngresoDivisa.setVisible(false);
         btnCalculateCurrency.setVisible(false);
+    }
+
+    private void hidePanelCurrencyError() {
+        panelCurrencyError.setVisible(false);
     }
 
     private void showPanelTemperature() {
@@ -265,7 +301,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     }
 
     private <T> boolean hasEqualsComboBoxSelectedIndex(JComboBox<T> baseComboBox,
-                                                       JComboBox<T> targetComboBox) {
+            JComboBox<T> targetComboBox) {
         int baseComboBoxIndex = baseComboBox.getSelectedIndex();
         int targetComboBoxIndex = targetComboBox.getSelectedIndex();
         return !baseComboBox.getItemAt(baseComboBoxIndex)
@@ -288,7 +324,6 @@ public final class ConverterUI extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        javax.swing.JLabel backgroundReference;
         java.awt.GridBagConstraints gridBagConstraints;
 
         panelMenu = new JPanelImageDrawer("images/FondoMenu.png");
@@ -310,6 +345,9 @@ public final class ConverterUI extends javax.swing.JFrame {
         arrowLabelOne = new javax.swing.JLabel();
         targetCurrencyComboBox = new javax.swing.JComboBox<>();
         btnCalculateCurrency = new javax.swing.JLabel();
+        panelCurrencyError = new javax.swing.JPanel();
+        errorMessageLabel = new javax.swing.JLabel();
+        btnTryAgain = new javax.swing.JLabel();
         panelTemperature = new JPanelImageDrawer("images/FondoPanelTemperatura.png");
         instruccionCampoIngresoTemperatura = new javax.swing.JLabel();
         inputTextTemperature = new javax.swing.JTextField();
@@ -336,18 +374,16 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCerrarVentana.setForeground(new java.awt.Color(255, 255, 255));
         btnCerrarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnCerrarVentana.setText("x");
-        btnCerrarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCerrarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCerrarVentana.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCerrarVentana.setOpaque(true);
         btnCerrarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseClicked(evt);
             }
-
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCerrarVentanaMouseExited(evt);
             }
@@ -359,17 +395,15 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnMinimizarVentana.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnMinimizarVentana.setText("_");
         btnMinimizarVentana.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        btnMinimizarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMinimizarVentana.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnMinimizarVentana.setOpaque(true);
         btnMinimizarVentana.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseClicked(evt);
             }
-
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnMinimizarVentanaMouseExited(evt);
             }
@@ -381,17 +415,15 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnConversionMoneda.setForeground(new java.awt.Color(244, 246, 252));
         btnConversionMoneda.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnConversionMoneda.setText("Conversor de Moneda");
-        btnConversionMoneda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConversionMoneda.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnConversionMoneda.setOpaque(true);
         btnConversionMoneda.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseClicked(evt);
             }
-
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnConversionMonedaMouseExited(evt);
             }
@@ -403,17 +435,15 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnConversionTemperatura.setForeground(new java.awt.Color(244, 246, 252));
         btnConversionTemperatura.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnConversionTemperatura.setText("Conversor de Temperatura");
-        btnConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConversionTemperatura.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnConversionTemperatura.setOpaque(true);
         btnConversionTemperatura.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseClicked(evt);
             }
-
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnConversionTemperaturaMouseExited(evt);
             }
@@ -425,17 +455,15 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnBienvenida.setForeground(new java.awt.Color(244, 246, 252));
         btnBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnBienvenida.setText("Bienvenida");
-        btnBienvenida.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBienvenida.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBienvenida.setOpaque(true);
         btnBienvenida.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseClicked(evt);
             }
-
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnBienvenidaMouseExited(evt);
             }
@@ -597,14 +625,13 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCalculateCurrency.setForeground(new java.awt.Color(244, 246, 252));
         btnCalculateCurrency.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnCalculateCurrency.setText("Convertir");
-        btnCalculateCurrency.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCalculateCurrency.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCalculateCurrency.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCalculateCurrency.setOpaque(true);
         btnCalculateCurrency.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCalculateCurrencyMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCalculateCurrencyMouseExited(evt);
             }
@@ -619,6 +646,21 @@ public final class ConverterUI extends javax.swing.JFrame {
         panelCurrency.add(btnCalculateCurrency, gridBagConstraints);
 
         getContentPane().add(panelCurrency, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
+
+        panelCurrencyError.setLayout(new java.awt.GridBagLayout());
+
+        errorMessageLabel.setText("<p>Servicio de divisas no disponible, conectese a internet o inténtelo más tarde</p>");
+        panelCurrencyError.add(errorMessageLabel, new java.awt.GridBagConstraints());
+
+        btnTryAgain.setText("Reintentar");
+        btnTryAgain.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnTryAgainMouseClicked(evt);
+            }
+        });
+        panelCurrencyError.add(btnTryAgain, new java.awt.GridBagConstraints());
+
+        getContentPane().add(panelCurrencyError, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
 
         panelTemperature.setMaximumSize(new java.awt.Dimension(740, 510));
         panelTemperature.setMinimumSize(new java.awt.Dimension(740, 510));
@@ -750,14 +792,13 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnCalculateTemperature.setForeground(new java.awt.Color(244, 246, 252));
         btnCalculateTemperature.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         btnCalculateTemperature.setText("Convertir");
-        btnCalculateTemperature.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnCalculateTemperature.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCalculateTemperature.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnCalculateTemperature.setOpaque(true);
         btnCalculateTemperature.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnCalculateTemperatureMouseEntered(evt);
             }
-
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 btnCalculateTemperatureMouseExited(evt);
             }
@@ -804,7 +845,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         if (panelTemperature.isVisible()) {
             hidePanelTemperature();
         }
-        showPanelCurrency();
+        loadCurrencyConverterUI(rateProviderService);
     }//GEN-LAST:event_btnConversionMonedaMouseClicked
 
     private void btnConversionTemperaturaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnConversionTemperaturaMouseClicked
@@ -815,6 +856,9 @@ public final class ConverterUI extends javax.swing.JFrame {
         if (panelCurrency.isVisible()) {
             hidePanelCurrency();
         }
+        if (panelCurrencyError.isVisible()) {
+            hidePanelCurrencyError();
+        }
         showPanelTemperature();
     }//GEN-LAST:event_btnConversionTemperaturaMouseClicked
 
@@ -822,6 +866,9 @@ public final class ConverterUI extends javax.swing.JFrame {
         evt.consume();
         if (panelCurrency.isVisible()) {
             hidePanelCurrency();
+        }
+        if (panelCurrencyError.isVisible()) {
+            hidePanelCurrencyError();
         }
         if (panelTemperature.isVisible()) {
             hidePanelTemperature();
@@ -960,9 +1007,15 @@ public final class ConverterUI extends javax.swing.JFrame {
         setLocation(x - xMouse, y - yMouse);
     }//GEN-LAST:event_backgroundReferenceMouseDragged
 
+    private void btnTryAgainMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTryAgainMouseClicked
+        evt.consume();
+        loadCurrencyConverterUI(rateProviderService);
+    }//GEN-LAST:event_btnTryAgainMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowLabelOne;
     private javax.swing.JLabel arrowLabelTwo;
+    private javax.swing.JLabel backgroundReference;
     private javax.swing.JComboBox<CurrencyUnit> baseCurrencyComboBox;
     private javax.swing.JComboBox<TemperatureSymbol> baseTemperatureComboBox;
     private javax.swing.JLabel btnBienvenida;
@@ -972,6 +1025,8 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JLabel btnConversionMoneda;
     private javax.swing.JLabel btnConversionTemperatura;
     private javax.swing.JLabel btnMinimizarVentana;
+    private javax.swing.JLabel btnTryAgain;
+    private javax.swing.JLabel errorMessageLabel;
     private javax.swing.JTextField inputTextCurrency;
     private javax.swing.JTextField inputTextTemperature;
     private javax.swing.JLabel instruccionCampoIngresoDivisa;
@@ -984,17 +1039,17 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JTextField outputTextCurrency;
     private javax.swing.JTextField outputTextTemperature;
     private javax.swing.JPanel panelCurrency;
+    private javax.swing.JPanel panelCurrencyError;
     private javax.swing.JPanel panelMenu;
     private javax.swing.JPanel panelTemperature;
     private javax.swing.JPanel panelWelcome;
     private javax.swing.JComboBox<CurrencyUnit> targetCurrencyComboBox;
     private javax.swing.JComboBox<TemperatureSymbol> targetTemperatureComboBox;
     private javax.swing.JLabel tituloBienvenida;
-
     // End of variables declaration//GEN-END:variables
     static class JPanelImageDrawer extends JPanel {
 
-        private String fileName;
+        private final String fileName;
 
         public JPanelImageDrawer(String fileName) {
             this.fileName = fileName;
