@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  */
 public class RateProviderService {
 
-    private RateProviderRegistry rateProviderRegistry;
-    private JSONCurrencyRepository jsonCurrencyRepository;
+    private final RateProviderRegistry rateProviderRegistry;
+    private final JSONCurrencyRepository jsonCurrencyRepository;
 
     public RateProviderService(RateProviderRegistry rateProviderRegistry, JSONCurrencyRepository jsonCurrencyRepository) {
         validateRateProviderRegistry(rateProviderRegistry);
@@ -44,31 +44,31 @@ public class RateProviderService {
 
     public Map<String, BigDecimal> filterCurrencyRatesFromAvailableProvider() {
         Map<String, BigDecimal> currencyRates = rateProviderRegistry.filterCurrencyRatesFromAvailableProvider();
-        if(currencyRates.isEmpty()) {
+        if (currencyRates.isEmpty()) {
             return jsonCurrencyRepository.getCurrencyRates();
         }
         return currencyRates;
     }
 
     public void updateCurrencyRates() {
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    Map<String, BigDecimal> currencyRates = filterCurrencyRatesFromAvailableProvider();
-                    if(!currencyRates.isEmpty()) {
-                        try {
-                            jsonCurrencyRepository.updateCurrencyRates(currencyRates);
-                        } catch (IOException e) {
-                            registerLogException(Level.SEVERE, "An error occurs on the repository while updating" +
-                                    " the currency rates: {0}", e);
-                            Thread.currentThread().interrupt();
-                        }
-                    } else {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Map<String, BigDecimal> currencyRates = filterCurrencyRatesFromAvailableProvider();
+                if (!currencyRates.isEmpty()) {
+                    try {
+                        jsonCurrencyRepository.updateCurrencyRates(currencyRates);
+                    } catch (IOException e) {
+                        registerLogException(Level.SEVERE, "An error occurs on the repository while updating"
+                                + " the currency rates: {0} ", e);
                         Thread.currentThread().interrupt();
                     }
+                } else {
+                    Thread.currentThread().interrupt();
                 }
-            }, 0, TimeUnit.MINUTES.toMillis(5));
+            }
+        }, 0, TimeUnit.MINUTES.toMillis(5));
     }
 
     /**
