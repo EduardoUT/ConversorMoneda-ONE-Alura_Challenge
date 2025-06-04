@@ -29,10 +29,16 @@ public class CurrencyConverterController {
 
     private final RateProviderService rateProviderService;
     private final CurrencyConverter currencyConverter;
+    private List<CurrencyUnit> availableCurrencyUnits;
 
     public CurrencyConverterController(CurrencyConverter currencyConverter, RateProviderService rateProviderService) {
         this.currencyConverter = currencyConverter;
         this.rateProviderService = rateProviderService;
+        loadAvailableCurrencyUnits();
+    }
+
+    private void loadAvailableCurrencyUnits() {
+        availableCurrencyUnits = rateProviderService.availableCurrencyUnits();
     }
 
     public void setConversion(JTextField campoIngresoDivisa, JTextField campoConversion, JComboBox<CurrencyUnit> base,
@@ -46,13 +52,23 @@ public class CurrencyConverterController {
 
     public void loadAvailableCurrencies(JComboBox<CurrencyUnit> baseComboBoxCurrencies,
             JComboBox<CurrencyUnit> targetComboBoxCurrencies) {
-        List<CurrencyUnit> currencies = rateProviderService.availableCurrencyUnits();
-        addCurrenciesAsComboBoxItems(currencies, baseComboBoxCurrencies);
-        addCurrenciesAsComboBoxItems(currencies, targetComboBoxCurrencies);
+        addCurrenciesAsComboBoxItems(availableCurrencyUnits, baseComboBoxCurrencies);
+        addCurrenciesAsComboBoxItems(availableCurrencyUnits, targetComboBoxCurrencies);
     }
 
     private void addCurrenciesAsComboBoxItems(List<CurrencyUnit> currencies,
             JComboBox<CurrencyUnit> comboBox) {
         currencies.forEach(comboBox::addItem);
+    }
+
+    /**
+     * Method to check the disponibility of the rate provider.
+     *
+     * @return A boolean value to validate if the currency list of the rate
+     * provider are not empty.
+     */
+    public boolean hasAvailableCurrencyUnits() {
+        loadAvailableCurrencyUnits();
+        return !availableCurrencyUnits.isEmpty();
     }
 }
