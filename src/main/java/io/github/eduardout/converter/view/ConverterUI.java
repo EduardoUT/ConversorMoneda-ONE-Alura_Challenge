@@ -369,11 +369,10 @@ public final class ConverterUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
-        setMaximumSize(new java.awt.Dimension(975, 510));
-        setMinimumSize(new java.awt.Dimension(975, 510));
+        setMaximumSize(new java.awt.Dimension(980, 510));
+        setMinimumSize(new java.awt.Dimension(980, 510));
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(975, 510));
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        getContentPane().setLayout(new java.awt.GridBagLayout());
 
         panelMenu.setMaximumSize(new java.awt.Dimension(240, 510));
         panelMenu.setMinimumSize(new java.awt.Dimension(240, 510));
@@ -480,10 +479,16 @@ public final class ConverterUI extends javax.swing.JFrame {
         });
         panelMenu.add(btnBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 390, 225, 30));
 
-        getContentPane().add(panelMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 240, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(panelMenu, gridBagConstraints);
 
-        panelWelcome.setMaximumSize(new java.awt.Dimension(300, 2147483647));
-        panelWelcome.setPreferredSize(new java.awt.Dimension(300, 450));
+        panelWelcome.setMaximumSize(new java.awt.Dimension(740, 510));
+        panelWelcome.setMinimumSize(new java.awt.Dimension(740, 510));
+        panelWelcome.setPreferredSize(new java.awt.Dimension(740, 510));
         panelWelcome.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         tituloBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -497,13 +502,18 @@ public final class ConverterUI extends javax.swing.JFrame {
         nombreDesarrollador.setText("Desarrollado por: EduardoUT");
         panelWelcome.add(nombreDesarrollador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 340, -1));
 
-        getContentPane().add(panelWelcome, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(panelWelcome, gridBagConstraints);
 
         panelCurrency.setForeground(new java.awt.Color(244, 246, 252));
         panelCurrency.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        panelCurrency.setMaximumSize(new java.awt.Dimension(400, 430));
-        panelCurrency.setMinimumSize(new java.awt.Dimension(400, 430));
-        panelCurrency.setPreferredSize(new java.awt.Dimension(580, 430));
+        panelCurrency.setMaximumSize(new java.awt.Dimension(740, 510));
+        panelCurrency.setMinimumSize(new java.awt.Dimension(740, 510));
+        panelCurrency.setPreferredSize(new java.awt.Dimension(740, 510));
         panelCurrency.setLayout(new java.awt.GridBagLayout());
 
         instruccionCampoIngresoDivisa.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -655,7 +665,12 @@ public final class ConverterUI extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 15, 0);
         panelCurrency.add(btnCalculateCurrency, gridBagConstraints);
 
-        getContentPane().add(panelCurrency, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(panelCurrency, gridBagConstraints);
 
         panelCurrencyError.setBackground(java.awt.Color.black);
         panelCurrencyError.setMaximumSize(new java.awt.Dimension(740, 510));
@@ -711,10 +726,16 @@ public final class ConverterUI extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 15, 0);
         panelCurrencyError.add(btnTryAgain, gridBagConstraints);
 
-        getContentPane().add(panelCurrencyError, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(panelCurrencyError, gridBagConstraints);
 
         panelTemperature.setMaximumSize(new java.awt.Dimension(740, 510));
         panelTemperature.setMinimumSize(new java.awt.Dimension(740, 510));
+        panelTemperature.setPreferredSize(new java.awt.Dimension(740, 510));
         panelTemperature.setLayout(new java.awt.GridBagLayout());
 
         instruccionCampoIngresoTemperatura.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -863,7 +884,12 @@ public final class ConverterUI extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(15, 0, 15, 0);
         panelTemperature.add(btnCalculateTemperature, gridBagConstraints);
 
-        getContentPane().add(panelTemperature, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, 740, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(panelTemperature, gridBagConstraints);
 
         backgroundReference.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -875,7 +901,14 @@ public final class ConverterUI extends javax.swing.JFrame {
                 backgroundReferenceMousePressed(evt);
             }
         });
-        getContentPane().add(backgroundReference, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 980, 510));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.ipadx = 980;
+        gridBagConstraints.ipady = 510;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(backgroundReference, gridBagConstraints);
 
         setSize(new java.awt.Dimension(975, 510));
         setLocationRelativeTo(null);
