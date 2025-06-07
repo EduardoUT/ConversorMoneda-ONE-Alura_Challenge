@@ -535,18 +535,34 @@ public final class ConverterUI extends javax.swing.JFrame {
         panelWelcome.setMaximumSize(new java.awt.Dimension(740, 510));
         panelWelcome.setMinimumSize(new java.awt.Dimension(740, 510));
         panelWelcome.setPreferredSize(new java.awt.Dimension(740, 510));
-        panelWelcome.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelWelcome.setLayout(new java.awt.GridBagLayout());
 
         tituloBienvenida.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         tituloBienvenida.setForeground(new java.awt.Color(0, 0, 0));
         tituloBienvenida.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         tituloBienvenida.setText("Bienvenido(a)");
-        panelWelcome.add(tituloBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 720, -1));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(30, 0, 0, 0);
+        panelWelcome.add(tituloBienvenida, gridBagConstraints);
 
         nombreDesarrollador.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         nombreDesarrollador.setForeground(new java.awt.Color(0, 0, 0));
+        nombreDesarrollador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         nombreDesarrollador.setText("Desarrollado por: EduardoUT");
-        panelWelcome.add(nombreDesarrollador, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 470, 340, -1));
+        nombreDesarrollador.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 155;
+        gridBagConstraints.insets = new java.awt.Insets(408, 0, 0, 0);
+        panelWelcome.add(nombreDesarrollador, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
