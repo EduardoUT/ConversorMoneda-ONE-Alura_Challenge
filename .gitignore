@@ -11,3 +11,4 @@ nbactions.xml
 
 # IntelliJ
 .idea
+*.iml
