@@ -18,6 +18,7 @@ package io.github.eduardout.converter.currency;
 
 import java.math.BigDecimal;
 import java.util.List;
+import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
@@ -58,6 +59,7 @@ public class CurrencyConverterController {
 
     private void addCurrenciesAsComboBoxItems(List<CurrencyUnit> currencies,
             JComboBox<CurrencyUnit> comboBox) {
+        comboBox.removeAllItems();
         currencies.forEach(comboBox::addItem);
     }
 
