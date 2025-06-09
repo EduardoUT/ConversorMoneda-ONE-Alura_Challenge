@@ -18,7 +18,6 @@ package io.github.eduardout.converter.currency;
 
 import java.math.BigDecimal;
 import java.util.List;
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
