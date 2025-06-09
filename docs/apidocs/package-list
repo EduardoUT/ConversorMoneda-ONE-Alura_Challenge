@@ -1,0 +1,8 @@
+io.github.eduardout.converter
+io.github.eduardout.converter.currency
+io.github.eduardout.converter.currency.config
+io.github.eduardout.converter.currency.provider
+io.github.eduardout.converter.currency.repository
+io.github.eduardout.converter.temperature
+io.github.eduardout.converter.util
+io.github.eduardout.converter.view
