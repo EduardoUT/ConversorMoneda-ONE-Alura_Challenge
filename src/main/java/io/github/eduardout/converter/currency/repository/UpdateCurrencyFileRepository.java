@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 /**
  *
  * @author EduardoUT
@@ -34,6 +32,7 @@ public interface UpdateCurrencyFileRepository {
      * connection.
      *
      * @param currencies A Map with the currency code and the equivalent monetary amount to store.
+     * @throws java.io.IOException Yhrows when handling the local repository file.
      */
     void updateCurrencyRates(Map<String, BigDecimal> currencies) throws IOException;
 }

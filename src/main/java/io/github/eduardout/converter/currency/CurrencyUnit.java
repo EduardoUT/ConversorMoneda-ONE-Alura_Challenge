@@ -42,27 +42,27 @@ public class CurrencyUnit {
     }
 
     /**
-     * The Currency object provided by Java API.
+     * 
      *
-     * @return
+     * @return The Currency object provided by Java API.
      */
     public Currency getCurrency() {
         return currency;
     }
 
     /**
-     * The ISO 4217 CurrencyCode.
+     * 
      *
-     * @return
+     * @return The ISO 4217 CurrencyCode.
      */
     public String getCurrencyCode() {
         return currency.getCurrencyCode();
     }
 
     /**
-     * The symbol of the CurrencyUnit.
      *
-     * @return
+     *
+     * @return The symbol of the CurrencyUnit.
      */
     public String getSymbol() {
         return currency.getSymbol();
@@ -86,8 +86,8 @@ public class CurrencyUnit {
      *
      * - To compare unique CurrencyUnirs based in its own numeric code.
      *
-     * @param object
-     * @return
+     * @param object The object to compare with this instance.
+     * @return Boolean evaluation of this with a different object,
      */
     @Override
     public boolean equals(Object object) {

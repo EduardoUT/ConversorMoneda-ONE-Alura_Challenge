@@ -33,8 +33,8 @@ public class EvaluateDoubleValue {
      * Comprobando que el valor ingresado en el inputMessage sea numerico
      * decimal o entero.
      *
-     * @param cantidadDivisaUsuario
-     * @return
+     * @param cantidadDivisaUsuario Valor numéico a validar.
+     * @return True if its a number.
      */
     public static boolean esNumerico(double cantidadDivisaUsuario) {
         return JSType.isNumber(cantidadDivisaUsuario);

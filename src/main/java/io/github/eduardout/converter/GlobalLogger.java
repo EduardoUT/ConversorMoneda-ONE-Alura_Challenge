@@ -47,7 +47,8 @@ public class GlobalLogger {
     /**
      * Realiza la inisialización del archivo de log.
      *
-     * @throws java.io.IOException
+     * @throws java.io.IOException Lanza esta excepción si hubo problemas para
+     * crear el archivo log.
      */
     protected static void setUpLoggerConfigurationFile() throws IOException {
         LoggerConfigurationFile loggerConfigFile = new LoggerConfigurationFile();
@@ -69,8 +70,8 @@ public class GlobalLogger {
     /**
      * Captura logs para describir eventos o brindan información.
      *
-     * @param level
-     * @param message
+     * @param level Nivel de severidad del error.
+     * @param message Contenido o mensaje de la excepción.
      */
     public static void registerLog(Level level, String message) {
         GLOBAL_LOGGER.log(level, message);
