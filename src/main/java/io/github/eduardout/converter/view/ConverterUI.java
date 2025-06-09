@@ -365,7 +365,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         arrowLabelTwo = new javax.swing.JLabel();
         targetTemperatureComboBox = new javax.swing.JComboBox<>();
         btnCalculateTemperature = new javax.swing.JLabel();
-        backgroundReference = new javax.swing.JLabel();
+        mouseHoldClicReference = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -953,14 +953,14 @@ public final class ConverterUI extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         getContentPane().add(panelTemperature, gridBagConstraints);
 
-        backgroundReference.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        mouseHoldClicReference.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
-                backgroundReferenceMouseDragged(evt);
+                mouseHoldClicReferenceMouseDragged(evt);
             }
         });
-        backgroundReference.addMouseListener(new java.awt.event.MouseAdapter() {
+        mouseHoldClicReference.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                backgroundReferenceMousePressed(evt);
+                mouseHoldClicReferenceMousePressed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -970,7 +970,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         gridBagConstraints.ipadx = 980;
         gridBagConstraints.ipady = 510;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        getContentPane().add(backgroundReference, gridBagConstraints);
+        getContentPane().add(mouseHoldClicReference, gridBagConstraints);
 
         setSize(new java.awt.Dimension(975, 510));
         setLocationRelativeTo(null);
@@ -1141,17 +1141,6 @@ public final class ConverterUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCalculateCurrencyMouseExited
 
-    private void backgroundReferenceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundReferenceMousePressed
-        xMouse = evt.getX();
-        yMouse = evt.getY();
-    }//GEN-LAST:event_backgroundReferenceMousePressed
-
-    private void backgroundReferenceMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundReferenceMouseDragged
-        int x = evt.getXOnScreen();
-        int y = evt.getYOnScreen();
-        setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_backgroundReferenceMouseDragged
-
     private void btnTryAgainMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnTryAgainMouseClicked
         evt.consume();
         loadCurrencyConverterUI(rateProviderService);
@@ -1167,10 +1156,20 @@ public final class ConverterUI extends javax.swing.JFrame {
         btnTryAgain.setBackground(darkGreen);
     }//GEN-LAST:event_btnTryAgainMouseExited
 
+    private void mouseHoldClicReferenceMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseHoldClicReferenceMousePressed
+        xMouse = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_mouseHoldClicReferenceMousePressed
+
+    private void mouseHoldClicReferenceMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mouseHoldClicReferenceMouseDragged
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        setLocation(x - xMouse, y - yMouse);
+    }//GEN-LAST:event_mouseHoldClicReferenceMouseDragged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel arrowLabelOne;
     private javax.swing.JLabel arrowLabelTwo;
-    private javax.swing.JLabel backgroundReference;
     private javax.swing.JComboBox<CurrencyUnit> baseCurrencyComboBox;
     private javax.swing.JComboBox<TemperatureSymbol> baseTemperatureComboBox;
     private javax.swing.JLabel btnBienvenida;
@@ -1190,6 +1189,7 @@ public final class ConverterUI extends javax.swing.JFrame {
     private javax.swing.JSeparator lineSeparatorOne;
     private javax.swing.JSeparator lineSeparatorThree;
     private javax.swing.JSeparator lineSeparatorTwo;
+    private javax.swing.JLabel mouseHoldClicReference;
     private javax.swing.JLabel nombreDesarrollador;
     private javax.swing.JTextField outputTextCurrency;
     private javax.swing.JTextField outputTextTemperature;
