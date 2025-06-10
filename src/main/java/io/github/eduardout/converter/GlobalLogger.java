@@ -109,7 +109,7 @@ public class GlobalLogger {
             try {
                 Handler consoleHandler = new ConsoleHandler();
                 Handler fileHandler = new FileHandler(
-                        FILE_PATH + "register.log", true
+                        FILE_PATH + "register.log", false
                 );
                 SimpleFormatter simpleFormatter = new SimpleFormatter();
                 fileHandler.setFormatter(simpleFormatter);
