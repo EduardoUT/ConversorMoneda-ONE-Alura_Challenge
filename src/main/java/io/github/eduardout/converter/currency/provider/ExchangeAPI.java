@@ -102,7 +102,7 @@ public class ExchangeAPI extends AbstractCurrencyProvider {
         for (String key : super.getPropertiesConfig().getKeyProperties(super.getPropertyKeyPrefix())) {
             try {
                 String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), key);
-                registerLog(Level.INFO, "Fetching data from Free Exchange Rates API.");
+                logHealthCheckIfNeeded(getClass(), "Fetching data from Free Exchange Rates API");
                 String response = super.getHttpClient().fetchData(buildUrlWithParams(url));
                 exchangeAPIParser.setBaseCurrencyUnitKey(baseCurrencyParameter);
                 return exchangeAPIParser.parseRate(response);
