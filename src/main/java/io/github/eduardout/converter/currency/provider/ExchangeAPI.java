@@ -56,7 +56,7 @@ public class ExchangeAPI extends AbstractCurrencyProvider {
     public static final String JSON_EXTENSION = ".min.json";
     private CurrencyUnit baseCurrencyParameter;
     private String endPointVersion;
-    private ExchangeAPIParser exchangeAPIParser;
+    private final ExchangeAPIParser exchangeAPIParser;
 
     public ExchangeAPI(HttpClient httpClient,
                        PropertiesConfig propertiesConfig,
