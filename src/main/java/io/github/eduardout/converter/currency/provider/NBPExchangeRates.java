@@ -31,7 +31,7 @@ import java.util.logging.Level;
  */
 public class NBPExchangeRates extends AbstractCurrencyProvider {
 
-    private RateParser rateParser;
+    private final RateParser rateParser;
 
     public NBPExchangeRates(HttpClient httpClient,
                             PropertiesConfig propertiesConfig,
@@ -46,7 +46,7 @@ public class NBPExchangeRates extends AbstractCurrencyProvider {
         Map<String, BigDecimal> currencyRates = Collections.emptyMap();
         try {
             String url = super.getPropertiesConfig().getPropertyValue(super.getPropertyKeyPrefix(), "exchange-rates");
-            registerLog(Level.INFO, "Fetching data from National Bank Of Poland API");
+            logHealthCheckIfNeeded(getClass(), "Fetching data from National Bank Of Poland Web API.");
             String response = super.getHttpClient().fetchData(url);
             currencyRates = rateParser.parseRate(response);
         } catch (IOException | IllegalStateException e) {
