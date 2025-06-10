@@ -44,6 +44,7 @@ public class GlobalLogger {
     private static final String FILE_PATH = "logs/";
     private static final Map<String, Long> lastHealthCheckLogs = new ConcurrentHashMap<>();
     private static final long DEFAULT_INTERVAL = 30000;
+    private static final String UTF_8 = "UTF-8";
 
     private GlobalLogger() {
         throw new IllegalStateException("Utility class");
@@ -169,6 +170,8 @@ public class GlobalLogger {
                 Handler fileHandler = new FileHandler(
                         FILE_PATH + "register.log", false
                 );
+                fileHandler.setEncoding(UTF_8);
+                consoleHandler.setEncoding(UTF_8);
                 SimpleFormatter simpleFormatter = new SimpleFormatter();
                 fileHandler.setFormatter(simpleFormatter);
                 GLOBAL_LOGGER.setUseParentHandlers(false);
