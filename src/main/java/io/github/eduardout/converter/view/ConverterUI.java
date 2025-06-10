@@ -85,12 +85,12 @@ public final class ConverterUI extends javax.swing.JFrame {
         arrowLabelTwo.setIcon(new ImageIcon(ImageLoader.getImage(oppositeArrows)));
         setUpColors();
         setUpBackground();
+        setUpCurrencyConverterController();
+        setUpTemperatureConverterController();
         showPanelWelcome();
         hidePanelCurrency();
         hidePanelCurrencyError();
         hidePanelTemperature();
-        setUpCurrencyConverterController();
-        setUpTemperatureConverterController();
     }
 
     private void setUpColors() {
