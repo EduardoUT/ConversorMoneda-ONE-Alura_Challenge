@@ -16,12 +16,15 @@
  */
 package io.github.eduardout.converter;
 
+import io.github.eduardout.converter.currency.provider.RateProvider;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -37,18 +40,20 @@ import java.util.logging.SimpleFormatter;
  */
 public class GlobalLogger {
 
-    private static final Logger GLOBAL_LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger GLOBAL_LOGGER = Logger.getLogger("io.github.eduardout.converter");
     private static final String FILE_PATH = "logs/";
+    private static final Map<String, Long> lastHealthCheckLogs = new ConcurrentHashMap<>();
+    private static final long DEFAULT_INTERVAL = 30000;
 
     private GlobalLogger() {
         throw new IllegalStateException("Utility class");
     }
 
     /**
-     * Realiza la inisialización del archivo de log.
+     * Initialize the logger in the console and the file.
      *
-     * @throws java.io.IOException Lanza esta excepción si hubo problemas para
-     * crear el archivo log.
+     * @throws java.io.IOException Throws this exception if a problem accours
+     * during the initialization of the logger.
      */
     protected static void setUpLoggerConfigurationFile() throws IOException {
         LoggerConfigurationFile loggerConfigFile = new LoggerConfigurationFile();
@@ -56,33 +61,88 @@ public class GlobalLogger {
     }
 
     /**
-     * Captura el mensaje y el stackTrace de la excepción configurando el nivel
-     * severo.
+     * Logs the level, message and exception object cathed.
      *
-     * @param level Nivel de severidad del Logger a registrar.
-     * @param message Mensaje personalizado acorde al contexto del error.
-     * @param e Exception para poder obtener el stackTrace.
+     * @param level Severity level of the log.
+     * @param message Personalized message detail to log.
+     * @param e Exception object catched in the error.
      */
     public static void registerLogException(Level level, String message, Exception e) {
+        GLOBAL_LOGGER.log(level, message, writeErrorMessage(e));
+    }
+
+    /**
+     * Logs all the details of he exception with its stackTrace, ideal to
+     * debugging and full monitoring.
+     *
+     * @param level Severity level of the log.
+     * @param message Personalized message detail to log.
+     * @param e Exception object catched in the error.
+     */
+    public static void registerLogExceptionWithStackTrace(Level level, String message, Exception e) {
         GLOBAL_LOGGER.log(level, message, printStackTrace(e));
     }
 
     /**
-     * Captura logs para describir eventos o brindan información.
+     * Logs to describe events or informs.
      *
-     * @param level Nivel de severidad del error.
-     * @param message Contenido o mensaje de la excepción.
+     * @param level Level of severity.
+     * @param message Content of the message.
      */
     public static void registerLog(Level level, String message) {
         GLOBAL_LOGGER.log(level, message);
     }
 
     /**
-     * Impresión de la pila de ejecución donde la excepción fue interceptada.
+     * Logs and checks the frequency of a log info message that is called
+     * multiple times in a rate provider, so handles the interval of time of 30
+     * seconds by default to prevent spam.
      *
-     * @param e Objeto de tipo Exception, ideal para obtener el detalle de la
-     * exceptión captada.
-     * @return Fragmento de la pila donde el error ocurrió.
+     * @param classIdentifier The class object of the specific rate provider to
+     * log.
+     * @param message The message to register in the log.
+     */
+    public static void logHealthCheckIfNeeded(Class<? extends RateProvider> classIdentifier, String message) {
+        logHealthCheckIfNeeded(classIdentifier, message, DEFAULT_INTERVAL);
+    }
+
+    /**
+     * Logs and checks the frequency of a log info message that is called
+     * multiple times in a rate provider, so handles the interval of time of 30
+     * seconds by default to prevent spam.
+     *
+     * @param classIdentifier The class object of the specific rate provider to
+     * log.
+     * @param message The message to register in the log.
+     * @param interval Sets the miliseconds interval of time that a message info
+     * log can be reegistered.
+     */
+    public static void logHealthCheckIfNeeded(Class<? extends RateProvider> classIdentifier, String message, long interval) {
+        String className = classIdentifier.getSimpleName();
+        long now = System.currentTimeMillis();
+        Long lastLog = lastHealthCheckLogs.get(className);
+        if (lastLog == null || (now - lastLog) > interval) {
+            registerLog(Level.INFO, message);
+            lastHealthCheckLogs.put(className, now);
+        }
+    }
+
+    /**
+     * Logs the short description of the exception.
+     *
+     * @param e The exception catched object.
+     * @return The class and a short description of the error.
+     */
+    public static String writeErrorMessage(Exception e) {
+        return e.toString();
+    }
+
+    /**
+     * To register and debug the log exceptions in a more detailed way by using
+     * the stackTrace of the exception catched.
+     *
+     * @param e Exception object.
+     * @return The full stackTrace of the exception catched.
      */
     public static String printStackTrace(Exception e) {
         StringWriter stringWriter = new StringWriter();
@@ -91,13 +151,11 @@ public class GlobalLogger {
         return stringWriter.toString();
     }
 
-    /**
-     * Clase dedicada a la configuración del archivo de registro.
-     */
+    //Class to configure and set the properties of the Logger.
     private static class LoggerConfigurationFile {
 
         /**
-         * Se configura e inicializa el archivo de registro.
+         * Configuration and initialization of the log in the file and console.
          */
         public final void setUpLoggerFile() throws IOException {
             Path customPaths = Paths.get(FILE_PATH);
@@ -113,6 +171,7 @@ public class GlobalLogger {
                 );
                 SimpleFormatter simpleFormatter = new SimpleFormatter();
                 fileHandler.setFormatter(simpleFormatter);
+                GLOBAL_LOGGER.setUseParentHandlers(false);
                 GLOBAL_LOGGER.addHandler(consoleHandler);
                 GLOBAL_LOGGER.addHandler(fileHandler);
                 consoleHandler.setLevel(Level.ALL);
