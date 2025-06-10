@@ -355,7 +355,7 @@ public final class ConverterUI extends javax.swing.JFrame {
         panelCurrencyError = new JPanelImageDrawer("images/unavailableCurrency.png");
         errorMessageLabel = new javax.swing.JLabel();
         btnTryAgain = new javax.swing.JLabel();
-        panelTemperature = new JPanelImageDrawer("images/FondoPanelTemperatura.png");
+        panelTemperature = new JPanelImageDrawer("images/panelTemperatura.png");
         instruccionCampoIngresoTemperatura = new javax.swing.JLabel();
         inputTextTemperature = new javax.swing.JTextField();
         lineSeparatorThree = new javax.swing.JSeparator();
