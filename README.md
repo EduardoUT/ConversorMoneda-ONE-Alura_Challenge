@@ -1,3 +1,6 @@
+![Build Status - Passing](https://img.shields.io/badge/build-passing-green)
+![converter - 1.0-SNAPSHOT](https://img.shields.io/badge/converter-1.0--SNAPSHOT-purple)
+
 Challenge Cinco de Seis | Formación Java Orientado a Objetos | Conversor de Moneda
 
 <h1 align="center">:currency_exchange: Conversor de Moneda ☕</h1>
@@ -61,7 +64,7 @@ https://github.com/topics/challengeoneconversorlatam
 
 **Demo:**
 
-![Gif demo de Conversión de Moneda](https://raw.githubusercontent.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/master/src/main/resources/images/conversorMonedaDemo.gif)
+![Gif demo de Conversión de Moneda](https://raw.githubusercontent.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/master/src/main/resources/images/demoConverterApp.gif)
 
 **Vista Previa 👁️:**
 
