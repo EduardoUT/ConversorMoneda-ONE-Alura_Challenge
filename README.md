@@ -35,7 +35,7 @@ Extra personal:
 **Pruebe el Proyecto JAR (Requiere JRE de Java 8+):**
 
 Enlace de descarga:
-https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/releases/tag/v1.0.0
+https://github.com/EduardoUT/ConversorMoneda-ONE-Alura_Challenge/releases/tag/v1.0.0-SNAPSHOT
 
 **Instrucciones para ejecución:**
   - Una vez descargado, descomprima.
