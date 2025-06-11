@@ -23,7 +23,7 @@ package io.github.eduardout.converter.temperature;
 public enum TemperatureSymbol {
     CELSIUS("Celsius", "°C", 0d),
     FARENHEIT("Farenheit", "°F", 32d),
-    KELVIN("Kelvin", "°F", 273.15);
+    KELVIN("Kelvin", "°K", 273.15);
 
     private final String symbolName;
     private final String symbol;
